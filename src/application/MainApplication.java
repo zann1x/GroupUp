@@ -1,7 +1,7 @@
 package application;
 
 import application.connection.db.DbConnector;
-import application.connection.db.SqliteConnector;
+import application.connection.db.H2Connector;
 import application.controller.LoginController;
 import application.controller.MainController;
 import application.util.SceneNavigator;
@@ -68,7 +68,8 @@ public class MainApplication extends Application {
     public void init() throws Exception {
         instance = this;
 
-        dbConnector = new SqliteConnector("db/sqlite/test.db");
+        //dbConnector = new SqliteConnector("db/sqlite/test.db");
+        dbConnector = new H2Connector("db/h2/test");
 
         dbConnector.open();
     }

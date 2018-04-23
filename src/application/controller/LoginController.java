@@ -50,8 +50,7 @@ public class LoginController extends FxmlController {
 
         // player names are unique, therefore i'm blindly assuming only one player was selected
         Player player = null;
-        if (resultSet.isBeforeFirst()) {
-            resultSet.next();
+        if (resultSet.first()) {
             int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
 
