@@ -1,7 +1,6 @@
 package application.util;
 
 import application.MainApplication;
-import application.controller.FxmlController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 
@@ -23,16 +22,19 @@ public class ViewNavigator {
         CHAT_DETAIL
     }
 
-    private String playerOverview = "fxml/overview/player.fxml";
-    private String playerDetail = "fxml/detail/player.fxml";
-    private String teamOverview = "fxml/overview/team.fxml";
-    private String teamDetail = "fxml/detail/team.fxml";
-    private String gamesOverview = "fxml/overview/games.fxml";
-    private String gamesDetail = "fxml/detail/games.fxml";
-    private String newsOverview = "fxml/overview/news.fxml";
-    private String newsDetail = "fxml/detail/news.fxml";
-    private String chatOverview = "fxml/overview/chat.fxml";
-    private String chatDetail = "fxml/detail/chat.fxml";
+    private static final String overviewPath = "fxml/overview/";
+    private static final String detailPath = "fxml/detail/";
+
+    private static final String playerOverview = overviewPath + "player.fxml";
+    private static final String playerDetail = detailPath + "player.fxml";
+    private static final String teamOverview = overviewPath + "team.fxml";
+    private static final String teamDetail = detailPath + "team.fxml";
+    private static final String gamesOverview = overviewPath + "games.fxml";
+    private static final String gamesDetail = detailPath + "games.fxml";
+    private static final String newsOverview = overviewPath + "news.fxml";
+    private static final String newsDetail = detailPath + "news.fxml";
+    private static final String chatOverview = overviewPath + "chat.fxml";
+    private static final String chatDetail = detailPath + "chat.fxml";
 
     private HashMap<NodeName, Node> fxmlMap;
 

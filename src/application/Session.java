@@ -2,16 +2,19 @@ package application;
 
 import application.model.Player;
 
+import java.util.UUID;
+
 public class Session {
 
     private static volatile Session instance;
     private static Object mutex = new Object();
 
-    public int id;
+    public UUID id;
     private Player player;
 
-    private Session(int playerId) {
-        player = new Player(playerId);
+    private Session(Player player) {
+        this.id = UUID.randomUUID();
+        this.player = player;
     }
 
     public static Session getInstance() throws Exception {
@@ -21,11 +24,11 @@ public class Session {
         return session;
     }
 
-    public static void create(int playerId) throws Exception {
+    public static void create(Player player) throws Exception {
         Session session = instance;
         if (session == null) {
             synchronized (mutex) {
-                instance = new Session(playerId);
+                instance = new Session(player);
             }
         } else {
             throw new Exception("A Session does already exist!");
@@ -43,7 +46,7 @@ public class Session {
 
     @Override
     public String toString() {
-        return "sid" + String.valueOf(id);
+        return player.getName() + "@" + String.valueOf(id);
     }
 
 }

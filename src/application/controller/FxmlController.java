@@ -1,5 +1,7 @@
 package application.controller;
 
+import application.MainApplication;
+import application.util.ViewNavigator;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
@@ -12,6 +14,10 @@ public abstract class FxmlController {
     }
 
     @FXML
-    public abstract void showDetail();
+    protected abstract void showDetail();
+
+    protected void showDetail(ViewNavigator.NodeName nodeName) {
+        MainApplication.instance.getMainController().switchToDetailNode(nodeName);
+    }
 
 }

@@ -1,9 +1,9 @@
 package application;
 
-import application.connection.Connection;
-import application.connection.db.SqliteConnection;
-import application.controller.MainController;
+import application.connection.db.DbConnector;
+import application.connection.db.SqliteConnector;
 import application.controller.LoginController;
+import application.controller.MainController;
 import application.util.SceneNavigator;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -14,28 +14,36 @@ import javafx.stage.Stage;
 public class MainApplication extends Application {
 
     public static final String APPL_NAME = "GroupUp!";
-    public static final String APPL_NAME_EXT = APPL_NAME + " - Esports Group Finder";
     public static final String APPL_VERSION = "v0.0.1";
+    public static final String APPL_NAME_EXT = APPL_NAME + " - Esports Group Finder";
+    public static final String APPL_NAME_FULL = APPL_NAME_EXT + " " + APPL_VERSION;
+
+    public static volatile MainApplication instance;
+    private DbConnector dbConnector;
 
     private Stage primaryStage;
-    private static SceneNavigator sceneNavigator;
+    private SceneNavigator sceneNavigator;
 
-    private static LoginController loginController;
-    private static MainController mainController;
+    private LoginController loginController;
+    private MainController mainController;
 
-    public static SceneNavigator getSceneNavigator() {
+    public DbConnector getDbConnector() {
+        return dbConnector;
+    }
+
+    public SceneNavigator getSceneNavigator() {
         return sceneNavigator;
     }
 
-    public static LoginController getLoginController() {
+    public LoginController getLoginController() {
         return loginController;
     }
 
-    public static MainController getMainController() {
+    public MainController getMainController() {
         return mainController;
     }
 
-    private void initScreens() throws Exception {
+    private void initScenes() throws Exception {
         FXMLLoader fxmlLoader;
         Scene scene;
         sceneNavigator = new SceneNavigator(primaryStage);
@@ -57,6 +65,15 @@ public class MainApplication extends Application {
     }
 
     @Override
+    public void init() throws Exception {
+        instance = this;
+
+        dbConnector = new SqliteConnector("db/sqlite/test.db");
+
+        dbConnector.open();
+    }
+
+    @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         primaryStage.setResizable(false);
@@ -65,20 +82,18 @@ public class MainApplication extends Application {
             mainController.close();
             event.consume();
         });
-        initScreens();
+        initScenes();
         primaryStage.setTitle(MainApplication.APPL_NAME);
         primaryStage.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        dbConnector.close();
+    }
+
     public static void main(String[] args) {
-        Connection connection = new SqliteConnection("db/test.db");
-        try {
-            connection.open();
-            launch(args);
-            connection.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        launch(args);
     }
 
 }

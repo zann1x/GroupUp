@@ -13,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 
-import javax.swing.text.View;
 import java.io.IOException;
 
 public class MainController extends FxmlController {
@@ -24,6 +23,7 @@ public class MainController extends FxmlController {
     private Pane overviewPane;
     @FXML
     private Pane detailPane;
+
     @FXML
     private ImageView iv_profile;
     @FXML
@@ -57,7 +57,7 @@ public class MainController extends FxmlController {
         Platform.exit();
     }
 
-    public void logout() {
+    private void logout() {
         overviewPane.getChildren().clear();
         detailPane.getChildren().clear();
         try {
@@ -70,81 +70,73 @@ public class MainController extends FxmlController {
     @FXML
     public void handleLogout() {
         logout();
-        MainApplication.getSceneNavigator().activateScene(SceneNavigator.SceneName.LOGIN);
+        MainApplication.instance.getSceneNavigator().activateScene(SceneNavigator.SceneName.LOGIN);
     }
 
     @FXML
     public void showAbout() {
+        String sessionName;
+        try {
+            assert (Session.getInstance() != null);
+            sessionName = Session.getInstance().toString();
+        } catch (Exception e) {
+            sessionName = "???";
+            e.printStackTrace();
+        }
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
         alert.setHeaderText(null);
-        String content = MainApplication.APPL_NAME_EXT + " " + MainApplication.APPL_VERSION + "\n" +
-                "Christian Goller, Lukas Zanner";
+        String content = MainApplication.APPL_NAME_FULL + "\n" +
+                "Christian Goller, Lukas Zanner\n\n" +
+                "Session: " + sessionName;
         alert.setContentText(content);
         alert.initOwner(stage);
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.showAndWait();
     }
 
-    public void switchToOverviewNode(ViewNavigator.NodeName nodeName) {
+    private void switchToNodeOnPane(ViewNavigator.NodeName nodeName, Pane pane) {
         Node node = viewNavigator.getNode(nodeName);
-        overviewPane.getChildren().clear();
-        overviewPane.getChildren().add(node);
+        pane.getChildren().clear();
+        pane.getChildren().add(node);
+    }
+
+    public void switchToOverviewNode(ViewNavigator.NodeName nodeName) {
+        switchToNodeOnPane(nodeName, overviewPane);
     }
 
     public void switchToDetailNode(ViewNavigator.NodeName nodeName) {
-        Node node = viewNavigator.getNode(nodeName);
-        detailPane.getChildren().clear();
-        detailPane.getChildren().add(node);
+        switchToNodeOnPane(nodeName, detailPane);
     }
 
     @FXML
     public void showPlayer() {
-        try {
-            switchToOverviewNode(ViewNavigator.NodeName.PLAYER_OVERVIEW);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        switchToOverviewNode(ViewNavigator.NodeName.PLAYER_OVERVIEW);
     }
 
     @FXML
     public void showTeam() {
-        try {
-            switchToOverviewNode(ViewNavigator.NodeName.TEAM_OVERVIEW);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        switchToOverviewNode(ViewNavigator.NodeName.TEAM_OVERVIEW);
     }
 
     @FXML
     public void showGames() {
-        try {
-            switchToOverviewNode(ViewNavigator.NodeName.GAMES_OVERVIEW);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        switchToOverviewNode(ViewNavigator.NodeName.GAMES_OVERVIEW);
     }
 
     @FXML
     public void showNews() {
-        try {
-            switchToOverviewNode(ViewNavigator.NodeName.NEWS_OVERVIEW);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        switchToOverviewNode(ViewNavigator.NodeName.NEWS_OVERVIEW);
     }
 
     @FXML
     public void showChat() {
-        try {
-            switchToOverviewNode(ViewNavigator.NodeName.CHAT_OVERVIEW);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        switchToOverviewNode(ViewNavigator.NodeName.CHAT_OVERVIEW);
     }
 
     @Override
-    public void showDetail() {
-        System.out.println("not here");
+    protected void showDetail() {
     }
+
 }

@@ -8,9 +8,17 @@ public abstract class Party {
     protected String name;
     protected List<Integer> playerIds;
 
-    abstract void create();
-    abstract void delete();
-    abstract void addPlayer(int playerId);
-    abstract void removePlayer(int playerId);
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public abstract void create();
+    public abstract void delete();
+    public abstract void addPlayer(int playerId);
+    public abstract void removePlayer(int playerId);
 
 }

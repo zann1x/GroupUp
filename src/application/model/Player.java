@@ -5,12 +5,20 @@ import java.util.List;
 public class Player {
 
     private int id;
-    private int name;
+    private String name;
     private List<Integer> teamIds;
 
-    public Player(int id) {
+    public Player(int id, String name) {
         this.id = id;
-        // TODO check if player exists
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

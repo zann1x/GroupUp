@@ -3,27 +3,27 @@ package application.model;
 public class Group extends Party {
 
     @Override
-    void create() {
+    public void create() {
 
     }
 
     @Override
-    void delete() {
+    public void delete() {
 
     }
 
     @Override
-    void addPlayer(int playerId) {
+    public void addPlayer(int playerId) {
 
     }
 
     @Override
-    void removePlayer(int playerId) {
+    public void removePlayer(int playerId) {
 
     }
 
     private void exitOnLogout() {
-        // TODO
+
     }
 
 }
