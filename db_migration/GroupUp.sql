@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 26. Apr 2018 um 16:07
+-- Erstellungszeit: 26. Apr 2018 um 23:50
 -- Server-Version: 10.1.31-MariaDB
 -- PHP-Version: 7.2.4
 
@@ -47,16 +47,17 @@ DROP TABLE IF EXISTS `player`;
 CREATE TABLE `player` (
   `id` int(11) NOT NULL,
   `name` char(255) NOT NULL,
-  `password` char(255) NOT NULL
+  `password` char(255) NOT NULL,
+  `sessionid` varchar(36) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `player`
 --
 
-INSERT INTO `player` (`id`, `name`, `password`) VALUES
-(1, 'lukas', 'test'),
-(2, 'chris', 'test');
+INSERT INTO `player` (`id`, `name`, `password`, `sessionid`) VALUES
+(1, 'lukas', 'test', NULL),
+(2, 'chris', 'test', NULL);
 
 -- --------------------------------------------------------
 
@@ -87,7 +88,8 @@ ALTER TABLE `games`
 --
 ALTER TABLE `player`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD UNIQUE KEY `name` (`name`),
+  ADD UNIQUE KEY `player_sessionid_uindex` (`sessionid`);
 
 --
 -- Indizes für die Tabelle `team`
