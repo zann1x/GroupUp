@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 26. Apr 2018 um 15:53
+-- Erstellungszeit: 26. Apr 2018 um 16:07
 -- Server-Version: 10.1.31-MariaDB
 -- PHP-Version: 7.2.4
 
@@ -19,8 +19,11 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Datenbank: `test`
+-- Datenbank: `groupup`
 --
+DROP DATABASE IF EXISTS `groupup`;
+CREATE DATABASE IF NOT EXISTS `groupup` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `groupup`;
 
 -- --------------------------------------------------------
 
@@ -28,6 +31,7 @@ SET time_zone = "+00:00";
 -- Tabellenstruktur für Tabelle `games`
 --
 
+DROP TABLE IF EXISTS `games`;
 CREATE TABLE `games` (
   `id` int(11) NOT NULL,
   `name` char(255) NOT NULL
@@ -39,6 +43,7 @@ CREATE TABLE `games` (
 -- Tabellenstruktur für Tabelle `player`
 --
 
+DROP TABLE IF EXISTS `player`;
 CREATE TABLE `player` (
   `id` int(11) NOT NULL,
   `name` char(255) NOT NULL,
@@ -59,6 +64,7 @@ INSERT INTO `player` (`id`, `name`, `password`) VALUES
 -- Tabellenstruktur für Tabelle `team`
 --
 
+DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `id` int(11) NOT NULL,
   `name` char(255) NOT NULL,
