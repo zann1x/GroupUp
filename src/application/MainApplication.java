@@ -2,6 +2,7 @@ package application;
 
 import application.connection.db.DbConnector;
 import application.connection.db.H2Connector;
+import application.connection.db.MySqlConnector;
 import application.controller.LoginController;
 import application.controller.MainController;
 import application.util.SceneNavigator;
@@ -69,7 +70,8 @@ public class MainApplication extends Application {
         instance = this;
 
         //dbConnector = new SqliteConnector("db/sqlite/test.db");
-        dbConnector = new H2Connector("db/h2/test");
+        //dbConnector = new H2Connector("db/h2/test");
+        dbConnector = new MySqlConnector("test");
 
         dbConnector.open();
     }
