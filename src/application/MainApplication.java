@@ -1,7 +1,6 @@
 package application;
 
 import application.connection.db.DbConnector;
-import application.connection.db.H2Connector;
 import application.connection.db.MySqlConnector;
 import application.controller.LoginController;
 import application.controller.MainController;
@@ -68,9 +67,6 @@ public class MainApplication extends Application {
     @Override
     public void init() throws Exception {
         instance = this;
-
-        //dbConnector = new SqliteConnector("db/sqlite/test.db");
-        //dbConnector = new H2Connector("db/h2/test");
         dbConnector = new MySqlConnector("test");
 
         dbConnector.open();
