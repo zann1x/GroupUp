@@ -9,10 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class LoginController extends FxmlController {
 
     @FXML
@@ -30,8 +26,8 @@ public class LoginController extends FxmlController {
         String password = txt_password.getText();
         txt_password.clear();
         try {
-            Player player;
-            if ((player = checkCredentials(txt_username.getText(), password)) != null) {
+            Player player = new Player();
+            if ((player.checkCredentials(txt_username.getText(), password))) {
                 Session.create(player);
                 MainApplication.instance.getSceneNavigator().activateScene(SceneNavigator.SceneName.MAIN);
             } else {
@@ -40,24 +36,6 @@ public class LoginController extends FxmlController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private Player checkCredentials(String username, String password) throws SQLException {
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement("SELECT id, name FROM player WHERE name = ? AND password = ?;");
-        statement.setString(1, username);
-        statement.setString(2, password);
-        ResultSet resultSet = statement.executeQuery();
-
-        // player names are unique, therefore i'm blindly assuming only one player was selected
-        Player player = null;
-        if (resultSet.first()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-
-            assert name.equals(username);
-            player = new Player(id, name);
-        }
-        return player;
     }
 
     @Override

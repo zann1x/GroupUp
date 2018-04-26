@@ -8,5 +8,4 @@ public class GamesController extends FxmlController {
     protected void showDetail() {
         super.showDetail(ViewNavigator.NodeName.GAMES_DETAIL);
     }
-
 }
