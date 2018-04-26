@@ -12,6 +12,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainApplication extends Application {
+	
+	private final String DB_Name = "GroupUp";
 
     public static final String APPL_NAME = "GroupUp!";
     public static final String APPL_VERSION = "v0.0.1";
@@ -67,7 +69,7 @@ public class MainApplication extends Application {
     @Override
     public void init() throws Exception {
         instance = this;
-        dbConnector = new MySqlConnector("test");
+        dbConnector = new MySqlConnector(DB_Name);
 
         dbConnector.open();
     }
