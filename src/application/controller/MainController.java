@@ -58,31 +58,25 @@ public class MainController extends FxmlController {
     }
 
     private void logout() {
-        overviewPane.getChildren().clear();
-        detailPane.getChildren().clear();
-        try {
-            Session.delete();
-        } catch (Exception e) {
-            e.printStackTrace();
+        Session session;
+        if ((session = Session.getInstance()) != null) {
+            overviewPane.getChildren().clear();
+            detailPane.getChildren().clear();
+            session.delete();
         }
     }
 
     @FXML
-    public void handleLogout() {
+    private void handleLogout() {
         logout();
         MainApplication.instance.getSceneNavigator().activateScene(SceneNavigator.SceneName.LOGIN);
     }
 
     @FXML
-    public void showAbout() {
+    private void showAbout() {
         String sessionName;
-        try {
-            assert (Session.getInstance() != null);
-            sessionName = Session.getInstance().toString();
-        } catch (Exception e) {
-            sessionName = "???";
-            e.printStackTrace();
-        }
+        assert (Session.getInstance() != null);
+        sessionName = Session.getInstance().toString();
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");

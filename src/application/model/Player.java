@@ -1,11 +1,11 @@
 package application.model;
 
+import application.MainApplication;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
-import application.MainApplication;
 
 public class Player {
 
@@ -14,9 +14,9 @@ public class Player {
     private List<Integer> teamIds;
 
     public Player() {
-    	
+
     }
-    
+
     public Player(int id, String name) {
         this.id = id;
         this.name = name;
@@ -29,7 +29,7 @@ public class Player {
     public String getName() {
         return name;
     }
-    
+
     public boolean checkCredentials(String username, String password) throws SQLException {
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement("SELECT id, name FROM player WHERE name = ? AND password = ?;");
         statement.setString(1, username);
@@ -45,9 +45,17 @@ public class Player {
             this.id = id;
             this.name = name;
         } else {
-        	return false;
+            return false;
         }
         
         return true;
     }
+
+    public void setSessionId(String sessionId) throws SQLException {
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement("UPDATE player SET sessionid = ? WHERE id = ?");
+        preparedStatement.setString(1, sessionId);
+        preparedStatement.setInt(2, id);
+        preparedStatement.executeUpdate();
+    }
+
 }

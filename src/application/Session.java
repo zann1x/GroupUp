@@ -2,12 +2,13 @@ package application;
 
 import application.model.Player;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class Session {
 
     private static volatile Session instance;
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
 
     public UUID id;
     private Player player;
@@ -17,11 +18,8 @@ public class Session {
         this.player = player;
     }
 
-    public static Session getInstance() throws Exception {
-        Session session = instance;
-        if (session == null)
-            throw new Exception("No session created yet!");
-        return session;
+    public static Session getInstance() {
+        return instance;
     }
 
     public static void create(Player player) throws Exception {
@@ -29,17 +27,23 @@ public class Session {
         if (session == null) {
             synchronized (mutex) {
                 instance = new Session(player);
+                player.setSessionId(instance.id.toString());
             }
         } else {
             throw new Exception("A Session does already exist!");
         }
     }
 
-    public static void delete() {
+    public void delete() {
         Session session = instance;
         if (session != null) {
             synchronized (mutex) {
                 instance = null;
+                try {
+                    player.setSessionId(null);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
