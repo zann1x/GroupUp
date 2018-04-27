@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.ImageView?>
@@ -9,11 +10,11 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
+<BorderPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
     <left>
-        <VBox id="left" BorderPane.alignment="CENTER">
+        <VBox id="left" prefWidth="70.0" BorderPane.alignment="CENTER">
             <children>
-                <AnchorPane prefHeight="720.0">
+                <AnchorPane prefHeight="680.0">
                     <children>
                   <ImageView fx:id="iv_profile" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#showPlayer" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                   <ImageView fx:id="iv_team" fitHeight="50.0" fitWidth="50.0" layoutY="70.0" onMouseClicked="#showTeam" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
@@ -30,7 +31,7 @@
             </children></VBox>
     </left>
    <bottom>
-      <AnchorPane id="bottom" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <AnchorPane id="bottom" prefHeight="40.0" BorderPane.alignment="CENTER">
          <children>
                   <ImageView fx:id="iv_logout" fitHeight="20.0" fitWidth="20.0" layoutX="1236.0" layoutY="10.0" onMouseClicked="#handleLogout" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
             <Label layoutX="1229.0" layoutY="12.0" onMouseClicked="#showAbout" prefHeight="17.0" prefWidth="37.0" text="About" underline="true" AnchorPane.rightAnchor="10.0" />
@@ -40,9 +41,15 @@
    <center>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="overviewPane" maxWidth="-Infinity" prefWidth="250.0" />
+            <Pane fx:id="overviewPane" prefWidth="227.0">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin></Pane>
             <Separator orientation="VERTICAL" />
-            <Pane fx:id="detailPane" maxWidth="-Infinity" prefWidth="960.0" />
+            <Pane fx:id="detailPane" maxWidth="-Infinity" prefWidth="937.0">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin></Pane>
          </children>
       </HBox>
    </center>

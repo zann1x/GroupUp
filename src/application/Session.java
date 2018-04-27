@@ -22,6 +22,10 @@ public class Session {
         return instance;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     public static void create(Player player) throws Exception {
         Session session = instance;
         if (session == null) {

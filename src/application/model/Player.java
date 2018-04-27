@@ -5,6 +5,7 @@ import application.MainApplication;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -14,10 +15,11 @@ public class Player {
     private List<Integer> teamIds;
 
     public Player() {
-
+        teamIds = new ArrayList<>();
     }
 
     public Player(int id, String name) {
+        this();
         this.id = id;
         this.name = name;
     }
@@ -30,8 +32,9 @@ public class Player {
         return name;
     }
 
-    public boolean checkCredentials(String username, String password) throws SQLException {
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement("SELECT id, name FROM player WHERE name = ? AND password = ?;");
+    public boolean checkCredentials(String username, String password) throws Exception {
+        String sql = "SELECT id, name FROM player WHERE name = ? AND password = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setString(1, username);
         statement.setString(2, password);
         ResultSet resultSet = statement.executeQuery();
@@ -47,15 +50,25 @@ public class Player {
         } else {
             return false;
         }
-        
+
         return true;
     }
 
     public void setSessionId(String sessionId) throws SQLException {
-        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement("UPDATE player SET sessionid = ? WHERE id = ?");
+        String sql = "UPDATE player SET sessionid = ? WHERE id = ?";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         preparedStatement.setString(1, sessionId);
         preparedStatement.setInt(2, id);
         preparedStatement.executeUpdate();
+    }
+
+    public void addTeamId(int id) {
+        teamIds.add(id);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

@@ -2,24 +2,12 @@ package application.model;
 
 public class Team extends Party {
 
-    @Override
-    public void create() {
-
+    public Team() {
+        super();
     }
 
-    @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public void addPlayer(int playerId) {
-
-    }
-
-    @Override
-    public void removePlayer(int playerId) {
-
+    public Team(int id, String name) {
+        super(id, name);
     }
 
 }
