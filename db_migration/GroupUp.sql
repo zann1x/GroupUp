@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 26. Apr 2018 um 23:50
+-- Erstellungszeit: 27. Apr 2018 um 16:07
 -- Server-Version: 10.1.31-MariaDB
 -- PHP-Version: 7.2.4
 
@@ -72,6 +72,18 @@ CREATE TABLE `team` (
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `team_player_mapping`
+--
+
+DROP TABLE IF EXISTS `team_player_mapping`;
+CREATE TABLE `team_player_mapping` (
+  `teamId` int(11) NOT NULL,
+  `playerId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Indizes der exportierten Tabellen
 --
@@ -97,6 +109,12 @@ ALTER TABLE `player`
 ALTER TABLE `team`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indizes für die Tabelle `team_player_mapping`
+--
+ALTER TABLE `team_player_mapping`
+  ADD PRIMARY KEY (`teamId`,`playerId`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
