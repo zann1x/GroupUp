@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -18,6 +19,11 @@ import java.io.IOException;
 public class MainController extends FxmlController {
 
     private ViewNavigator viewNavigator;
+
+    @FXML
+    private Label lbl_overviewName;
+    @FXML
+    private Label lbl_detailName;
 
     @FXML
     private Pane overviewPane;
@@ -47,6 +53,8 @@ public class MainController extends FxmlController {
             iv_news.setImage(new Image("file:res/img/news.png"));
             iv_chat.setImage(new Image("file:res/img/chat.png"));
             iv_logout.setImage(new Image("file:res/img/logout_icon.png"));
+
+            showPlayer();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,10 +68,10 @@ public class MainController extends FxmlController {
     private void logout() {
         Session session;
         if ((session = Session.getInstance()) != null) {
-            overviewPane.getChildren().clear();
-            detailPane.getChildren().clear();
             session.delete();
         }
+        overviewPane.getChildren().clear();
+        detailPane.getChildren().clear();
     }
 
     @FXML
@@ -96,37 +104,39 @@ public class MainController extends FxmlController {
         pane.getChildren().add(node);
     }
 
-    public void switchToOverviewNode(ViewNavigator.NodeName nodeName) {
+    public void switchToOverviewNode(ViewNavigator.NodeName nodeName, String headerText) {
+        lbl_overviewName.setText(headerText.toUpperCase());
         switchToNodeOnPane(nodeName, overviewPane);
     }
 
-    public void switchToDetailNode(ViewNavigator.NodeName nodeName) {
+    public void switchToDetailNode(ViewNavigator.NodeName nodeName, String headerText) {
+        lbl_detailName.setText(headerText.toUpperCase());
         switchToNodeOnPane(nodeName, detailPane);
     }
 
     @FXML
     public void showPlayer() {
-        switchToOverviewNode(ViewNavigator.NodeName.PLAYER_OVERVIEW);
+        switchToOverviewNode(ViewNavigator.NodeName.PLAYER_OVERVIEW, "PLAYER");
     }
 
     @FXML
     public void showTeam() {
-        switchToOverviewNode(ViewNavigator.NodeName.TEAM_OVERVIEW);
+        switchToOverviewNode(ViewNavigator.NodeName.TEAM_OVERVIEW, "TEAM");
     }
 
     @FXML
     public void showGames() {
-        switchToOverviewNode(ViewNavigator.NodeName.GAMES_OVERVIEW);
+        switchToOverviewNode(ViewNavigator.NodeName.GAMES_OVERVIEW, "GAMES");
     }
 
     @FXML
     public void showNews() {
-        switchToOverviewNode(ViewNavigator.NodeName.NEWS_OVERVIEW);
+        switchToOverviewNode(ViewNavigator.NodeName.NEWS_OVERVIEW, "NEWS");
     }
 
     @FXML
     public void showChat() {
-        switchToOverviewNode(ViewNavigator.NodeName.CHAT_OVERVIEW);
+        switchToOverviewNode(ViewNavigator.NodeName.CHAT_OVERVIEW, "CHAT");
     }
 
     @Override

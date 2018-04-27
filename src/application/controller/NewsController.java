@@ -6,7 +6,7 @@ public class NewsController extends FxmlController {
 
     @Override
     protected void showDetail() {
-        super.showDetail(ViewNavigator.NodeName.NEWS_DETAIL);
+        super.showDetail(ViewNavigator.NodeName.NEWS_DETAIL, "News detail");
     }
 
 }

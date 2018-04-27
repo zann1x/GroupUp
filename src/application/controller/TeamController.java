@@ -29,12 +29,12 @@ public class TeamController extends FxmlController {
 
     @Override
     protected void showDetail() {
-        super.showDetail(ViewNavigator.NodeName.TEAM_DETAIL);
+        super.showDetail(ViewNavigator.NodeName.TEAM_DETAIL, "Team detail");
     }
 
     @FXML
     private void createNewTeam() {
-        showDetail(ViewNavigator.NodeName.TEAM_CREATION);
+        super.showDetail(ViewNavigator.NodeName.TEAM_CREATION, "Team creation");
     }
 
     @FXML

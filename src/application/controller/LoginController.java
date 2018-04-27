@@ -39,7 +39,8 @@ public class LoginController extends FxmlController {
     }
 
     @Override
-    protected void showDetail() { }
+    protected void showDetail() {
+    }
 
     @FXML
     private void handleLoginOnEnterKey(KeyEvent keyEvent) {

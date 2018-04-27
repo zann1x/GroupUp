@@ -6,7 +6,7 @@ public class ChatController extends FxmlController {
 
     @Override
     protected void showDetail() {
-        super.showDetail(ViewNavigator.NodeName.CHAT_DETAIL);
+        super.showDetail(ViewNavigator.NodeName.CHAT_DETAIL, "Chat detail");
     }
 
 }

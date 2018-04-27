@@ -6,7 +6,7 @@ public class PlayerController extends FxmlController {
 
     @Override
     protected void showDetail() {
-        super.showDetail(ViewNavigator.NodeName.PLAYER_DETAIL);
+        super.showDetail(ViewNavigator.NodeName.PLAYER_DETAIL, "Player detail");
     }
 
 }
