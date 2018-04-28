@@ -5,3 +5,7 @@
 #left {
     -fx-background-color: #dedede;
 }
+
+#header-text {
+    -fx-font-weight: bold;
+}

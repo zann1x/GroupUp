@@ -14,6 +14,9 @@ public abstract class FxmlController {
     }
 
     @FXML
+    public abstract void initialize();
+
+    @FXML
     protected abstract void showDetail();
 
     protected void showDetail(ViewNavigator.NodeName nodeName, String headerText) {

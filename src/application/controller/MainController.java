@@ -44,7 +44,7 @@ public class MainController extends FxmlController {
     private ImageView iv_logout;
 
     @FXML
-    private void initialize() {
+    public void initialize() {
         try {
             viewNavigator = new ViewNavigator();
             iv_profile.setImage(new Image("file:res/img/profile.png"));
@@ -70,6 +70,8 @@ public class MainController extends FxmlController {
         if ((session = Session.getInstance()) != null) {
             session.delete();
         }
+        lbl_overviewName.setText("");
+        lbl_detailName.setText("");
         overviewPane.getChildren().clear();
         detailPane.getChildren().clear();
     }
@@ -77,7 +79,7 @@ public class MainController extends FxmlController {
     @FXML
     private void handleLogout() {
         logout();
-        MainApplication.instance.getSceneNavigator().activateScene(SceneNavigator.SceneName.LOGIN);
+        MainApplication.instance.getSceneNavigator().activateScene(SceneNavigator.SceneName.LOGIN, MainApplication.instance.getLoginController());
     }
 
     @FXML

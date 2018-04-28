@@ -63,7 +63,7 @@ public class MainApplication extends Application {
         mainController = fxmlLoader.getController();
         mainController.setStage(primaryStage);
 
-        sceneNavigator.activateScene(SceneNavigator.SceneName.LOGIN);
+        sceneNavigator.activateScene(SceneNavigator.SceneName.LOGIN, loginController);
     }
 
     @Override

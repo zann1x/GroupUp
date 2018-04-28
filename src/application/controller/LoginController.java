@@ -29,13 +29,17 @@ public class LoginController extends FxmlController {
             if (player.checkCredentials(txt_username.getText(), password)) {
                 lbl_loginSuccess.setText("");
                 Session.create(player);
-                MainApplication.instance.getSceneNavigator().activateScene(SceneNavigator.SceneName.MAIN);
+                MainApplication.instance.getSceneNavigator().activateScene(SceneNavigator.SceneName.MAIN, MainApplication.instance.getMainController());
             } else {
                 lbl_loginSuccess.setText("wrong login details!");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void initialize() {
     }
 
     @Override

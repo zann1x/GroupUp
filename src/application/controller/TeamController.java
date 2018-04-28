@@ -23,7 +23,7 @@ public class TeamController extends FxmlController {
     private ObservableList<Player> playerObservableList;
 
     @FXML
-    private void initialize() {
+    public void initialize() {
         playerObservableList = FXCollections.observableArrayList();
     }
 

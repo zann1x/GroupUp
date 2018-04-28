@@ -9,13 +9,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
+<BorderPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
     <left>
         <VBox id="left" prefWidth="70.0" BorderPane.alignment="CENTER">
             <children>
-                <AnchorPane prefHeight="680.0">
+                <AnchorPane prefHeight="680.0" prefWidth="70.0">
                     <children>
                   <ImageView fx:id="iv_profile" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#showPlayer" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                   <ImageView fx:id="iv_team" fitHeight="50.0" fitWidth="50.0" layoutY="70.0" onMouseClicked="#showTeam" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
@@ -44,36 +43,25 @@
          <children>
             <VBox prefWidth="217.0" spacing="10.0">
                <children>
-                  <Label fx:id="lbl_overviewName" prefWidth="200.0">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font></Label>
-                  <Separator prefWidth="200.0">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </Separator>
-                  <Pane fx:id="overviewPane" maxWidth="-Infinity" />
+                  <Label id="header-text" fx:id="lbl_overviewName" prefWidth="200.0" />
+                  <Separator prefWidth="200.0" />
+                  <Pane fx:id="overviewPane" />
                </children>
                <HBox.margin>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </HBox.margin>
             </VBox>
             <Separator orientation="VERTICAL" />
-            <VBox prefWidth="937.0" spacing="10.0">
-               <children>
-                  <Label fx:id="lbl_detailName" prefWidth="300.0">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Separator prefWidth="200.0" />
-                  <Pane fx:id="detailPane" maxWidth="-Infinity" />
-               </children>
-               <HBox.margin>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </HBox.margin>
-            </VBox>
+             <VBox prefWidth="927.0" spacing="10.0">
+                 <children>
+                     <Label id="header-text" fx:id="lbl_detailName" prefWidth="200.0" />
+                     <Separator prefWidth="200.0" />
+                     <Pane fx:id="detailPane" />
+                 </children>
+                 <HBox.margin>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                 </HBox.margin>
+             </VBox>
          </children>
       </HBox>
    </center>
