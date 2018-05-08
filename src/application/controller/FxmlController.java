@@ -15,6 +15,7 @@ public abstract class FxmlController {
 
     @FXML
     public abstract void initialize();
+    public abstract  void initForShow();
 
     @FXML
     protected abstract void showDetail();

@@ -29,7 +29,7 @@ public class SceneNavigator {
         Scene scene = sceneMap.get(name);
         stage.setScene(scene);
         stage.centerOnScreen();
-        controller.initialize();
+        controller.initForShow();
     }
 
 }

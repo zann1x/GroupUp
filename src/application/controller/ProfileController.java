@@ -2,7 +2,7 @@ package application.controller;
 
 import application.util.ViewNavigator;
 
-public class NewsController extends FxmlController {
+public class ProfileController extends FxmlController {
 
     @Override
     public void initialize() {
@@ -14,7 +14,7 @@ public class NewsController extends FxmlController {
 
     @Override
     protected void showDetail() {
-        super.showDetail(ViewNavigator.NodeName.NEWS_DETAIL, "News detail");
+        super.showDetail(ViewNavigator.NodeName.PROFILE_DETAIL, "Profile detail");
     }
 
 }

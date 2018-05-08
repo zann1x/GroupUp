@@ -43,6 +43,10 @@ public class LoginController extends FxmlController {
     }
 
     @Override
+    public void initForShow() {
+    }
+
+    @Override
     protected void showDetail() {
     }
 

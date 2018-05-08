@@ -14,8 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 
-import java.io.IOException;
-
 public class MainController extends FxmlController {
 
     private ViewNavigator viewNavigator;
@@ -53,11 +51,14 @@ public class MainController extends FxmlController {
             iv_news.setImage(new Image("file:res/img/news.png"));
             iv_chat.setImage(new Image("file:res/img/chat.png"));
             iv_logout.setImage(new Image("file:res/img/logout_icon.png"));
-
-            showPlayer();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void initForShow() {
+        showPlayer();
     }
 
     public void close() {
@@ -118,7 +119,7 @@ public class MainController extends FxmlController {
 
     @FXML
     public void showPlayer() {
-        switchToOverviewNode(ViewNavigator.NodeName.PLAYER_OVERVIEW, "PLAYER");
+        switchToOverviewNode(ViewNavigator.NodeName.PROFILE_OVERVIEW, "PROFILE");
     }
 
     @FXML

@@ -9,6 +9,10 @@ public class GamesController extends FxmlController {
     }
 
     @Override
+    public void initForShow() {
+    }
+
+    @Override
     protected void showDetail() {
         super.showDetail(ViewNavigator.NodeName.GAMES_DETAIL, "Game detail");
     }

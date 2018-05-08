@@ -4,14 +4,14 @@ import application.MainApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ViewNavigator {
 
     public enum NodeName {
-        PLAYER_OVERVIEW,
-        PLAYER_DETAIL,
+        PROFILE_OVERVIEW,
+        PROFILE_DETAIL,
 
         TEAM_OVERVIEW,
         TEAM_DETAIL,
@@ -30,8 +30,8 @@ public class ViewNavigator {
     private static final String overviewPath = "fxml/overview/";
     private static final String detailPath = "fxml/detail/";
 
-    private static final String playerOverview = overviewPath + "player.fxml";
-    private static final String playerDetail = detailPath + "player.fxml";
+    private static final String profileOverview = overviewPath + "profile.fxml";
+    private static final String profileDetail = detailPath + "profile.fxml";
 
     private static final String teamOverview = overviewPath + "team.fxml";
     private static final String teamDetail = detailPath + "team/team.fxml";
@@ -46,30 +46,76 @@ public class ViewNavigator {
     private static final String chatOverview = overviewPath + "chat.fxml";
     private static final String chatDetail = detailPath + "chat.fxml";
 
-    private HashMap<NodeName, Node> fxmlMap;
+    private Map<NodeName, ViewHolder> fxmlMap;
 
-    public ViewNavigator() throws IOException {
+    public ViewNavigator() throws Exception {
         fxmlMap = new HashMap<>();
 
-        fxmlMap.put(NodeName.PLAYER_OVERVIEW, FXMLLoader.load(MainApplication.class.getResource(playerOverview)));
-        fxmlMap.put(NodeName.PLAYER_DETAIL, FXMLLoader.load(MainApplication.class.getResource(playerDetail)));
+        addNode(NodeName.PROFILE_OVERVIEW);
+        addNode(NodeName.PROFILE_DETAIL);
 
-        fxmlMap.put(NodeName.TEAM_OVERVIEW, FXMLLoader.load(MainApplication.class.getResource(teamOverview)));
-        fxmlMap.put(NodeName.TEAM_DETAIL, FXMLLoader.load(MainApplication.class.getResource(teamDetail)));
-        fxmlMap.put(NodeName.TEAM_CREATION, FXMLLoader.load(MainApplication.class.getResource(teamCreation)));
+        addNode(NodeName.TEAM_OVERVIEW);
+        addNode(NodeName.TEAM_DETAIL);
+        addNode(NodeName.TEAM_CREATION);
 
-        fxmlMap.put(NodeName.GAMES_OVERVIEW, FXMLLoader.load(MainApplication.class.getResource(gamesOverview)));
-        fxmlMap.put(NodeName.GAMES_DETAIL, FXMLLoader.load(MainApplication.class.getResource(gamesDetail)));
+        addNode(NodeName.GAMES_OVERVIEW);
+        addNode(NodeName.GAMES_DETAIL);
 
-        fxmlMap.put(NodeName.NEWS_OVERVIEW, FXMLLoader.load(MainApplication.class.getResource(newsOverview)));
-        fxmlMap.put(NodeName.NEWS_DETAIL, FXMLLoader.load(MainApplication.class.getResource(newsDetail)));
+        addNode(NodeName.NEWS_OVERVIEW);
+        addNode(NodeName.NEWS_DETAIL);
 
-        fxmlMap.put(NodeName.CHAT_OVERVIEW, FXMLLoader.load(MainApplication.class.getResource(chatOverview)));
-        fxmlMap.put(NodeName.CHAT_DETAIL, FXMLLoader.load(MainApplication.class.getResource(chatDetail)));
+        addNode(NodeName.CHAT_OVERVIEW);
+        addNode(NodeName.CHAT_DETAIL);
+    }
+
+
+    private void addNode(NodeName nodeName) throws Exception {
+        FXMLLoader loader;
+        switch (nodeName) {
+            case PROFILE_OVERVIEW:
+                loader = new FXMLLoader(MainApplication.class.getResource(profileOverview));
+                break;
+            case PROFILE_DETAIL:
+                loader = new FXMLLoader(MainApplication.class.getResource(profileDetail));
+                break;
+            case TEAM_OVERVIEW:
+                loader = new FXMLLoader(MainApplication.class.getResource(teamOverview));
+                break;
+            case TEAM_DETAIL:
+                loader = new FXMLLoader(MainApplication.class.getResource(teamDetail));
+                break;
+            case TEAM_CREATION:
+                loader = new FXMLLoader(MainApplication.class.getResource(teamCreation));
+                break;
+            case GAMES_OVERVIEW:
+                loader = new FXMLLoader(MainApplication.class.getResource(gamesOverview));
+                break;
+            case GAMES_DETAIL:
+                loader = new FXMLLoader(MainApplication.class.getResource(gamesDetail));
+                break;
+            case NEWS_OVERVIEW:
+                loader = new FXMLLoader(MainApplication.class.getResource(newsOverview));
+                break;
+            case NEWS_DETAIL:
+                loader = new FXMLLoader(MainApplication.class.getResource(newsDetail));
+                break;
+            case CHAT_OVERVIEW:
+                loader = new FXMLLoader(MainApplication.class.getResource(chatOverview));
+                break;
+            case CHAT_DETAIL:
+                loader = new FXMLLoader(MainApplication.class.getResource(chatDetail));
+                break;
+            default:
+                throw new Exception("node type not supported");
+        }
+
+        fxmlMap.put(nodeName, new ViewHolder(loader.load(), loader.getController()));
     }
 
     public Node getNode(NodeName node) {
-        return fxmlMap.get(node);
+        ViewHolder viewHolder = fxmlMap.get(node);
+        viewHolder.getController().initForShow();
+        return viewHolder.getNode();
     }
 
 }

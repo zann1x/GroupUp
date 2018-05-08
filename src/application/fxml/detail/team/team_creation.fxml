@@ -15,13 +15,29 @@
          <children>
             <Label fx:id="lbl_name" text="Name *" />
             <TextField fx:id="tf_name" prefWidth="400.0" />
-            <HBox prefWidth="200.0" spacing="5.0">
+            <HBox prefWidth="200.0" spacing="5.0" />
+            <HBox prefHeight="200.0" prefWidth="500.0">
                <children>
-                  <Button fx:id="btn_addPlayer" mnemonicParsing="false" onAction="#handleAddPlayer" text="Add player" />
-                  <Button fx:id="btn_removePlayer" mnemonicParsing="false" onAction="#handleRemovePlayer" text="Remove player" />
+                  <VBox>
+                     <children>
+                        <Label text="Available players" />
+                        <ListView fx:id="lv_availablePlayers" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefWidth="50.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#handleAddPlayer" text="&gt;" />
+                        <Button mnemonicParsing="false" onAction="#handleRemovePlayer" text="&lt;" />
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Players in team" />
+                        <ListView fx:id="lv_selectedPlayers" />
+                     </children>
+                  </VBox>
                </children>
             </HBox>
-            <ListView fx:id="lv_selectedPlayers" prefHeight="150.0" prefWidth="400.0" />
             <Label text="* mandatory fields" textFill="RED">
                <VBox.margin>
                   <Insets top="20.0" />

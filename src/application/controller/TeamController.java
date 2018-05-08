@@ -12,6 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 
 public class TeamController extends FxmlController {
 
@@ -19,12 +20,31 @@ public class TeamController extends FxmlController {
     private TextField tf_name;
     @FXML
     private ListView<Player> lv_selectedPlayers;
+    @FXML
+    private ListView<Player> lv_availablePlayers;
 
-    private ObservableList<Player> playerObservableList;
+    private ObservableList<Player> selectedPlayers;
+    private ObservableList<Player> availablePlayers;
 
     @FXML
     public void initialize() {
-        playerObservableList = FXCollections.observableArrayList();
+        selectedPlayers = FXCollections.observableArrayList();
+        availablePlayers = FXCollections.observableArrayList();
+    }
+
+    @Override
+    public void initForShow() {
+        if (lv_availablePlayers != null) {
+            try {
+                availablePlayers.addAll(Player.getAllPlayers());
+                FXCollections.sort(availablePlayers, Comparator.comparing(Player::toString));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            lv_selectedPlayers.setItems(selectedPlayers);
+            lv_availablePlayers.setItems(availablePlayers);
+        }
     }
 
     @Override
@@ -44,6 +64,10 @@ public class TeamController extends FxmlController {
             try {
                 team.create(tf_name.getText());
                 team.addPlayer(Session.getInstance().getPlayer());
+                for (int i = 0; i < selectedPlayers.size(); i++) {
+                    Player player = selectedPlayers.get(i);
+                    team.addPlayer(player);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -65,21 +89,22 @@ public class TeamController extends FxmlController {
         return isAllFilled;
     }
 
-    static int i = 0;
-
     @FXML
     private void handleAddPlayer() {
-        // TODO
-        i++;
-        Player player = new Player(42, "horst" + i);
-        playerObservableList.add(player);
-        lv_selectedPlayers.setItems(playerObservableList);
+        if (!lv_availablePlayers.getSelectionModel().getSelectedItem().equals("")) {
+            selectedPlayers.add(lv_availablePlayers.getSelectionModel().getSelectedItem());
+            availablePlayers.remove(lv_availablePlayers.getSelectionModel().getSelectedIndex());
+            FXCollections.sort(selectedPlayers, Comparator.comparing(Player::toString));
+        }
     }
 
     @FXML
     private void handleRemovePlayer() {
-        // TODO
-        Player player = lv_selectedPlayers.getSelectionModel().getSelectedItem();
-        playerObservableList.remove(player);
+        if (!lv_selectedPlayers.getSelectionModel().getSelectedItem().equals("")) {
+            availablePlayers.add(lv_selectedPlayers.getSelectionModel().getSelectedItem());
+            selectedPlayers.remove(lv_selectedPlayers.getSelectionModel().getSelectedIndex());
+            FXCollections.sort(availablePlayers, Comparator.comparing(Player::toString));
+        }
     }
+
 }

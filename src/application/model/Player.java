@@ -34,10 +34,10 @@ public class Player {
 
     public boolean checkCredentials(String username, String password) throws Exception {
         String sql = "SELECT id, name FROM player WHERE name = ? AND password = ?;";
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-        statement.setString(1, username);
-        statement.setString(2, password);
-        ResultSet resultSet = statement.executeQuery();
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, password);
+        ResultSet resultSet = preparedStatement.executeQuery();
 
         // player names are unique, therefore i'm blindly assuming only one player was selected
         if (resultSet.first()) {
@@ -60,6 +60,19 @@ public class Player {
         preparedStatement.setString(1, sessionId);
         preparedStatement.setInt(2, id);
         preparedStatement.executeUpdate();
+    }
+
+    public static List<Player> getAllPlayers() throws SQLException {
+        List<Player> players = new ArrayList<>();
+        String sql = "SELECT * FROM player;";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            players.add(new Player(id, name));
+        }
+        return players;
     }
 
     public void addTeamId(int id) {
