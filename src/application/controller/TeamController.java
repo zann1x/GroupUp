@@ -7,14 +7,20 @@ import application.util.ViewNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Paint;
 
 import java.sql.SQLException;
-import java.util.Comparator;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TeamController extends FxmlController {
+
+    @FXML
+    private BorderPane teamCreationRoot;
+    @FXML
+    private BorderPane ownTeamsRoot;
 
     @FXML
     private TextField tf_name;
@@ -22,6 +28,11 @@ public class TeamController extends FxmlController {
     private ListView<Player> lv_selectedPlayers;
     @FXML
     private ListView<Player> lv_availablePlayers;
+    @FXML
+    private Label lbl_createSuccess;
+
+    @FXML
+    private TreeView<Team> tv_teams;
 
     private ObservableList<Player> selectedPlayers;
     private ObservableList<Player> availablePlayers;
@@ -32,18 +43,70 @@ public class TeamController extends FxmlController {
         availablePlayers = FXCollections.observableArrayList();
     }
 
-    @Override
-    public void initForShow() {
-        if (lv_availablePlayers != null) {
+    private void initTeamCreationView() {
+        try {
+            List<Player> players = Player.getAllPlayers();
+            players = players.stream()
+                    .filter(p -> p.getId() != Session.getInstance().getPlayer().getId())
+                    .collect(Collectors.toList());
+            availablePlayers.addAll(players);
+            FXCollections.sort(availablePlayers, Comparator.comparing(Player::toString));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        lv_selectedPlayers.setItems(selectedPlayers);
+        lv_availablePlayers.setItems(availablePlayers);
+    }
+
+    private void initOwnTeamsView() {
+        List<Integer> teamIds = Session.getInstance().getPlayer().getTeamIds();
+        List<Team> teams = new ArrayList<>();
+        List<Player> playersInTeam;
+        Map<Integer, List<Player>> playerMap = new TreeMap<>();
+
+        for (int id : teamIds) {
+            playersInTeam = new ArrayList<>();
             try {
-                availablePlayers.addAll(Player.getAllPlayers());
-                FXCollections.sort(availablePlayers, Comparator.comparing(Player::toString));
+                teams.add(Team.getTeam(id));
+                playersInTeam.addAll(Team.getPlayers(id));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            playersInTeam.sort(Comparator.comparing(Player::toString));
+            playerMap.put(id, playersInTeam);
+        }
+        teams.sort(Comparator.comparing(Team::toString));
 
-            lv_selectedPlayers.setItems(selectedPlayers);
-            lv_availablePlayers.setItems(availablePlayers);
+        List<TreeItem> treeItemList = new ArrayList<>();
+        for (Team team : teams) {
+            playersInTeam = playerMap.get(team.getId());
+            TreeItem<String> item = new TreeItem<>(team.getName());
+            for (Player player : playersInTeam) {
+                TreeItem<String> teamItem = new TreeItem<>(player.getName());
+                item.getChildren().add(teamItem);
+            }
+            treeItemList.add(item);
+        }
+        TreeItem rootItem = new TreeItem<>("Teams");
+        rootItem.getChildren().addAll(treeItemList);
+
+        tv_teams.setRoot(rootItem);
+        tv_teams.setShowRoot(false);
+    }
+
+    @Override
+    public void initForShow() {
+        if (teamCreationRoot != null) {
+            tf_name.setText("");
+            availablePlayers.clear();
+            selectedPlayers.clear();
+            lbl_createSuccess.setText("");
+
+            initTeamCreationView();
+        }
+
+        if (ownTeamsRoot != null) {
+            initOwnTeamsView();
         }
     }
 
@@ -60,6 +123,7 @@ public class TeamController extends FxmlController {
     @FXML
     private void handleSubmit() {
         if (mandatoryFieldsFilled()) {
+            boolean createSuccess;
             Team team = new Team();
             try {
                 team.create(tf_name.getText());
@@ -68,8 +132,19 @@ public class TeamController extends FxmlController {
                     Player player = selectedPlayers.get(i);
                     team.addPlayer(player);
                 }
+                createSuccess = true;
             } catch (SQLException e) {
+                createSuccess = false;
                 e.printStackTrace();
+            }
+
+            initForShow();
+            if (createSuccess) {
+                lbl_createSuccess.setTextFill(Paint.valueOf("GREEN"));
+                lbl_createSuccess.setText("Team created successfully!");
+            } else {
+                lbl_createSuccess.setTextFill(Paint.valueOf("RED"));
+                lbl_createSuccess.setText("Team creation unsuccessful!");
             }
         }
     }
@@ -107,4 +182,8 @@ public class TeamController extends FxmlController {
         }
     }
 
+    @FXML
+    private void showTeams() {
+        super.showDetail(ViewNavigator.NodeName.OWN_TEAMS, "Teams");
+    }
 }

@@ -22,6 +22,7 @@ public class Player {
         this();
         this.id = id;
         this.name = name;
+
     }
 
     public int getId() {
@@ -30,6 +31,26 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+
+    public List<Integer> getTeamIds() {
+        return teamIds;
+    }
+
+    public static List<Integer> getTeamIds(int id) throws SQLException {
+        String sql = "SELECT * FROM team_player_mapping WHERE playerId = ?;";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        List<Integer> teamIds = new ArrayList<>();
+        if (resultSet.first()) {
+            do {
+                int teamId = resultSet.getInt("teamId");
+                teamIds.add(teamId);
+            } while (resultSet.next());
+        }
+        return teamIds;
     }
 
     public boolean checkCredentials(String username, String password) throws Exception {
@@ -47,6 +68,8 @@ public class Player {
             assert name.equals(username);
             this.id = id;
             this.name = name;
+
+            teamIds = Player.getTeamIds(id);
         } else {
             return false;
         }
@@ -62,11 +85,26 @@ public class Player {
         preparedStatement.executeUpdate();
     }
 
+    public static Player getPlayer(int id) throws SQLException {
+        String sql = "SELECT id, name FROM player WHERE id = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        ResultSet resultSet = statement.executeQuery();
+
+        Player player = null;
+        if (resultSet.first()) {
+            String name = resultSet.getString("name");
+            player = new Player(id, name);
+        }
+        return player;
+    }
+
     public static List<Player> getAllPlayers() throws SQLException {
-        List<Player> players = new ArrayList<>();
         String sql = "SELECT * FROM player;";
         PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
+
+        List<Player> players = new ArrayList<>();
         while (resultSet.next()) {
             int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
