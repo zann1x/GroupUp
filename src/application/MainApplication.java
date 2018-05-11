@@ -29,6 +29,10 @@ public class MainApplication extends Application {
     private LoginController loginController;
     private MainController mainController;
 
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     public DbConnector getDbConnector() {
         return dbConnector;
     }

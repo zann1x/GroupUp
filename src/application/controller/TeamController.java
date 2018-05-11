@@ -1,13 +1,16 @@
 package application.controller;
 
 import application.Session;
+import application.model.Party;
 import application.model.Player;
 import application.model.Team;
 import application.util.ViewNavigator;
+import application.view.AddPlayerPopup;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
 
@@ -32,7 +35,7 @@ public class TeamController extends FxmlController {
     private Label lbl_createSuccess;
 
     @FXML
-    private TreeView<Team> tv_teams;
+    private TreeView<String> tv_teams;
 
     private ObservableList<Player> selectedPlayers;
     private ObservableList<Player> availablePlayers;
@@ -60,36 +63,38 @@ public class TeamController extends FxmlController {
 
     private void initOwnTeamsView() {
         List<Integer> teamIds = Session.getInstance().getPlayer().getTeamIds();
-        List<Team> teams = new ArrayList<>();
+        List<Team> ownTeams = new ArrayList<>();
         List<Player> playersInTeam;
         Map<Integer, List<Player>> playerMap = new TreeMap<>();
 
+        // collect own teams and all players in them
         for (int id : teamIds) {
+            // initialize at each iteration, so every team gets its own list of players
             playersInTeam = new ArrayList<>();
             try {
-                teams.add(Team.getTeam(id));
-                playersInTeam.addAll(Team.getPlayers(id));
+                ownTeams.add(Team.getTeam(id));
+                playersInTeam = Party.getPlayers(id);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             playersInTeam.sort(Comparator.comparing(Player::toString));
             playerMap.put(id, playersInTeam);
         }
-        teams.sort(Comparator.comparing(Team::toString));
+        ownTeams.sort(Comparator.comparing(Team::toString));
 
-        List<TreeItem> treeItemList = new ArrayList<>();
-        for (Team team : teams) {
+        // populate tree view with all collected teams
+        TreeItem<String> rootItem = new TreeItem<>("Teams");
+        for (Team team : ownTeams) {
             playersInTeam = playerMap.get(team.getId());
-            TreeItem<String> item = new TreeItem<>(team.getName());
+            TreeItem<String> teamItem = new TreeItem<>(team.getName());
             for (Player player : playersInTeam) {
-                TreeItem<String> teamItem = new TreeItem<>(player.getName());
-                item.getChildren().add(teamItem);
+                TreeItem<String> playerItem = new TreeItem<>(player.getName());
+                teamItem.getChildren().add(playerItem);
             }
-            treeItemList.add(item);
+            rootItem.getChildren().add(teamItem);
         }
-        TreeItem rootItem = new TreeItem<>("Teams");
-        rootItem.getChildren().addAll(treeItemList);
 
+        tv_teams.setCellFactory(param -> new CustomTreeCell());
         tv_teams.setRoot(rootItem);
         tv_teams.setShowRoot(false);
     }
@@ -128,8 +133,7 @@ public class TeamController extends FxmlController {
             try {
                 team.create(tf_name.getText());
                 team.addPlayer(Session.getInstance().getPlayer());
-                for (int i = 0; i < selectedPlayers.size(); i++) {
-                    Player player = selectedPlayers.get(i);
+                for (Player player : selectedPlayers) {
                     team.addPlayer(player);
                 }
                 createSuccess = true;
@@ -186,4 +190,47 @@ public class TeamController extends FxmlController {
     private void showTeams() {
         super.showDetail(ViewNavigator.NodeName.OWN_TEAMS, "Teams");
     }
+
+    //////////////////////
+    // CUSTOM TREE CELL //
+    //////////////////////
+
+    private class CustomTreeCell extends TextFieldTreeCell<String> {
+
+        private ContextMenu teamContextMenu;
+        private ContextMenu playerContextMenu;
+
+        public CustomTreeCell() {
+            MenuItem rootItem = new MenuItem("Add player");
+            rootItem.setOnAction(e -> {
+                try {
+                    Team team = Team.getTeam(getTreeItem().getValue());
+                    new AddPlayerPopup(team).show();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            teamContextMenu = new ContextMenu(rootItem);
+
+            MenuItem leafItem = new MenuItem("Remove player");
+            leafItem.setOnAction(e -> {
+                System.out.println("remove");
+            });
+            playerContextMenu = new ContextMenu(leafItem);
+        }
+
+        @Override
+        public void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (!empty) {
+                if (!getTreeItem().isLeaf())
+                    setContextMenu(teamContextMenu);
+                else
+                    setContextMenu(playerContextMenu);
+            }
+        }
+
+    }
+
 }

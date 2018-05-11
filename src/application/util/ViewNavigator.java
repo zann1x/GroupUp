@@ -17,6 +17,7 @@ public class ViewNavigator {
         TEAM_DETAIL,
         TEAM_CREATION,
         OWN_TEAMS,
+        ADD_PLAYER,
 
         GAMES_OVERVIEW,
         GAMES_DETAIL,

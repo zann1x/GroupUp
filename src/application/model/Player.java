@@ -37,22 +37,6 @@ public class Player {
         return teamIds;
     }
 
-    public static List<Integer> getTeamIds(int id) throws SQLException {
-        String sql = "SELECT * FROM team_player_mapping WHERE playerId = ?;";
-        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-        preparedStatement.setInt(1, id);
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        List<Integer> teamIds = new ArrayList<>();
-        if (resultSet.first()) {
-            do {
-                int teamId = resultSet.getInt("teamId");
-                teamIds.add(teamId);
-            } while (resultSet.next());
-        }
-        return teamIds;
-    }
-
     public boolean checkCredentials(String username, String password) throws Exception {
         String sql = "SELECT id, name FROM player WHERE name = ? AND password = ?;";
         PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
@@ -85,6 +69,31 @@ public class Player {
         preparedStatement.executeUpdate();
     }
 
+    public void addTeamId(int id) {
+        teamIds.add(id);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public static List<Integer> getTeamIds(int id) throws SQLException {
+        String sql = "SELECT * FROM team_player_mapping WHERE playerId = ?;";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        List<Integer> teamIds = new ArrayList<>();
+        if (resultSet.first()) {
+            do {
+                int teamId = resultSet.getInt("teamId");
+                teamIds.add(teamId);
+            } while (resultSet.next());
+        }
+        return teamIds;
+    }
+
     public static Player getPlayer(int id) throws SQLException {
         String sql = "SELECT id, name FROM player WHERE id = ?;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
@@ -111,15 +120,6 @@ public class Player {
             players.add(new Player(id, name));
         }
         return players;
-    }
-
-    public void addTeamId(int id) {
-        teamIds.add(id);
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 
 }
