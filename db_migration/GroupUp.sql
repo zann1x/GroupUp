@@ -1,27 +1,7 @@
--- phpMyAdmin SQL Dump
--- version 4.8.0
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Erstellungszeit: 27. Apr 2018 um 16:07
--- Server-Version: 10.1.31-MariaDB
--- PHP-Version: 7.2.4
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
 --
 -- Datenbank: `groupup`
 --
-DROP DATABASE IF EXISTS `groupup`;
+DROP DATABASE `groupup`;
 CREATE DATABASE IF NOT EXISTS `groupup` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `groupup`;
 
@@ -46,8 +26,11 @@ CREATE TABLE `games` (
 DROP TABLE IF EXISTS `player`;
 CREATE TABLE `player` (
   `id` int(11) NOT NULL,
-  `name` char(255) NOT NULL,
-  `password` char(255) NOT NULL,
+  `forename` varchar(255) DEFAULT NULL,
+  `surname` varchar(255) DEFAULT NULL,
+  `pseudonym` varchar(255) NOT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
   `sessionid` varchar(36) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -55,9 +38,9 @@ CREATE TABLE `player` (
 -- Daten für Tabelle `player`
 --
 
-INSERT INTO `player` (`id`, `name`, `password`, `sessionid`) VALUES
-(1, 'lukas', 'test', NULL),
-(2, 'chris', 'test', NULL);
+INSERT INTO `player` (`id`, `forename`, `surname`, `pseudonym`, `password`, `email`, `sessionid`) VALUES
+(1, 'Lukas', 'Zanner', 'Zann1x', 'test', 'zannix@test.de', NULL),
+(2, 'Christian', 'Goller', 'Flame4Fame', 'test', 'Flame4Fame@test.de', NULL);
 
 -- --------------------------------------------------------
 
@@ -100,8 +83,7 @@ ALTER TABLE `games`
 --
 ALTER TABLE `player`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
-  ADD UNIQUE KEY `player_sessionid_uindex` (`sessionid`);
+  ADD UNIQUE KEY `pseudonym` (`pseudonym`);
 
 --
 -- Indizes für die Tabelle `team`
@@ -125,19 +107,16 @@ ALTER TABLE `team_player_mapping`
 --
 ALTER TABLE `games`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT für Tabelle `player`
 --
 ALTER TABLE `player`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
 --
 -- AUTO_INCREMENT für Tabelle `team`
 --
 ALTER TABLE `team`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-COMMIT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
