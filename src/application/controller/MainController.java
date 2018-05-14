@@ -2,8 +2,8 @@ package application.controller;
 
 import application.MainApplication;
 import application.Session;
-import application.util.SceneNavigator;
-import application.util.ViewNavigator;
+import application.util.navigation.SceneNavigator;
+import application.util.navigation.ViewNavigator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

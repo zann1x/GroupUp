@@ -5,12 +5,18 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane focusTraversable="true" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.LoginController">
+<AnchorPane focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.LoginController">
    <children>
+      <Label layoutX="266.0" layoutY="40.0" text="Login">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
       <TextField fx:id="txt_username" layoutX="226.0" layoutY="137.0" onKeyReleased="#handleLoginOnEnterKey" promptText="username" />
       <PasswordField fx:id="txt_password" layoutX="226.0" layoutY="175.0" onKeyReleased="#handleLoginOnEnterKey" promptText="password" />
-      <Button fx:id="btn_login" layoutX="272.0" layoutY="235.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="25.0" prefWidth="56.0" text="login" />
-      <Label fx:id="lbl_loginSuccess" alignment="CENTER" layoutX="219.0" layoutY="286.0" prefHeight="17.0" prefWidth="164.0" textAlignment="CENTER" textFill="RED" />
+      <Button fx:id="btn_login" layoutX="272.0" layoutY="235.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="25.0" prefWidth="56.0" text="accept" />
+      <Label fx:id="lbl_loginSuccess" alignment="CENTER" layoutX="220.0" layoutY="285.0" prefHeight="20.0" prefWidth="165.0" textAlignment="CENTER" textFill="RED" />
    </children>
 </AnchorPane>

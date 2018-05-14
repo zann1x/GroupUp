@@ -1,4 +1,4 @@
-package application.util;
+package application.util.navigation;
 
 import application.controller.FxmlController;
 import javafx.scene.Node;

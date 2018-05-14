@@ -1,7 +1,7 @@
 package application.controller;
 
 import application.MainApplication;
-import application.util.ViewNavigator;
+import application.util.navigation.ViewNavigator;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 

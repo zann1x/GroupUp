@@ -1,4 +1,4 @@
-package application.util;
+package application.util.navigation;
 
 import application.MainApplication;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +11,9 @@ public class ViewNavigator {
 
     public enum NodeName {
         PROFILE_OVERVIEW,
-        PROFILE_DETAIL,
+        Account,
+        Friends,
+        Rank,
 
         TEAM_OVERVIEW,
         TEAM_DETAIL,
@@ -31,7 +33,9 @@ public class ViewNavigator {
     private static final String detailPath = "fxml/detail/";
 
     private static final String profileOverview = overviewPath + "profile.fxml";
-    private static final String profileDetail = detailPath + "profile.fxml";
+    private static final String account = detailPath + "profile/account.fxml";
+    private static final String friends = detailPath + "profile/friends.fxml";
+    private static final String rank = detailPath + "profile/rank.fxml";
 
     private static final String teamOverview = overviewPath + "team.fxml";
     private static final String teamDetail = detailPath + "team/team.fxml";
@@ -52,7 +56,9 @@ public class ViewNavigator {
         fxmlMap = new HashMap<>();
 
         addNode(NodeName.PROFILE_OVERVIEW);
-        addNode(NodeName.PROFILE_DETAIL);
+        addNode(NodeName.Account);
+        addNode(NodeName.Friends);
+        addNode(NodeName.Rank);
 
         addNode(NodeName.TEAM_OVERVIEW);
         addNode(NodeName.TEAM_DETAIL);
@@ -75,8 +81,14 @@ public class ViewNavigator {
             case PROFILE_OVERVIEW:
                 loader = new FXMLLoader(MainApplication.class.getResource(profileOverview));
                 break;
-            case PROFILE_DETAIL:
-                loader = new FXMLLoader(MainApplication.class.getResource(profileDetail));
+            case Account:
+                loader = new FXMLLoader(MainApplication.class.getResource(account));
+                break;
+            case Friends:
+                loader = new FXMLLoader(MainApplication.class.getResource(friends));
+                break;
+            case Rank:
+                loader = new FXMLLoader(MainApplication.class.getResource(rank));
                 break;
             case TEAM_OVERVIEW:
                 loader = new FXMLLoader(MainApplication.class.getResource(teamOverview));

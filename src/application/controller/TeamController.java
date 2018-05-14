@@ -1,9 +1,9 @@
 package application.controller;
 
 import application.Session;
-import application.model.Player;
 import application.model.Team;
-import application.util.ViewNavigator;
+import application.util.Player;
+import application.util.navigation.ViewNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

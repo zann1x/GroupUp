@@ -2,8 +2,8 @@ package application.controller;
 
 import application.MainApplication;
 import application.Session;
-import application.model.Player;
-import application.util.SceneNavigator;
+import application.util.Player;
+import application.util.navigation.SceneNavigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -34,6 +34,7 @@ public class LoginController extends FxmlController {
                 lbl_loginSuccess.setText("wrong login details!");
             }
         } catch (Exception e) {
+        	lbl_loginSuccess.setText("There was a Problem with DB-Connection");;
             e.printStackTrace();
         }
     }

@@ -4,7 +4,7 @@ import application.connection.db.DbConnector;
 import application.connection.db.MySqlConnector;
 import application.controller.LoginController;
 import application.controller.MainController;
-import application.util.SceneNavigator;
+import application.util.navigation.SceneNavigator;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;

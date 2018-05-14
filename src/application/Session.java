@@ -1,9 +1,9 @@
 package application;
 
-import application.model.Player;
-
 import java.sql.SQLException;
 import java.util.UUID;
+
+import application.util.Player;
 
 public class Session {
 
@@ -54,7 +54,7 @@ public class Session {
 
     @Override
     public String toString() {
-        return player.getName() + "@" + String.valueOf(id);
+        return player.getPseudonym() + "@" + String.valueOf(id);
     }
 
 }

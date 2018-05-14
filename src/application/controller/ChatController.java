@@ -1,6 +1,6 @@
 package application.controller;
 
-import application.util.ViewNavigator;
+import application.util.navigation.ViewNavigator;
 
 public class ChatController extends FxmlController {
 

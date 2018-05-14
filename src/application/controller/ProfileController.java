@@ -1,6 +1,7 @@
 package application.controller;
 
-import application.util.ViewNavigator;
+import application.util.navigation.ViewNavigator;
+import javafx.fxml.FXML;
 
 public class ProfileController extends FxmlController {
 
@@ -14,7 +15,21 @@ public class ProfileController extends FxmlController {
 
     @Override
     protected void showDetail() {
-        super.showDetail(ViewNavigator.NodeName.PROFILE_DETAIL, "Profile detail");
+        super.showDetail(ViewNavigator.NodeName.Account, "Profile detail");
     }
-
+    
+    @FXML
+    private void editAccount(){
+    	super.showDetail(ViewNavigator.NodeName.Account, "Account Settings");
+    }
+    
+    @FXML
+    private void editFriends(){
+    	super.showDetail(ViewNavigator.NodeName.Friends, "Friends");
+    }
+    
+    @FXML
+    private void editRank(){
+    	super.showDetail(ViewNavigator.NodeName.Rank, "Rank Options");
+    }
 }
