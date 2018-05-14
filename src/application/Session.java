@@ -2,8 +2,7 @@ package application;
 
 import java.sql.SQLException;
 import java.util.UUID;
-
-import application.util.Player;
+import model.Player;
 
 public class Session {
 

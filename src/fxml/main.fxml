@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+    <left>
+        <VBox id="left" prefWidth="70.0" BorderPane.alignment="CENTER">
+            <children>
+                <AnchorPane prefHeight="680.0" prefWidth="70.0">
+                    <children>
+                  <ImageView fx:id="iv_profile" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#showPlayer" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <ImageView fx:id="iv_team" fitHeight="50.0" fitWidth="50.0" layoutY="70.0" onMouseClicked="#showTeam" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <ImageView fx:id="iv_games" fitHeight="50.0" fitWidth="50.0" layoutY="140.0" onMouseClicked="#showGames" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <ImageView fx:id="iv_news" fitHeight="50.0" fitWidth="50.0" layoutY="210.0" onMouseClicked="#showNews" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <ImageView fitHeight="50.0" fitWidth="50.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <ImageView fitHeight="50.0" fitWidth="50.0" layoutY="350.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <ImageView fitHeight="50.0" fitWidth="50.0" layoutY="420.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <ImageView fitHeight="50.0" fitWidth="50.0" layoutY="490.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <Separator AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+                  <ImageView fx:id="iv_chat" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#showChat" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children>
+                </AnchorPane>
+            </children></VBox>
+    </left>
+   <bottom>
+      <AnchorPane id="bottom" prefHeight="40.0" BorderPane.alignment="CENTER">
+         <children>
+                  <ImageView fx:id="iv_logout" fitHeight="20.0" fitWidth="20.0" layoutX="1236.0" layoutY="10.0" onMouseClicked="#handleLogout" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+            <Label layoutX="1229.0" layoutY="12.0" onMouseClicked="#showAbout" prefHeight="17.0" prefWidth="37.0" text="About" underline="true" AnchorPane.rightAnchor="10.0" />
+         </children>
+      </AnchorPane>
+   </bottom>
+   <center>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefWidth="217.0" spacing="10.0">
+               <children>
+                  <Label id="header-text" fx:id="lbl_overviewName" prefWidth="200.0" />
+                  <Separator prefWidth="200.0" />
+                  <Pane fx:id="overviewPane" />
+               </children>
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </VBox>
+            <Separator orientation="VERTICAL" />
+             <VBox prefWidth="927.0" spacing="10.0">
+                 <children>
+                     <Label id="header-text" fx:id="lbl_detailName" prefWidth="200.0" />
+                     <Separator prefWidth="200.0" />
+                     <Pane fx:id="detailPane" />
+                 </children>
+                 <HBox.margin>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                 </HBox.margin>
+             </VBox>
+         </children>
+      </HBox>
+   </center>
+</BorderPane>
