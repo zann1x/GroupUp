@@ -30,8 +30,8 @@ public class ViewNavigator {
         CHAT_DETAIL
     }
 
-    private static final String overviewPath = "fxml/overview/";
-    private static final String detailPath = "fxml/detail/";
+    private static final String overviewPath = "../fxml/overview/";
+    private static final String detailPath = "../fxml/detail/";
 
     private static final String profileOverview = overviewPath + "profile.fxml";
     private static final String account = detailPath + "profile/account.fxml";
