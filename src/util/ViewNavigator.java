@@ -15,10 +15,8 @@ public class ViewNavigator {
         Rank,
 
         TEAM_OVERVIEW,
-        TEAM_DETAIL,
         TEAM_CREATION,
         OWN_TEAMS,
-        ADD_PLAYER,
 
         GAMES_OVERVIEW,
         GAMES_DETAIL,
@@ -39,7 +37,6 @@ public class ViewNavigator {
     private static final String rank = detailPath + "profile/rank.fxml";
 
     private static final String teamOverview = overviewPath + "team.fxml";
-    private static final String teamDetail = detailPath + "team/team.fxml";
     private static final String teamCreation = detailPath + "team/team_creation.fxml";
     private static final String teams = detailPath + "team/own_teams.fxml";
 
@@ -63,7 +60,6 @@ public class ViewNavigator {
         addNode(NodeName.Rank);
 
         addNode(NodeName.TEAM_OVERVIEW);
-        addNode(NodeName.TEAM_DETAIL);
         addNode(NodeName.TEAM_CREATION);
         addNode(NodeName.OWN_TEAMS);
 
@@ -95,9 +91,6 @@ public class ViewNavigator {
                 break;
             case TEAM_OVERVIEW:
                 loader = new FXMLLoader(MainApplication.class.getResource(teamOverview));
-                break;
-            case TEAM_DETAIL:
-                loader = new FXMLLoader(MainApplication.class.getResource(teamDetail));
                 break;
             case TEAM_CREATION:
                 loader = new FXMLLoader(MainApplication.class.getResource(teamCreation));

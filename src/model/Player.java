@@ -24,7 +24,13 @@ public class Player {
     public Player(int id) throws SQLException {
         this();
         this.id = id;
-        this.getData();
+        this.getDataFromId();
+    }
+
+    public Player(String pseudonym) throws SQLException {
+        this();
+        this.pseudonym = pseudonym;
+        this.getDataFromPseudonym();
     }
 
     public int getId() {
@@ -47,23 +53,48 @@ public class Player {
         return email;
     }
     
-    public List<Integer> getTeamIds(){
+    public List<Integer> getTeamIds() throws SQLException {
+        String sql = "SELECT * FROM team_player_mapping WHERE playerId = ?;";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        teamIds.clear();
+        if (rs.first()) {
+            do {
+                int teamId = rs.getInt("teamId");
+                teamIds.add(teamId);
+            } while (rs.next());
+        }
     	return teamIds;
     }
-    
-    private void getData() throws SQLException {
-    	String sql = "SELECT * FROM player WHERE id = ?";
-    	PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-    	preparedStatement.setInt(1, this.id);
-		ResultSet rs = preparedStatement.executeQuery();
-		
-    	//player names are unique, therefore i'm blindly assuming only one player was selected
-    	while(rs.next()){
-    		this.forename = rs.getString("forename");
-    		this.surname = rs.getString("surname");
-    		this.pseudonym = rs.getString("pseudonym");
-    	    this.email = rs.getString("email");
-    	}
+
+    private void getDataFromId() throws SQLException {
+        String sql = "SELECT * FROM player WHERE id = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        getData(statement);
+    }
+
+    private void getDataFromPseudonym() throws SQLException {
+        String sql = "SELECT * FROM player WHERE pseudonym = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setString(1, pseudonym);
+        getData(statement);
+    }
+
+    private void getData(PreparedStatement preparedStatement) throws SQLException {
+        ResultSet rs = preparedStatement.executeQuery();
+
+        //player names are unique, therefore i'm blindly assuming only one player was selected
+        while(rs.next()){
+            this.id = rs.getInt("id");
+            this.forename = rs.getString("forename");
+            this.surname = rs.getString("surname");
+            this.pseudonym = rs.getString("pseudonym");
+            this.email = rs.getString("email");
+        }
+        getTeamIds();
     }
 
     public boolean checkCredentials(String pseudonym, String password) throws Exception {
@@ -75,13 +106,12 @@ public class Player {
 
         // player names are unique, therefore i'm blindly assuming only one player was selected
         if (resultSet.first()) {
-            int id = resultSet.getInt("id");
-            this.id = id;
-            this.getData();
+            this.id = resultSet.getInt("id");
+            this.getDataFromId();
+            return true;
         } else {
             return false;
         }
-        return true;
     }
 
     public void setSessionId(String sessionId) throws SQLException {
@@ -129,6 +159,10 @@ public class Player {
 
     public void addTeamId(int id) {
         teamIds.add(id);
+    }
+
+    public void removeTeamId(int id) {
+        teamIds.remove(Integer.valueOf(id));
     }
 
     @Override

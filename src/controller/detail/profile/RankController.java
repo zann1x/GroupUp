@@ -12,10 +12,6 @@ public class RankController extends FxmlController {
     @Override
     public void initForShow() {
     }
-    
-    @Override
-    protected void showDetail() {
-    }
 
   	@FXML
 	private void resetRank(){

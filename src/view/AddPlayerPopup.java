@@ -8,7 +8,9 @@ import application.MainApplication;
 import application.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -21,16 +23,20 @@ public class AddPlayerPopup {
     private Stage stage;
 
     public AddPlayerPopup(Party party) {
-        VBox root = new VBox();
+        Label lbl_selectedPlayers = new Label("Selectable Players");
         ListView<Player> listView = new ListView<>();
         ObservableList<Player> observableList = FXCollections.observableArrayList();
 
         try {
             List<Player> players = Player.getAllPlayers();
+            // remove all players that are already in the team
             players = players.stream()
-                    .filter(p -> p.getId() != Session.getInstance().getPlayer().getId())
+                    .filter(p -> p.getId() != Session.getInstance().getPlayer().getId()
+                            && !party.getPlayerIds().contains(p.getId()))
                     .collect(Collectors.toList());
-            players.removeAll(party.getPlayerIds());
+
+            if (players.size() == 0)
+                lbl_selectedPlayers.setText("No players selectable");
             observableList.addAll(players);
             FXCollections.sort(observableList, Comparator.comparing(Player::toString));
         } catch (SQLException e) {
@@ -52,7 +58,9 @@ public class AddPlayerPopup {
             }
         });
 
-        root.getChildren().add(listView);
+        VBox root = new VBox(5.0d);
+        root.setPadding(new Insets(5.0d));
+        root.getChildren().addAll(lbl_selectedPlayers, listView);
 
         stage = new Stage();
         stage.setScene(new Scene(root));

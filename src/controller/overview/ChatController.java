@@ -1,5 +1,7 @@
-package controller;
+package controller.overview;
 
+import controller.FxmlController;
+import javafx.fxml.FXML;
 import util.ViewNavigator;
 
 public class ChatController extends FxmlController {
@@ -12,8 +14,8 @@ public class ChatController extends FxmlController {
     public void initForShow() {
     }
 
-    @Override
-    protected void showDetail() {
+    @FXML
+    private void showDetail() {
         super.showDetail(ViewNavigator.NodeName.CHAT_DETAIL, "Chat detail");
     }
 

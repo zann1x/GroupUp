@@ -14,11 +14,9 @@ public abstract class FxmlController {
     }
 
     @FXML
-    public abstract void initialize();
-    public abstract  void initForShow();
+    protected abstract void initialize();
 
-    @FXML
-    protected abstract void showDetail();
+    public abstract void initForShow();
 
     protected void showDetail(ViewNavigator.NodeName nodeName, String headerText) {
         MainApplication.instance.getMainController().switchToDetailNode(nodeName, headerText);

@@ -47,10 +47,6 @@ public class LoginController extends FxmlController {
     public void initForShow() {
     }
 
-    @Override
-    protected void showDetail() {
-    }
-
     @FXML
     private void handleLoginOnEnterKey(KeyEvent keyEvent) {
         if (keyEvent.getCode().equals(KeyCode.ENTER))

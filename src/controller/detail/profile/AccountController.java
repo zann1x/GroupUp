@@ -38,10 +38,6 @@ public class AccountController extends FxmlController {
     	pw_password.setText("");
     	txt_email.setText(player.getEmail());
     }
-
-    @Override
-    protected void showDetail() {
-    }
 	
 	@FXML
 	private void save(){

@@ -13,10 +13,6 @@ public class FriendsController extends FxmlController {
     public void initForShow() {
     }
     
-    @Override
-    protected void showDetail() {
-    }
-    
     @FXML
 	private void addPlayer(){
   		

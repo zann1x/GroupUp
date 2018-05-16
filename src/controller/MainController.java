@@ -142,8 +142,4 @@ public class MainController extends FxmlController {
         switchToOverviewNode(ViewNavigator.NodeName.CHAT_OVERVIEW, "CHAT");
     }
 
-    @Override
-    protected void showDetail() {
-    }
-
 }

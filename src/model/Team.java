@@ -1,10 +1,9 @@
 package model;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 import application.MainApplication;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class Team extends Party {
 
@@ -12,40 +11,22 @@ public class Team extends Party {
         super();
     }
 
-    public Team(int id, String name) {
-        super(id, name);
+    public Team(int id) throws SQLException {
+        super(id);
     }
 
-    public Team(int id, String name, List<Integer> playerIds) {
-        super(id, name, playerIds);
+    public Team(String name) throws SQLException {
+        super(name);
     }
 
-    public static Team getTeam(int id) throws SQLException {
-        String sql = "SELECT * FROM team WHERE id = ?";
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-        statement.setInt(1, id);
-
-        return Team.getTeam(statement);
-    }
-
-    public static Team getTeam(String name) throws SQLException {
-        String sql = "SELECT * FROM team WHERE name = ?";
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-        statement.setString(1, name);
-
-        return Team.getTeam(statement);
-    }
-
-    private static Team getTeam(PreparedStatement statement) throws SQLException {
-        ResultSet resultSet = statement.executeQuery();
-        Team team = null;
-        if (resultSet.first()) {
-            int teamId = resultSet.getInt("id");
-            String teamName = resultSet.getString("name");
-            List<Integer> playerIds = Party.getPlayerIds(teamId);
-            team = new Team(teamId, teamName, playerIds);
+    @Override
+    public void removePlayer(Player player) throws SQLException {
+        super.removePlayer(player);
+        if (playerIds.isEmpty()) {
+            String sql = "DELETE FROM team WHERE id = ?;";
+            PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+            statement.setInt(1, id);
+            statement.executeUpdate();
         }
-        return team;
     }
-
 }

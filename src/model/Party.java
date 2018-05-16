@@ -1,5 +1,7 @@
 package model;
 
+import application.MainApplication;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,28 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import application.MainApplication;
-
 public abstract class Party {
 
     protected int id;
     protected String name;
+    protected boolean isActive;
     protected List<Integer> playerIds;
 
     public Party() {
         playerIds = new ArrayList<>();
     }
 
-    public Party(int id, String name) {
+    public Party(int id) throws SQLException {
         this();
         this.id = id;
-        this.name = name;
+        getDataFromId();
     }
 
-    public Party(int id, String name, List<Integer> playerIds) {
-        this.id = id;
+    public Party(String name) throws SQLException {
+        this();
         this.name = name;
-        this.playerIds = playerIds;
+        getDataFromName();
     }
 
     public int getId() {
@@ -39,21 +40,63 @@ public abstract class Party {
         return name;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     public List<Integer> getPlayerIds() {
         return playerIds;
     }
 
-    public void create(String name) throws SQLException {
+    private void getDataFromId() throws SQLException {
+        String sql = "SELECT * FROM team WHERE id = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        getData(statement);
+    }
+
+    private void getDataFromName() throws SQLException {
+        String sql = "SELECT * FROM team WHERE name = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setString(1, name);
+        getData(statement);
+    }
+
+    private void getData(PreparedStatement statement) throws SQLException {
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.first()) {
+            this.id = resultSet.getInt("id");
+            this.name = resultSet.getString("name");
+            this.isActive = resultSet.getBoolean("isActive");
+        }
+
+        String sql = "SELECT * FROM team_player_mapping WHERE teamId = ?;";
+        statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        resultSet = statement.executeQuery();
+
+        if (resultSet.first()) {
+            do {
+                int playerId = resultSet.getInt("playerId");
+                playerIds.add(playerId);
+            } while (resultSet.next());
+        }
+    }
+
+    private void create(String name) throws SQLException {
         String sql = "INSERT INTO team (name) VALUE(?);";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setString(1, name);
         statement.executeUpdate();
 
-        ResultSet resultSet = statement.executeQuery("SELECT id FROM team WHERE name = '" + name + "';");
-        if (resultSet.first()) {
-            this.id = resultSet.getInt("id");
-            this.name = name;
-        }
+        this.name = name;
+        getDataFromName();
+    }
+
+    public void create(String name, Player player) throws SQLException {
+        create(name);
+        addPlayer(player);
     }
 
     public void delete() {
@@ -73,8 +116,22 @@ public abstract class Party {
         playerIds.add(playerId);
     }
 
-    public void removePlayer(Player player) {
+    public void addPlayers(List<Player> players) throws SQLException {
+        for (Player player : players)
+            addPlayer(player);
+    }
 
+    public void removePlayer(Player player) throws SQLException {
+        int playerId = player.getId();
+
+        String sql = "DELETE FROM team_player_mapping WHERE teamId = ? AND playerId = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        statement.setInt(2, playerId);
+        statement.executeUpdate();
+
+        player.removeTeamId(id);
+        playerIds.remove(Integer.valueOf(playerId));
     }
 
     @Override
@@ -82,32 +139,15 @@ public abstract class Party {
         return name;
     }
 
-    public static List<Integer> getPlayerIds(int id) throws SQLException {
-        String sql = "SELECT * FROM team_player_mapping WHERE teamId = ?;";
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-        statement.setInt(1, id);
-        ResultSet resultSet = statement.executeQuery();
-
-        List<Integer> playerIds = new ArrayList<>();
-        if (resultSet.first()) {
-            do {
-                int playerId = resultSet.getInt("playerId");
-                playerIds.add(playerId);
-            } while (resultSet.next());
-        }
-        return playerIds;
-    }
-
-    public static List<Player> getPlayers(int id) throws SQLException {
-        List<Integer> playerIds = Party.getPlayerIds(id);
-        List<Player> players = playerIds.stream().map(p -> {
+    public List<Player> getPlayers() {
+        return playerIds.stream().map(p -> {
             try {
                 return new Player(p);
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }).collect(Collectors.toList());
-        return players;
     }
+
 }
