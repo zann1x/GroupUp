@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0
+-- version 4.8.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 27. Apr 2018 um 16:07
--- Server-Version: 10.1.31-MariaDB
--- PHP-Version: 7.2.4
+-- Erstellungszeit: 16. Mai 2018 um 23:21
+-- Server-Version: 10.1.32-MariaDB
+-- PHP-Version: 7.2.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,7 +21,7 @@ SET time_zone = "+00:00";
 --
 -- Datenbank: `groupup`
 --
-DROP DATABASE `groupup`;
+DROP DATABASE IF EXISTS `groupup`;
 CREATE DATABASE IF NOT EXISTS `groupup` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `groupup`;
 
@@ -34,7 +34,7 @@ USE `groupup`;
 DROP TABLE IF EXISTS `games`;
 CREATE TABLE `games` (
   `id` int(11) NOT NULL,
-  `name` char(255) NOT NULL
+  `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -51,7 +51,7 @@ CREATE TABLE `player` (
   `pseudonym` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
-  `sessionid` varchar(36) DEFAULT NULL
+  `sessionid` char(36) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -59,7 +59,7 @@ CREATE TABLE `player` (
 --
 
 INSERT INTO `player` (`id`, `forename`, `surname`, `pseudonym`, `password`, `email`, `sessionid`) VALUES
-(1, 'Lukas', 'Zanner', 'Zann1x', 'test', 'zannix@test.de', NULL),
+(1, 'Lukas', 'Zanner', 'zann1x', 'test', 'zannix@test.de', NULL),
 (2, 'Christian', 'Goller', 'Flame4Fame', 'test', 'Flame4Fame@test.de', NULL);
 
 -- --------------------------------------------------------
@@ -71,8 +71,8 @@ INSERT INTO `player` (`id`, `forename`, `surname`, `pseudonym`, `password`, `ema
 DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `id` int(11) NOT NULL,
-  `name` char(255) NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1'
+  `name` varchar(255) NOT NULL,
+  `isActive` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -128,11 +128,13 @@ ALTER TABLE `team_player_mapping`
 --
 ALTER TABLE `games`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT für Tabelle `player`
 --
 ALTER TABLE `player`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT für Tabelle `team`
 --
