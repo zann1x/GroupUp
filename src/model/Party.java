@@ -7,13 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class Party {
 
     protected int id;
     protected String name;
-    protected boolean isActive;
+    protected boolean active;
     protected List<Integer> playerIds;
 
     public Party() {
@@ -41,7 +40,7 @@ public abstract class Party {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public List<Integer> getPlayerIds() {
@@ -68,7 +67,7 @@ public abstract class Party {
         if (resultSet.first()) {
             this.id = resultSet.getInt("id");
             this.name = resultSet.getString("name");
-            this.isActive = resultSet.getBoolean("isActive");
+            this.active = resultSet.getBoolean("isActive");
         }
 
         String sql = "SELECT * FROM team_player_mapping WHERE teamId = ?;";
@@ -99,8 +98,23 @@ public abstract class Party {
         addPlayer(player);
     }
 
-    public void delete() {
+    public void setActive(boolean active) throws SQLException {
+        this.active = active;
 
+        String sql = "UPDATE team SET isActive = ? WHERE id = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setBoolean(1, active);
+        statement.setInt(2, id);
+        statement.executeUpdate();
+    }
+
+    public void delete() throws SQLException {
+        removeAllPlayers();
+
+        String sql = "DELETE FROM team WHERE id = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        statement.executeUpdate();
     }
 
     public void addPlayer(Player player) throws SQLException {
@@ -132,6 +146,16 @@ public abstract class Party {
 
         player.removeTeamId(id);
         playerIds.remove(Integer.valueOf(playerId));
+
+        if (playerIds.isEmpty()) {
+            delete();
+        }
+    }
+
+    private void removeAllPlayers() throws SQLException {
+        List<Player> players = getPlayers();
+        for (Player player : players)
+            removePlayer(player);
     }
 
     @Override
@@ -139,15 +163,12 @@ public abstract class Party {
         return name;
     }
 
-    public List<Player> getPlayers() {
-        return playerIds.stream().map(p -> {
-            try {
-                return new Player(p);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }).collect(Collectors.toList());
+    public List<Player> getPlayers() throws SQLException {
+        List<Player> players = new ArrayList<>();
+        for (int id : playerIds) {
+            players.add(new Player(id));
+        }
+        return players;
     }
 
 }

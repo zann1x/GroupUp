@@ -69,7 +69,7 @@ public class AddPlayerPopup {
         stage.initOwner(MainApplication.instance.getPrimaryStage());
     }
 
-    public void show() {
-        stage.show();
+    public void showAndWait() {
+        stage.showAndWait();
     }
 }
