@@ -129,7 +129,7 @@ public class MainController extends FxmlController {
 
     @FXML
     public void showGames() {
-        switchToOverviewNode(ViewNavigator.NodeName.GAMES_OVERVIEW, "GAMES");
+        switchToOverviewNode(ViewNavigator.NodeName.GAMES_OVERVIEW, "LINKED_GAMES");
     }
 
     @FXML

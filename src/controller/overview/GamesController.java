@@ -15,7 +15,13 @@ public class GamesController extends FxmlController {
     }
 
     @FXML
-    private void showDetail() {
-        super.showDetail(ViewNavigator.NodeName.GAMES_DETAIL, "Game detail");
+    public void addGame() {
+        super.showDetail(ViewNavigator.NodeName.ADD_GAME, "Game linking");
     }
+
+    @FXML
+    private void showGames() {
+        super.showDetail(ViewNavigator.NodeName.LINKED_GAMES, "Linked games");
+    }
+
 }

@@ -19,7 +19,8 @@ public class ViewNavigator {
         OWN_TEAMS,
 
         GAMES_OVERVIEW,
-        GAMES_DETAIL,
+        ADD_GAME,
+        LINKED_GAMES,
 
         NEWS_OVERVIEW,
         NEWS_DETAIL,
@@ -41,7 +42,8 @@ public class ViewNavigator {
     private static final String teams = detailPath + "team/own_teams.fxml";
 
     private static final String gamesOverview = overviewPath + "games.fxml";
-    private static final String gamesDetail = detailPath + "games.fxml";
+    private static final String addGame = detailPath + "/games/add_game.fxml";
+    private static final String linked_games = detailPath + "/games/linked_games.fxml";
 
     private static final String newsOverview = overviewPath + "news.fxml";
     private static final String newsDetail = detailPath + "news.fxml";
@@ -64,7 +66,8 @@ public class ViewNavigator {
         addNode(NodeName.OWN_TEAMS);
 
         addNode(NodeName.GAMES_OVERVIEW);
-        addNode(NodeName.GAMES_DETAIL);
+        addNode(NodeName.ADD_GAME);
+        addNode(NodeName.LINKED_GAMES);
 
         addNode(NodeName.NEWS_OVERVIEW);
         addNode(NodeName.NEWS_DETAIL);
@@ -101,8 +104,11 @@ public class ViewNavigator {
             case GAMES_OVERVIEW:
                 loader = new FXMLLoader(MainApplication.class.getResource(gamesOverview));
                 break;
-            case GAMES_DETAIL:
-                loader = new FXMLLoader(MainApplication.class.getResource(gamesDetail));
+            case ADD_GAME:
+                loader = new FXMLLoader(MainApplication.class.getResource(addGame));
+                break;
+            case LINKED_GAMES:
+                loader = new FXMLLoader(MainApplication.class.getResource(linked_games));
                 break;
             case NEWS_OVERVIEW:
                 loader = new FXMLLoader(MainApplication.class.getResource(newsOverview));

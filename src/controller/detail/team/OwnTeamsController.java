@@ -2,14 +2,14 @@ package controller.detail.team;
 
 import application.Session;
 import controller.FxmlController;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import model.Player;
 import model.Team;
 import view.AddPlayerPopup;
@@ -24,17 +24,28 @@ public class OwnTeamsController extends FxmlController {
 
     @FXML
     private TreeView<String> tv_teams;
-    private TreeItem<String> rootItem = new TreeItem<>("Teams");
+    @FXML
+    public VBox vb_statistics;
+    @FXML
+    public Label lbl_statistics;
 
-    private List<Team> activeTeams = new ArrayList<>();
-    private List<Team> inactiveTeams = new ArrayList<>();
+    private TreeItem<String> rootItem;
 
-    private Map<Integer, List<Player>> playerMap = new TreeMap<>();
+    private List<Team> activeTeams;
+    private List<Team> inactiveTeams;
+
+    private Map<Integer, List<Player>> playerMap;
+
     private static final String ACTIVE_TEAM_STRING = "Active teams";
     private static final String INACTIVE_TEAM_STRING = "Inactive teams";
+    private static final String ROOT_STRING = "Teams";
 
     @FXML
     public void initialize() {
+        activeTeams = new ArrayList<>();
+        inactiveTeams = new ArrayList<>();
+        rootItem = new TreeItem<>(ROOT_STRING);
+        playerMap = new TreeMap<>();
     }
 
     private void initOwnTeamsView() {
@@ -47,24 +58,33 @@ public class OwnTeamsController extends FxmlController {
         createTreeViewBody();
 
         tv_teams.setCellFactory(t -> new CustomTreeCell());
+        tv_teams.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                String val = newValue.getValue();
+                if (!(val.equals(ROOT_STRING) || val.equals(ACTIVE_TEAM_STRING) || val.equals(INACTIVE_TEAM_STRING))) {
+                    lbl_statistics.setText("Statistics of " + newValue.getValue());
+                    vb_statistics.setVisible(true);
+                }
+            }
+        });
         tv_teams.setRoot(rootItem);
         tv_teams.setShowRoot(false);
     }
 
     private void collectTeamsAndPlayers() throws SQLException {
-        List<Player> playersInTeam;
         List<Integer> teamIds = Session.getInstance().getPlayer().getTeamIds();
 
         for (int id : teamIds) {
             // initialize the list at each iteration, so every team gets its own list of players
-            playersInTeam = new ArrayList<>();
+            List<Player> playersInTeam = new ArrayList<>();
             try {
                 Team team = new Team(id);
+                playersInTeam = team.getPlayers();
+
                 if (team.isActive())
                     activeTeams.add(team);
                 else
                     inactiveTeams.add(team);
-                playersInTeam = team.getPlayers();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -101,6 +121,7 @@ public class OwnTeamsController extends FxmlController {
         for (Team team : teams) {
             List<Player> playersInTeam = playerMap.get(team.getId());
             TreeItem<String> teamItem = new TreeItem<>(team.getName());
+
             for (Player player : playersInTeam) {
                 TreeItem<String> playerItem = new TreeItem<>(player.getPseudonym());
                 teamItem.getChildren().add(playerItem);
@@ -113,6 +134,15 @@ public class OwnTeamsController extends FxmlController {
     @Override
     public void initForShow() {
         if (ownTeamsRoot != null) {
+            tv_teams.setRoot(null);
+            vb_statistics.setVisible(false);
+            lbl_statistics.setText("");
+
+            rootItem.getChildren().clear();
+            activeTeams.clear();
+            inactiveTeams.clear();
+            playerMap.clear();
+
             initOwnTeamsView();
         }
     }
@@ -199,13 +229,15 @@ public class OwnTeamsController extends FxmlController {
             super.updateItem(item, empty);
 
             if (!empty) {
-                if (!getTreeItem().isLeaf()) {
-                    if (getTreeItem().getParent().getValue().equals(ACTIVE_TEAM_STRING))
-                        setContextMenu(activeTeamsContextMenu);
-                    else if (getTreeItem().getParent().getValue().equals(INACTIVE_TEAM_STRING))
-                        setContextMenu(inactiveTeamsContextMenu);
+                String parentValue = getTreeItem().getParent().getValue();
+                if (getTreeItem().isLeaf()) {
+                    if (!parentValue.equals(ROOT_STRING))
+                        setContextMenu(playerContextMenu);
                 } else {
-                    setContextMenu(playerContextMenu);
+                    if (parentValue.equals(ACTIVE_TEAM_STRING))
+                        setContextMenu(activeTeamsContextMenu);
+                    else if (parentValue.equals(INACTIVE_TEAM_STRING))
+                        setContextMenu(inactiveTeamsContextMenu);
                 }
             }
         }
