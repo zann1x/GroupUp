@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 16. Mai 2018 um 23:21
+-- Erstellungszeit: 22. Mai 2018 um 21:19
 -- Server-Version: 10.1.32-MariaDB
 -- PHP-Version: 7.2.5
 
@@ -28,14 +28,23 @@ USE `groupup`;
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `games`
+-- Tabellenstruktur für Tabelle `game`
 --
 
-DROP TABLE IF EXISTS `games`;
-CREATE TABLE `games` (
+DROP TABLE IF EXISTS `game`;
+CREATE TABLE `game` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `game`
+--
+
+INSERT INTO `game` (`id`, `name`) VALUES
+(1, 'Counter-Strike: Global Offensive'),
+(2, 'DOTA 2'),
+(3, 'Fortnite');
 
 -- --------------------------------------------------------
 
@@ -92,9 +101,9 @@ CREATE TABLE `team_player_mapping` (
 --
 
 --
--- Indizes für die Tabelle `games`
+-- Indizes für die Tabelle `game`
 --
-ALTER TABLE `games`
+ALTER TABLE `game`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
@@ -124,10 +133,10 @@ ALTER TABLE `team_player_mapping`
 --
 
 --
--- AUTO_INCREMENT für Tabelle `games`
+-- AUTO_INCREMENT für Tabelle `game`
 --
-ALTER TABLE `games`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `game`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT für Tabelle `player`
