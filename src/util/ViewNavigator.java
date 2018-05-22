@@ -19,8 +19,8 @@ public class ViewNavigator {
         OWN_TEAMS,
 
         GAMES_OVERVIEW,
-        ADD_GAME,
-        LINKED_GAMES,
+        PLAY_NOW,
+        GAME_LINKING,
 
         NEWS_OVERVIEW,
         NEWS_DETAIL,
@@ -42,8 +42,8 @@ public class ViewNavigator {
     private static final String teams = detailPath + "team/own_teams.fxml";
 
     private static final String gamesOverview = overviewPath + "games.fxml";
-    private static final String addGame = detailPath + "/games/add_game.fxml";
-    private static final String linked_games = detailPath + "/games/linked_games.fxml";
+    private static final String playNow = detailPath + "/games/play_now.fxml";
+    private static final String gameLinking = detailPath + "/games/game_linking.fxml";
 
     private static final String newsOverview = overviewPath + "news.fxml";
     private static final String newsDetail = detailPath + "news.fxml";
@@ -66,8 +66,8 @@ public class ViewNavigator {
         addNode(NodeName.OWN_TEAMS);
 
         addNode(NodeName.GAMES_OVERVIEW);
-        addNode(NodeName.ADD_GAME);
-        addNode(NodeName.LINKED_GAMES);
+        addNode(NodeName.PLAY_NOW);
+        addNode(NodeName.GAME_LINKING);
 
         addNode(NodeName.NEWS_OVERVIEW);
         addNode(NodeName.NEWS_DETAIL);
@@ -104,11 +104,11 @@ public class ViewNavigator {
             case GAMES_OVERVIEW:
                 loader = new FXMLLoader(MainApplication.class.getResource(gamesOverview));
                 break;
-            case ADD_GAME:
-                loader = new FXMLLoader(MainApplication.class.getResource(addGame));
+            case PLAY_NOW:
+                loader = new FXMLLoader(MainApplication.class.getResource(playNow));
                 break;
-            case LINKED_GAMES:
-                loader = new FXMLLoader(MainApplication.class.getResource(linked_games));
+            case GAME_LINKING:
+                loader = new FXMLLoader(MainApplication.class.getResource(gameLinking));
                 break;
             case NEWS_OVERVIEW:
                 loader = new FXMLLoader(MainApplication.class.getResource(newsOverview));

@@ -15,13 +15,13 @@ public class GamesController extends FxmlController {
     }
 
     @FXML
-    public void addGame() {
-        super.showDetail(ViewNavigator.NodeName.ADD_GAME, "Game linking");
+    public void playNow() {
+        super.showDetail(ViewNavigator.NodeName.PLAY_NOW, "Play now");
     }
 
     @FXML
-    private void showGames() {
-        super.showDetail(ViewNavigator.NodeName.LINKED_GAMES, "Linked games");
+    private void unLinkGames() {
+        super.showDetail(ViewNavigator.NodeName.GAME_LINKING, "Un/Link games");
     }
 
 }

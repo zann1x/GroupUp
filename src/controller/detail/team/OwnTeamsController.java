@@ -61,7 +61,7 @@ public class OwnTeamsController extends FxmlController {
         tv_teams.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 String val = newValue.getValue();
-                if (!(val.equals(ROOT_STRING) || val.equals(ACTIVE_TEAM_STRING) || val.equals(INACTIVE_TEAM_STRING))) {
+                if (!(val.equals(ROOT_STRING) || val.equals(ACTIVE_TEAM_STRING) || val.equals(INACTIVE_TEAM_STRING) || observable.getValue().isLeaf())) {
                     lbl_statistics.setText("Statistics of " + newValue.getValue());
                     vb_statistics.setVisible(true);
                 }
