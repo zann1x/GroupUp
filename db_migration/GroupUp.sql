@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 22. Mai 2018 um 21:19
+-- Erstellungszeit: 24. Mai 2018 um 22:27
 -- Server-Version: 10.1.32-MariaDB
 -- PHP-Version: 7.2.5
 
@@ -49,6 +49,31 @@ INSERT INTO `game` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `group`
+--
+
+DROP TABLE IF EXISTS `group`;
+CREATE TABLE `group` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `idinuse` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `group_player_mapping`
+--
+
+DROP TABLE IF EXISTS `group_player_mapping`;
+CREATE TABLE `group_player_mapping` (
+  `groupid` int(11) NOT NULL,
+  `playerid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `player`
 --
 
@@ -81,7 +106,7 @@ DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `isActive` tinyint(1) NOT NULL DEFAULT '1'
+  `isactive` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -92,8 +117,8 @@ CREATE TABLE `team` (
 
 DROP TABLE IF EXISTS `team_player_mapping`;
 CREATE TABLE `team_player_mapping` (
-  `teamId` int(11) NOT NULL,
-  `playerId` int(11) NOT NULL
+  `teamid` int(11) NOT NULL,
+  `playerid` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -106,6 +131,20 @@ CREATE TABLE `team_player_mapping` (
 ALTER TABLE `game`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indizes für die Tabelle `group`
+--
+ALTER TABLE `group`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `group_name_uindex` (`name`);
+
+--
+-- Indizes für die Tabelle `group_player_mapping`
+--
+ALTER TABLE `group_player_mapping`
+  ADD KEY `group_player_mapping_group_id_fk` (`groupid`),
+  ADD KEY `group_player_mapping_player_id_fk` (`playerid`);
 
 --
 -- Indizes für die Tabelle `player`
@@ -126,7 +165,8 @@ ALTER TABLE `team`
 -- Indizes für die Tabelle `team_player_mapping`
 --
 ALTER TABLE `team_player_mapping`
-  ADD PRIMARY KEY (`teamId`,`playerId`);
+  ADD KEY `tp_mapping_team_id_fk` (`teamid`),
+  ADD KEY `tp_mapping_player_id_fk` (`playerid`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -139,6 +179,12 @@ ALTER TABLE `game`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT für Tabelle `group`
+--
+ALTER TABLE `group`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT für Tabelle `player`
 --
 ALTER TABLE `player`
@@ -149,6 +195,30 @@ ALTER TABLE `player`
 --
 ALTER TABLE `team`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints der exportierten Tabellen
+--
+
+--
+-- Constraints der Tabelle `group`
+--
+ALTER TABLE `group`
+  ADD CONSTRAINT `group_player_pseudonym_fk` FOREIGN KEY (`name`) REFERENCES `player` (`pseudonym`);
+
+--
+-- Constraints der Tabelle `group_player_mapping`
+--
+ALTER TABLE `group_player_mapping`
+  ADD CONSTRAINT `group_player_mapping_group_id_fk` FOREIGN KEY (`groupId`) REFERENCES `group` (`id`),
+  ADD CONSTRAINT `group_player_mapping_player_id_fk` FOREIGN KEY (`playerId`) REFERENCES `player` (`id`);
+
+--
+-- Constraints der Tabelle `team_player_mapping`
+--
+ALTER TABLE `team_player_mapping`
+  ADD CONSTRAINT `tp_mapping_player_id_fk` FOREIGN KEY (`playerId`) REFERENCES `player` (`id`),
+  ADD CONSTRAINT `tp_mapping_team_id_fk` FOREIGN KEY (`teamId`) REFERENCES `team` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
