@@ -2,7 +2,7 @@
     -fx-background-color: #b2b2b2;
 }
 
-#left {
+#left, #right {
     -fx-background-color: #dedede;
 }
 

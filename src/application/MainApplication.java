@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import util.SceneNavigator;
 
@@ -87,6 +88,7 @@ public class MainApplication extends Application {
             event.consume();
         });
         initScenes();
+        primaryStage.getIcons().add(new Image("file:res/img/play.png"));
         primaryStage.setTitle(MainApplication.APPL_NAME);
         primaryStage.show();
     }

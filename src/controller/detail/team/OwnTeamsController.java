@@ -2,8 +2,6 @@ package controller.detail.team;
 
 import application.Session;
 import controller.FxmlController;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import model.Player;
 import model.Team;
-import view.AddPlayerPopup;
+import view.AddPlayerToTeamPopup;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -23,13 +21,13 @@ public class OwnTeamsController extends FxmlController {
     private BorderPane ownTeamsRoot;
 
     @FXML
-    private TreeView<String> tv_teams;
+    private TreeView<Object> tv_teams;
     @FXML
     public VBox vb_statistics;
     @FXML
     public Label lbl_statistics;
 
-    private TreeItem<String> rootItem;
+    private TreeItem<Object> rootItem;
 
     private List<Team> activeTeams;
     private List<Team> inactiveTeams;
@@ -60,7 +58,7 @@ public class OwnTeamsController extends FxmlController {
         tv_teams.setCellFactory(t -> new CustomTreeCell());
         tv_teams.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                String val = newValue.getValue();
+                String val = newValue.getValue().toString();
                 if (!(val.equals(ROOT_STRING) || val.equals(ACTIVE_TEAM_STRING) || val.equals(INACTIVE_TEAM_STRING) || observable.getValue().isLeaf())) {
                     lbl_statistics.setText("Statistics of " + newValue.getValue());
                     vb_statistics.setVisible(true);
@@ -98,15 +96,15 @@ public class OwnTeamsController extends FxmlController {
 
     private void createTreeViewBody() {
         // populate tree view with all collected teams
-        TreeItem<String> activeTeamsItem = new TreeItem<>(ACTIVE_TEAM_STRING);
-        TreeItem<String> inactiveTeamsItem = new TreeItem<>(INACTIVE_TEAM_STRING);
+        TreeItem<Object> activeTeamsItem = new TreeItem<>(ACTIVE_TEAM_STRING);
+        TreeItem<Object> inactiveTeamsItem = new TreeItem<>(INACTIVE_TEAM_STRING);
 
-        List<TreeItem<String>> treeItems = createTreeItemList(activeTeams);
-        for (TreeItem<String> treeItem : treeItems)
+        List<TreeItem<Object>> treeItems = createTreeItemList(activeTeams);
+        for (TreeItem<Object> treeItem : treeItems)
             activeTeamsItem.getChildren().add(treeItem);
 
         treeItems = createTreeItemList(inactiveTeams);
-        for (TreeItem<String> treeItem : treeItems)
+        for (TreeItem<Object> treeItem : treeItems)
             inactiveTeamsItem.getChildren().add(treeItem);
 
         activeTeamsItem.setExpanded(true);
@@ -115,15 +113,15 @@ public class OwnTeamsController extends FxmlController {
         rootItem.getChildren().add(inactiveTeamsItem);
     }
 
-    private List<TreeItem<String>> createTreeItemList(List<Team> teams) {
-        List<TreeItem<String>> treeItems = new ArrayList<>();
+    private List<TreeItem<Object>> createTreeItemList(List<Team> teams) {
+        List<TreeItem<Object>> treeItems = new ArrayList<>();
 
         for (Team team : teams) {
             List<Player> playersInTeam = playerMap.get(team.getId());
-            TreeItem<String> teamItem = new TreeItem<>(team.getName());
+            TreeItem<Object> teamItem = new TreeItem<>(team);
 
             for (Player player : playersInTeam) {
-                TreeItem<String> playerItem = new TreeItem<>(player.getPseudonym());
+                TreeItem<Object> playerItem = new TreeItem<>(player);
                 teamItem.getChildren().add(playerItem);
             }
             treeItems.add(teamItem);
@@ -151,7 +149,7 @@ public class OwnTeamsController extends FxmlController {
     // CUSTOM TREE CELL //
     //////////////////////
 
-    private class CustomTreeCell extends TextFieldTreeCell<String> {
+    private class CustomTreeCell extends TextFieldTreeCell<Object> {
 
         private ContextMenu activeTeamsContextMenu;
         private ContextMenu inactiveTeamsContextMenu;
@@ -161,8 +159,8 @@ public class OwnTeamsController extends FxmlController {
             MenuItem addPlayer = new MenuItem("Add player");
             addPlayer.setOnAction(e -> {
                 try {
-                    Team team = new Team(getTreeItem().getValue());
-                    new AddPlayerPopup(team).showAndWait();
+                    Team team = new Team(((Team)getTreeItem().getValue()).getId());
+                    new AddPlayerToTeamPopup(team).showAndWait();
                     initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -171,7 +169,7 @@ public class OwnTeamsController extends FxmlController {
 
             javafx.event.EventHandler<ActionEvent> deleteTeamEventHandler = actionEvent -> {
                 try {
-                    Team team = new Team(getTreeItem().getValue());
+                    Team team = new Team(((Team)getTreeItem().getValue()).getId());
                     team.delete();
                     initForShow();
                 } catch (SQLException ex) {
@@ -188,7 +186,7 @@ public class OwnTeamsController extends FxmlController {
             MenuItem setInactive = new MenuItem("Set inactive");
             setInactive.setOnAction(e -> {
                 try {
-                    Team team = new Team(getTreeItem().getValue());
+                    Team team = new Team(((Team)getTreeItem().getValue()).getId());
                     team.setActive(false);
                     initForShow();
                 } catch (SQLException ex) {
@@ -199,7 +197,7 @@ public class OwnTeamsController extends FxmlController {
             MenuItem setActive = new MenuItem("Set active");
             setActive.setOnAction(e -> {
                 try {
-                    Team team = new Team(getTreeItem().getValue());
+                    Team team = new Team(((Team)getTreeItem().getValue()).getId());
                     team.setActive(true);
                     initForShow();
                 } catch (SQLException e1) {
@@ -210,8 +208,8 @@ public class OwnTeamsController extends FxmlController {
             MenuItem removePlayer = new MenuItem("Remove player");
             removePlayer.setOnAction(e -> {
                 try {
-                    Team team = new Team(getTreeItem().getParent().getValue());
-                    Player player = new Player(getTreeItem().getValue());
+                    Team team = new Team(((Team)getTreeItem().getParent().getValue()).getId());
+                    Player player = new Player(((Player)getTreeItem().getValue()).getId());
                     team.removePlayer(player);
                     initForShow();
                 } catch (SQLException ex) {
@@ -225,11 +223,11 @@ public class OwnTeamsController extends FxmlController {
         }
 
         @Override
-        public void updateItem(String item, boolean empty) {
+        public void updateItem(Object item, boolean empty) {
             super.updateItem(item, empty);
 
             if (!empty) {
-                String parentValue = getTreeItem().getParent().getValue();
+                Object parentValue = getTreeItem().getParent().getValue();
                 if (getTreeItem().isLeaf()) {
                     if (!parentValue.equals(ROOT_STRING))
                         setContextMenu(playerContextMenu);

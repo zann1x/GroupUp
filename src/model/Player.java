@@ -15,6 +15,7 @@ public class Player {
     private String surname;
     private String pseudonym;
     private String email;
+    private int groupId;
     private List<Integer> teamIds;
 
     public Player() {
@@ -24,13 +25,7 @@ public class Player {
     public Player(int id) throws SQLException {
         this();
         this.id = id;
-        this.getDataFromId();
-    }
-
-    public Player(String pseudonym) throws SQLException {
-        this();
-        this.pseudonym = pseudonym;
-        this.getDataFromPseudonym();
+        this.getData();
     }
 
     public int getId() {
@@ -52,7 +47,11 @@ public class Player {
     public String getEmail() {
         return email;
     }
-    
+
+    public int getGroupId() {
+        return groupId;
+    }
+
     public List<Integer> getTeamIds() throws SQLException {
         String sql = "SELECT * FROM team_player_mapping WHERE playerId = ?;";
         PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
@@ -69,21 +68,10 @@ public class Player {
     	return teamIds;
     }
 
-    private void getDataFromId() throws SQLException {
+    private void getData() throws SQLException {
         String sql = "SELECT * FROM player WHERE id = ?;";
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-        statement.setInt(1, id);
-        getData(statement);
-    }
-
-    private void getDataFromPseudonym() throws SQLException {
-        String sql = "SELECT * FROM player WHERE pseudonym = ?;";
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-        statement.setString(1, pseudonym);
-        getData(statement);
-    }
-
-    private void getData(PreparedStatement preparedStatement) throws SQLException {
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        preparedStatement.setInt(1, id);
         ResultSet rs = preparedStatement.executeQuery();
 
         //player names are unique, therefore i'm blindly assuming only one player was selected
@@ -107,7 +95,7 @@ public class Player {
         // player names are unique, therefore i'm blindly assuming only one player was selected
         if (resultSet.first()) {
             this.id = resultSet.getInt("id");
-            this.getDataFromId();
+            this.getData();
             return true;
         } else {
             return false;
@@ -125,6 +113,18 @@ public class Player {
     public static List<Player> getAllPlayers() throws SQLException {
         List<Player> players = new ArrayList<>();
         String sql = "SELECT id FROM player;";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            players.add(new Player(id));
+        }
+        return players;
+    }
+
+    public static List<Player> getAllLoggedInPlayers() throws SQLException {
+        List<Player> players = new ArrayList<>();
+        String sql = "SELECT id FROM player WHERE sessionid IS NOT NULL;";
         PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
@@ -155,6 +155,14 @@ public class Player {
         preparedStatement.setString(4, email);
         preparedStatement.setInt(5, id);
         preparedStatement.executeUpdate();
+    }
+
+    public void addToGroup(int id) {
+        groupId = id;
+    }
+
+    public void removeFromGroup() {
+        groupId = 0;
     }
 
     public void addTeamId(int id) {

@@ -3,20 +3,29 @@ package controller;
 import application.MainApplication;
 import application.Session;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import util.SceneNavigator;
 import util.ViewNavigator;
+import view.AddPlayerToGroupPopup;
 
 public class MainController extends FxmlController {
 
     private ViewNavigator viewNavigator;
+
+    @FXML
+    private BorderPane rootPane;
+    @FXML
+    private VBox rightPane;
 
     @FXML
     private Label lbl_overviewName;
@@ -58,7 +67,21 @@ public class MainController extends FxmlController {
 
     @Override
     public void initForShow() {
-        showPlayer();
+        if (rootPane != null) {
+            ObservableList<Node> nodes = rightPane.getChildren();
+            for (int i = 0; i < nodes.size(); i++) {
+                if (nodes.get(i) instanceof Label)
+                    nodes.remove(i);
+            }
+
+            initGroupView();
+            showPlayer();
+        }
+    }
+
+    private void initGroupView() {
+        Label lbl = new Label(Session.getInstance().getPlayer().getPseudonym());
+        rightPane.getChildren().add(lbl);
     }
 
     public void close() {
@@ -140,6 +163,12 @@ public class MainController extends FxmlController {
     @FXML
     public void showChat() {
         switchToOverviewNode(ViewNavigator.NodeName.CHAT_OVERVIEW, "CHAT");
+    }
+
+    @FXML
+    private void addPlayerToGroup() {
+        // TODO
+        new AddPlayerToGroupPopup().showAndWait();
     }
 
 }
