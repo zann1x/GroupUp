@@ -1,4 +1,4 @@
-package view;
+package view.popup;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;

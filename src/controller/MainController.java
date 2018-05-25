@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,9 +15,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import model.Group;
+import model.Player;
 import util.SceneNavigator;
 import util.ViewNavigator;
-import view.AddPlayerToGroupPopup;
+import view.popup.AddPlayerToGroupPopup;
+import view.label.PlayerLabel;
+import view.popup.RemovePlayerFromGroupPopup;
+
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.List;
 
 public class MainController extends FxmlController {
 
@@ -28,9 +37,15 @@ public class MainController extends FxmlController {
     private VBox rightPane;
 
     @FXML
+    private VBox vb_players;
+
+    @FXML
     private Label lbl_overviewName;
     @FXML
     private Label lbl_detailName;
+
+    @FXML
+    private Button btn_removePlayerFromGroup;
 
     @FXML
     private Pane overviewPane;
@@ -68,11 +83,7 @@ public class MainController extends FxmlController {
     @Override
     public void initForShow() {
         if (rootPane != null) {
-            ObservableList<Node> nodes = rightPane.getChildren();
-            for (int i = 0; i < nodes.size(); i++) {
-                if (nodes.get(i) instanceof Label)
-                    nodes.remove(i);
-            }
+            btn_removePlayerFromGroup.setDisable(true);
 
             initGroupView();
             showPlayer();
@@ -80,8 +91,22 @@ public class MainController extends FxmlController {
     }
 
     private void initGroupView() {
-        Label lbl = new Label(Session.getInstance().getPlayer().getPseudonym());
-        rightPane.getChildren().add(lbl);
+        vb_players.getChildren().clear();
+
+        try {
+            Group group = new Group(Session.getInstance().getPlayer().getGroupId());
+            List<Player> players = group.getPlayers();
+            players.sort(Comparator.comparing(Player::getPseudonym));
+            for (Player player : players)
+                vb_players.getChildren().add(new PlayerLabel(player));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (vb_players.getChildren().size() <= 1)
+            btn_removePlayerFromGroup.setDisable(true);
+        else if (vb_players.getChildren().size() > 1)
+            btn_removePlayerFromGroup.setDisable(false);
     }
 
     public void close() {
@@ -167,8 +192,26 @@ public class MainController extends FxmlController {
 
     @FXML
     private void addPlayerToGroup() {
-        // TODO
-        new AddPlayerToGroupPopup().showAndWait();
+        try {
+            Group group = new Group(Session.getInstance().getPlayer().getGroupId());
+            new AddPlayerToGroupPopup(group).showAndWait();
+
+            initGroupView();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void removePlayerFromGroup() {
+        try {
+            Group group = new Group(Session.getInstance().getPlayer().getGroupId());
+            new RemovePlayerFromGroupPopup(group).showAndWait();
+
+            initGroupView();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

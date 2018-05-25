@@ -1,4 +1,4 @@
-package view;
+package view.popup;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;

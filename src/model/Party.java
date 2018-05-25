@@ -8,16 +8,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO add 'leader' functionality to group and team
 public abstract class Party {
 
     protected String sql;
 
     protected int id;
     protected String name;
-    protected List<Integer> playerIds;
 
     public Party() {
-        playerIds = new ArrayList<>();
     }
 
     public Party(int id) throws SQLException {
@@ -34,28 +33,54 @@ public abstract class Party {
         return name;
     }
 
-    public List<Integer> getPlayerIds() {
-        return playerIds;
-    }
-
     protected abstract void getData() throws SQLException;
 
-    protected void collectPlayerIds() throws SQLException {
+    public List<Integer> getPlayerIds() throws SQLException {
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
 
+        List<Integer> playerIds = new ArrayList<>();
         if (resultSet.first()) {
             do {
                 int playerId = resultSet.getInt("playerid");
                 playerIds.add(playerId);
             } while (resultSet.next());
         }
+        return playerIds;
+    }
+
+    public List<Integer> getLeaderIds() throws SQLException {
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        ResultSet resultSet = statement.executeQuery();
+
+        List<Integer> leaders = new ArrayList<>();
+        while (resultSet.next()){
+            int playerId = resultSet.getInt("playerid");
+            leaders.add(playerId);
+        }
+        return leaders;
+    }
+
+    public void addLeader(Player player) throws SQLException {
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        statement.setInt(2, player.getId());
+        statement.executeUpdate();
+    }
+
+    public void removeLeader(Player player) throws SQLException {
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        statement.setInt(2, player.getId());
+        statement.executeUpdate();
     }
 
     protected void create(String name) throws SQLException {
         // TODO improve this method as soon as i find out how to get the table name of a query
 
+        // sql = "SELECT * FROM xxxx WHERE name = ?;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setString(1, name);
         ResultSet resultSet = statement.executeQuery();
@@ -68,19 +93,20 @@ public abstract class Party {
 
     public void create(String name, Player player) throws SQLException {
         create(name);
-        addPlayer(player);
+        addPlayer(player, true);
     }
 
-    public void addPlayer(Player player) throws SQLException {
+    public void addPlayer(Player player, boolean isLeader) throws SQLException {
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setInt(1, id);
         statement.setInt(2, player.getId());
+        statement.setBoolean(3, isLeader);
         statement.executeUpdate();
     }
 
     public void addPlayers(List<Player> players) throws SQLException {
         for (Player player : players)
-            addPlayer(player);
+            addPlayer(player, false);
     }
 
     public void removePlayer(Player player) throws SQLException {
@@ -89,8 +115,7 @@ public abstract class Party {
         statement.setInt(2, player.getId());
         statement.executeUpdate();
 
-        playerIds.remove(Integer.valueOf(player.getId()));
-        if (playerIds.isEmpty()) {
+        if (getPlayerIds().isEmpty()) {
             delete();
         }
     }
@@ -107,7 +132,9 @@ public abstract class Party {
     }
 
     public List<Player> getPlayers() throws SQLException {
+        List<Integer> playerIds = getPlayerIds();
         List<Player> players = new ArrayList<>();
+
         for (int id : playerIds) {
             players.add(new Player(id));
         }

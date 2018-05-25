@@ -8,9 +8,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import model.Party;
 import model.Player;
 import model.Team;
-import view.AddPlayerToTeamPopup;
+import view.popup.AddPlayerToTeamPopup;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -159,7 +160,7 @@ public class OwnTeamsController extends FxmlController {
             MenuItem addPlayer = new MenuItem("Add player");
             addPlayer.setOnAction(e -> {
                 try {
-                    Team team = new Team(((Team)getTreeItem().getValue()).getId());
+                    Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     new AddPlayerToTeamPopup(team).showAndWait();
                     initForShow();
                 } catch (SQLException ex) {
@@ -169,24 +170,26 @@ public class OwnTeamsController extends FxmlController {
 
             javafx.event.EventHandler<ActionEvent> deleteTeamEventHandler = actionEvent -> {
                 try {
-                    Team team = new Team(((Team)getTreeItem().getValue()).getId());
-                    team.delete();
-                    initForShow();
+                    if (showAlert("Are you sure you want to delete the team?")) {
+                        Team team = new Team(((Team) getTreeItem().getValue()).getId());
+                        team.delete();
+                        initForShow();
+                    }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
             };
 
-            MenuItem deleteTeam = new MenuItem("Delete team");
-            deleteTeam.setOnAction(deleteTeamEventHandler);
+            MenuItem deleteActiveTeam = new MenuItem("Delete team");
+            deleteActiveTeam.setOnAction(deleteTeamEventHandler);
 
-            MenuItem deleteTeam2 = new MenuItem("Delete team");
-            deleteTeam2.setOnAction(deleteTeamEventHandler);
+            MenuItem deleteInactiveTeam = new MenuItem("Delete team");
+            deleteInactiveTeam.setOnAction(deleteTeamEventHandler);
 
             MenuItem setInactive = new MenuItem("Set inactive");
             setInactive.setOnAction(e -> {
                 try {
-                    Team team = new Team(((Team)getTreeItem().getValue()).getId());
+                    Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     team.setActive(false);
                     initForShow();
                 } catch (SQLException ex) {
@@ -197,7 +200,7 @@ public class OwnTeamsController extends FxmlController {
             MenuItem setActive = new MenuItem("Set active");
             setActive.setOnAction(e -> {
                 try {
-                    Team team = new Team(((Team)getTreeItem().getValue()).getId());
+                    Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     team.setActive(true);
                     initForShow();
                 } catch (SQLException e1) {
@@ -205,40 +208,99 @@ public class OwnTeamsController extends FxmlController {
                 }
             });
 
-            MenuItem removePlayer = new MenuItem("Remove player");
-            removePlayer.setOnAction(e -> {
+            MenuItem makeLeader = new MenuItem("Make leader");
+            makeLeader.setOnAction(e -> {
                 try {
-                    Team team = new Team(((Team)getTreeItem().getParent().getValue()).getId());
-                    Player player = new Player(((Player)getTreeItem().getValue()).getId());
-                    team.removePlayer(player);
+                    Team team = new Team(((Team) getTreeItem().getParent().getValue()).getId());
+                    Player player = new Player(((Player) getTreeItem().getValue()).getId());
+                    team.addLeader(player);
                     initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
             });
 
-            activeTeamsContextMenu = new ContextMenu(addPlayer, deleteTeam, setInactive);
-            inactiveTeamsContextMenu = new ContextMenu(deleteTeam2, setActive);
-            playerContextMenu = new ContextMenu(removePlayer);
+            MenuItem removeLeader = new MenuItem("Remove leader");
+            removeLeader.setOnAction(e -> {
+                try {
+                    Team team = new Team(((Team) getTreeItem().getParent().getValue()).getId());
+                    Player player = new Player(((Player) getTreeItem().getValue()).getId());
+                    team.removeLeader(player);
+                    initForShow();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            MenuItem removePlayer = new MenuItem("Remove player");
+            removePlayer.setOnAction(e -> {
+                try {
+                    if (showAlert("Are you sure you want to remove this player?")) {
+                        Team team = new Team(((Team) getTreeItem().getParent().getValue()).getId());
+                        Player player = new Player(((Player) getTreeItem().getValue()).getId());
+                        team.removePlayer(player);
+                        initForShow();
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            activeTeamsContextMenu = new ContextMenu(addPlayer, deleteActiveTeam, setInactive);
+            inactiveTeamsContextMenu = new ContextMenu(deleteInactiveTeam, setActive);
+            playerContextMenu = new ContextMenu(makeLeader, removeLeader, removePlayer);
         }
 
         @Override
         public void updateItem(Object item, boolean empty) {
             super.updateItem(item, empty);
 
-            if (!empty) {
-                Object parentValue = getTreeItem().getParent().getValue();
-                if (getTreeItem().isLeaf()) {
-                    if (!parentValue.equals(ROOT_STRING))
-                        setContextMenu(playerContextMenu);
-                } else {
-                    if (parentValue.equals(ACTIVE_TEAM_STRING))
-                        setContextMenu(activeTeamsContextMenu);
-                    else if (parentValue.equals(INACTIVE_TEAM_STRING))
-                        setContextMenu(inactiveTeamsContextMenu);
+            try {
+                if (!empty) {
+                    int playerId = Session.getInstance().getPlayer().getId();
+                    Object parentValue = getTreeItem().getParent().getValue();
+                    Object value = getTreeItem().getValue();
+
+                    // players
+                    if (getTreeItem().isLeaf()) {
+                        if (!parentValue.equals(ROOT_STRING)) {
+                            List<Integer> leaders = ((Party) parentValue).getLeaderIds();
+                            if (leaders.contains(playerId)) {
+                                setContextMenu(playerContextMenu);
+                            }
+                        }
+                    } else {
+                        // teams
+                        if (parentValue.equals(ACTIVE_TEAM_STRING)) {
+                            List<Integer> leaders = ((Party) value).getLeaderIds();
+                            if (leaders.contains(playerId)) {
+                                setContextMenu(activeTeamsContextMenu);
+                            } else if (parentValue.equals(INACTIVE_TEAM_STRING)) {
+                                if (leaders.contains(playerId)) {
+                                    setContextMenu(inactiveTeamsContextMenu);
+                                }
+                            }
+                        }
+                    }
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
+
+        private boolean showAlert(String infoText) {
+            ButtonType confirm = new ButtonType("Yes");
+            ButtonType deny = new ButtonType("No");
+
+            Alert alert = new Alert(Alert.AlertType.WARNING, "test", confirm, deny);
+            alert.setTitle(null);
+            alert.setHeaderText(null);
+            alert.setContentText(infoText);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            return result.orElse(deny) == confirm;
+        }
+
     }
 
 }

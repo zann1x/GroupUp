@@ -2,6 +2,8 @@ package application;
 
 import java.sql.SQLException;
 import java.util.UUID;
+
+import model.Group;
 import model.Player;
 
 public class Session {
@@ -31,6 +33,10 @@ public class Session {
             synchronized (mutex) {
                 instance = new Session(player);
                 player.setSessionId(instance.id.toString());
+
+                // add player to an initial group with only him as a member
+                Group group = new Group();
+                group.create(player);
             }
         } else {
             throw new Exception("A Session does already exist!");
@@ -41,12 +47,17 @@ public class Session {
         Session session = instance;
         if (session != null) {
             synchronized (mutex) {
-                instance = null;
                 try {
                     player.setSessionId(null);
+
+                    // remove player from his current group
+                    Group group = new Group(player.getGroupId());
+                    // TODO rename group if 'leader' has left
+                    group.exitOnLogout();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+                instance = null;
             }
         }
     }

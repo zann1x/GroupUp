@@ -27,6 +27,7 @@
                      <toggleGroup>
                         <ToggleGroup fx:id="tg_searchMode" />
                      </toggleGroup></RadioButton>
+                  <RadioButton fx:id="rbtn_group" mnemonicParsing="false" text="Group" toggleGroup="$tg_searchMode" />
                   <RadioButton fx:id="rbtn_team" mnemonicParsing="false" text="Team" toggleGroup="$tg_searchMode" />
                </children>
             </HBox>

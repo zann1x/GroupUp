@@ -20,6 +20,12 @@ public class Team extends Party {
     }
 
     @Override
+    public List<Integer> getPlayerIds() throws SQLException {
+        sql = "SELECT * FROM team_player_mapping WHERE teamid = ?;";
+        return super.getPlayerIds();
+    }
+
+    @Override
     protected void getData() throws SQLException {
         sql = "SELECT * FROM team WHERE id = ?;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
@@ -31,9 +37,6 @@ public class Team extends Party {
             this.name = resultSet.getString("name");
             this.active = resultSet.getBoolean("isactive");
         }
-
-        sql = "SELECT * FROM team_player_mapping WHERE teamid = ?;";
-        super.collectPlayerIds();
     }
 
     public boolean isActive() {
@@ -51,6 +54,24 @@ public class Team extends Party {
     }
 
     @Override
+    public List<Integer> getLeaderIds() throws SQLException {
+        sql = "SELECT * FROM team_player_mapping WHERE teamid = ? AND leader = true;";
+        return super.getLeaderIds();
+    }
+
+    @Override
+    public void addLeader(Player player) throws SQLException {
+        sql = "UPDATE team_player_mapping SET leader = true WHERE teamid = ? AND playerid = ?;";
+        super.addLeader(player);
+    }
+
+    @Override
+    public void removeLeader(Player player) throws SQLException {
+        sql = "UPDATE team_player_mapping SET leader = false WHERE teamid = ? AND playerid = ?;";
+        super.removeLeader(player);
+    }
+
+    @Override
     protected void create(String name) throws SQLException {
         sql = "INSERT INTO team (name) VALUE(?);";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
@@ -62,20 +83,15 @@ public class Team extends Party {
     }
 
     @Override
-    public void addPlayer(Player player) throws SQLException {
-        sql = "INSERT INTO team_player_mapping (teamid, playerid) VALUE(?, ?);";
-        super.addPlayer(player);
-
-        player.addTeamId(id);
-        playerIds.add(player.getId());
+    public void addPlayer(Player player, boolean isLeader) throws SQLException {
+        sql = "INSERT INTO team_player_mapping (teamid, playerid, leader) VALUE(?, ?, ?);";
+        super.addPlayer(player, isLeader);
     }
 
     @Override
     public void removePlayer(Player player) throws SQLException {
         sql = "DELETE FROM team_player_mapping WHERE teamid = ? AND playerid = ?;";
         super.removePlayer(player);
-
-        player.removeTeamId(id);
     }
 
     private void removeAllPlayers() throws SQLException {

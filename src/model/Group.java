@@ -1,10 +1,12 @@
 package model;
 
 import application.MainApplication;
+import application.Session;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Group extends Party {
 
@@ -17,8 +19,14 @@ public class Group extends Party {
     }
 
     @Override
+    public List<Integer> getPlayerIds() throws SQLException {
+        sql = "SELECT * FROM group_player_mapping WHERE groupid = ?;";
+        return super.getPlayerIds();
+    }
+
+    @Override
     protected void getData() throws SQLException {
-        sql = "SELECT * FROM group WHERE id = ?;";
+        sql = "SELECT * FROM `group` WHERE id = ?;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
@@ -27,43 +35,73 @@ public class Group extends Party {
             this.id = resultSet.getInt("id");
             this.name = resultSet.getString("name");
         }
+    }
 
-        sql = "SELECT * FROM group_player_mapping WHERE groupid = ?;";
-        super.collectPlayerIds();
+    @Override
+    public List<Integer> getLeaderIds() throws SQLException {
+        sql = "SELECT * FROM group_player_mapping WHERE groupid = ? AND leader = true;";
+        return super.getLeaderIds();
+    }
+
+    @Override
+    public void addLeader(Player player) throws SQLException {
+        sql = "UPDATE group_player_mapping SET leader = true WHERE groupid = ? AND playerid = ?;";
+        super.addLeader(player);
+    }
+
+    @Override
+    public void removeLeader(Player player) throws SQLException {
+        sql = "UPDATE group_player_mapping SET leader = false WHERE groupid = ? AND playerid = ?;";
+        super.removeLeader(player);
     }
 
     @Override
     protected void create(String name) throws SQLException {
-        sql = "INSERT INTO group (name) VALUE(?);";
+        // get the lowest id that is currently not used
+        sql = "SELECT MIN(t1.id + 1) AS nextid FROM `group` t1 " +
+                "LEFT JOIN `group` t2 ON t1.id + 1 = t2.id " +
+                "WHERE t2.id IS NULL;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-        statement.setString(1, name);
-        statement.executeUpdate();
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.first()) {
+            int lowestIdAvailable = resultSet.getInt("nextid");
+            lowestIdAvailable = lowestIdAvailable == 0 ? 1 : lowestIdAvailable;
 
-        sql = "SELECT * FROM group WHERE name = ?;";
+            sql = "INSERT INTO `group`(id, name) VALUE(?, ?);";
+            statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+            statement.setInt(1, lowestIdAvailable);
+            statement.setString(2, name);
+            statement.executeUpdate();
+        }
+
+        sql = "SELECT * FROM `group` WHERE name = ?;";
         super.create(name);
     }
 
-    @Override
-    public void addPlayer(Player player) throws SQLException {
-        sql = "INSERT INTO group_player_mapping (groupid, playerid) VALUE(?, ?);";
-        super.addPlayer(player);
+    public void create(Player player) throws SQLException {
+        create(player.getPseudonym());
+    }
 
-        player.addToGroup(id);
-        playerIds.add(player.getId());
+    @Override
+    public void addPlayer(Player player, boolean isLeader) throws SQLException {
+        sql = "INSERT INTO group_player_mapping (groupid, playerid, leader) VALUE(?, ?, ?);";
+        super.addPlayer(player, isLeader);
     }
 
     @Override
     public void removePlayer(Player player) throws SQLException {
         sql = "DELETE FROM group_player_mapping WHERE groupid = ? AND playerid = ?;";
         super.removePlayer(player);
-
-        player.removeFromGroup();
     }
 
     @Override
     public void delete() throws SQLException {
-        sql = "DELETE FROM group WHERE id = ?;";
+        sql = "DELETE FROM `group` WHERE id = ?;";
         super.delete();
+    }
+
+    public void exitOnLogout() throws SQLException {
+        removePlayer(Session.getInstance().getPlayer());
     }
 
 }

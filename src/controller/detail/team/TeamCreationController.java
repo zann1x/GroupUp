@@ -72,24 +72,18 @@ public class TeamCreationController extends FxmlController {
     @FXML
     private void handleSubmit() {
         if (mandatoryFieldsFilled()) {
-            boolean createSuccess;
             Team team = new Team();
             try {
                 team.create(tf_name.getText(), Session.getInstance().getPlayer());
                 team.addPlayers(selectedPlayers);
-                createSuccess = true;
-            } catch (SQLException e) {
-                createSuccess = false;
-                e.printStackTrace();
-            }
 
-            initForShow();
-            if (createSuccess) {
+                initForShow();
                 lbl_createSuccess.setTextFill(Paint.valueOf("GREEN"));
                 lbl_createSuccess.setText("Team created successfully!");
-            } else {
+            } catch (SQLException e) {
                 lbl_createSuccess.setTextFill(Paint.valueOf("RED"));
                 lbl_createSuccess.setText("Team creation unsuccessful!");
+                e.printStackTrace();
             }
         }
     }

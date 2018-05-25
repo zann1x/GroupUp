@@ -1,4 +1,4 @@
-package view;
+package view.popup;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import model.Player;
 
-public class AddPlayerPopup extends VBoxPopup {
+public class PlayerPopup extends VBoxPopup {
 
     protected Label lbl_selectedPlayers;
     protected TextField tf_searchPlayer;
@@ -18,7 +18,7 @@ public class AddPlayerPopup extends VBoxPopup {
     protected ObservableList<Player> playerObservableList;
     protected EventHandler<MouseEvent> doubleClickEventHandler;
 
-    public AddPlayerPopup() {
+    public PlayerPopup() {
         lbl_selectedPlayers = new Label();
         tf_searchPlayer = new TextField();
         lv_players = new ListView<>();

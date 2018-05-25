@@ -15,11 +15,8 @@ public class Player {
     private String surname;
     private String pseudonym;
     private String email;
-    private int groupId;
-    private List<Integer> teamIds;
 
     public Player() {
-        teamIds = new ArrayList<>();
     }
 
     public Player(int id) throws SQLException {
@@ -48,17 +45,25 @@ public class Player {
         return email;
     }
 
-    public int getGroupId() {
-        return groupId;
+    public int getGroupId() throws SQLException {
+        String sql = "SELECT * FROM group_player_mapping WHERE playerid = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.first())
+            return resultSet.getInt("groupid");
+        else
+            return 0;
     }
 
     public List<Integer> getTeamIds() throws SQLException {
-        String sql = "SELECT * FROM team_player_mapping WHERE playerId = ?;";
+        String sql = "SELECT * FROM team_player_mapping WHERE playerid = ?;";
         PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         preparedStatement.setInt(1, id);
         ResultSet rs = preparedStatement.executeQuery();
 
-        teamIds.clear();
+        List<Integer> teamIds = new ArrayList<>();
         if (rs.first()) {
             do {
                 int teamId = rs.getInt("teamId");
@@ -82,6 +87,7 @@ public class Player {
             this.pseudonym = rs.getString("pseudonym");
             this.email = rs.getString("email");
         }
+        getGroupId();
         getTeamIds();
     }
 
@@ -155,22 +161,6 @@ public class Player {
         preparedStatement.setString(4, email);
         preparedStatement.setInt(5, id);
         preparedStatement.executeUpdate();
-    }
-
-    public void addToGroup(int id) {
-        groupId = id;
-    }
-
-    public void removeFromGroup() {
-        groupId = 0;
-    }
-
-    public void addTeamId(int id) {
-        teamIds.add(id);
-    }
-
-    public void removeTeamId(int id) {
-        teamIds.remove(Integer.valueOf(id));
     }
 
     @Override

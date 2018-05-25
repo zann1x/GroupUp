@@ -4,6 +4,8 @@ import application.Session;
 import controller.FxmlController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -34,6 +36,8 @@ public class PlayNowController extends FxmlController {
     @FXML
     private RadioButton rbtn_alone;
     @FXML
+    private RadioButton rbtn_group;
+    @FXML
     private RadioButton rbtn_team;
 
     @FXML
@@ -49,7 +53,7 @@ public class PlayNowController extends FxmlController {
     }
 
     private void initTeamChooser() {
-        if (rbtn_alone.isSelected()) {
+        if (rbtn_alone.isSelected() || rbtn_group.isSelected()) {
             chb_teamChooser.setDisable(true);
         } else if (rbtn_team.isSelected()) {
             chb_teamChooser.setDisable(false);
@@ -57,7 +61,7 @@ public class PlayNowController extends FxmlController {
 
         tg_searchMode.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                if (newValue.equals(rbtn_alone))
+                if (newValue.equals(rbtn_alone) || newValue.equals(rbtn_group))
                     chb_teamChooser.setDisable(true);
                 else if (newValue.equals(rbtn_team))
                     chb_teamChooser.setDisable(false);
@@ -72,8 +76,8 @@ public class PlayNowController extends FxmlController {
                 if (team.isActive())
                     teams.add(team);
             }
-            teams.sort(Comparator.comparing(Team::toString));
-            availableTeams.addAll(teams);
+            teams.sort(Comparator.comparing(Team::getName));
+            availableTeams.setAll(teams);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -83,6 +87,7 @@ public class PlayNowController extends FxmlController {
     private void initGameChooser() {
         try {
             List<Game> games = Game.getAllGames();
+            games.sort(Comparator.comparing(Game::getName));
             availableGames.setAll(games);
         } catch (SQLException e) {
             e.printStackTrace();

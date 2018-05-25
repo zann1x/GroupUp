@@ -23,6 +23,10 @@ public class Game {
         getDataFromName();
     }
 
+    public String getName() {
+        return name;
+    }
+
     private void getDataFromId() throws SQLException {
         String sql = "SELECT * FROM game WHERE id = ?;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
