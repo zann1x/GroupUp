@@ -82,10 +82,20 @@ public class Team extends Party {
         super.create(name);
     }
 
+    public void create(String name, Player player) throws SQLException {
+        create(name);
+        addPlayer(player, true);
+    }
+
     @Override
     public void addPlayer(Player player, boolean isLeader) throws SQLException {
         sql = "INSERT INTO team_player_mapping (teamid, playerid, leader) VALUE(?, ?, ?);";
         super.addPlayer(player, isLeader);
+    }
+
+    public void addPlayers(List<Player> players) throws SQLException {
+        for (Player player : players)
+            addPlayer(player, false);
     }
 
     @Override
@@ -106,6 +116,12 @@ public class Team extends Party {
 
         sql = "DELETE FROM team WHERE id = ?;";
         super.delete();
+    }
+
+    @Override
+    public void rename(String name) throws SQLException {
+        sql = "UPDATE team SET name = ? WHERE id = ?;";
+        super.rename(name);
     }
 
 }

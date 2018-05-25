@@ -3,7 +3,6 @@ package controller;
 import application.MainApplication;
 import application.Session;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -20,7 +19,6 @@ import model.Player;
 import util.SceneNavigator;
 import util.ViewNavigator;
 import view.popup.AddPlayerToGroupPopup;
-import view.label.PlayerLabel;
 import view.popup.RemovePlayerFromGroupPopup;
 
 import java.sql.SQLException;
@@ -98,7 +96,7 @@ public class MainController extends FxmlController {
             List<Player> players = group.getPlayers();
             players.sort(Comparator.comparing(Player::getPseudonym));
             for (Player player : players)
-                vb_players.getChildren().add(new PlayerLabel(player));
+                vb_players.getChildren().add(new Label(player.getPseudonym()));
         } catch (SQLException e) {
             e.printStackTrace();
         }

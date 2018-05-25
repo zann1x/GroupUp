@@ -6,9 +6,9 @@ import model.Group;
 import model.Player;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RemovePlayerFromGroupPopup extends PlayerPopup {
 
@@ -19,9 +19,13 @@ public class RemovePlayerFromGroupPopup extends PlayerPopup {
         try {
             List<Player> players = group.getPlayers();
             // remove all players that are already in the team
-            players = players.stream()
-                    .filter(p -> p.getId() != Session.getInstance().getPlayer().getId())
-                    .collect(Collectors.toList());
+            List<Player> playersToRemove = new ArrayList<>();
+            for (Player player : players) {
+                if (player.getId() == Session.getInstance().getPlayer().getId() || group.getLeaderIds().contains(player.getId())) {
+                    playersToRemove.add(player);
+                }
+            }
+            players.removeAll(playersToRemove);
 
             if (players.size() == 0) {
                 lbl_selectedPlayers.setText("No players selectable");
@@ -37,12 +41,11 @@ public class RemovePlayerFromGroupPopup extends PlayerPopup {
             if (event.getClickCount() >= 2) {
                 Player player = lv_players.getSelectionModel().getSelectedItem();
                 try {
-                    // TODO change group name if 'leader' was removed / has left
                     group.removePlayer(player);
 
                     // add removed player to his own group again
                     Group g = new Group();
-                    g.create(player.getPseudonym(), player);
+                    g.create(player);
 
                     stage.close();
                 } catch (SQLException e) {
@@ -51,7 +54,7 @@ public class RemovePlayerFromGroupPopup extends PlayerPopup {
             }
         };
 
-        initialize();
+        setupElements();
     }
 
 }

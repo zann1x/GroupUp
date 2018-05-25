@@ -12,6 +12,7 @@ import model.Party;
 import model.Player;
 import model.Team;
 import view.popup.AddPlayerToTeamPopup;
+import view.popup.EditTeamNamePopup;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -87,12 +88,12 @@ public class OwnTeamsController extends FxmlController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            playersInTeam.sort(Comparator.comparing(Player::toString));
+            playersInTeam.sort(Comparator.comparing(Player::getPseudonym));
             playerMap.put(id, playersInTeam);
         }
 
-        activeTeams.sort(Comparator.comparing(Team::toString));
-        inactiveTeams.sort(Comparator.comparing(Team::toString));
+        activeTeams.sort(Comparator.comparing(Team::getName));
+        inactiveTeams.sort(Comparator.comparing(Team::getName));
     }
 
     private void createTreeViewBody() {
@@ -157,6 +158,17 @@ public class OwnTeamsController extends FxmlController {
         private ContextMenu playerContextMenu;
 
         public CustomTreeCell() {
+            MenuItem renameTeam = new MenuItem("Rename");
+            renameTeam.setOnAction(e -> {
+                try {
+                    Team team = new Team(((Team) getTreeItem().getValue()).getId());
+                    new EditTeamNamePopup(team).showAndWait();
+                    initForShow();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
             MenuItem addPlayer = new MenuItem("Add player");
             addPlayer.setOnAction(e -> {
                 try {
@@ -246,7 +258,7 @@ public class OwnTeamsController extends FxmlController {
                 }
             });
 
-            activeTeamsContextMenu = new ContextMenu(addPlayer, deleteActiveTeam, setInactive);
+            activeTeamsContextMenu = new ContextMenu(renameTeam, addPlayer, deleteActiveTeam, setInactive);
             inactiveTeamsContextMenu = new ContextMenu(deleteInactiveTeam, setActive);
             playerContextMenu = new ContextMenu(makeLeader, removeLeader, removePlayer);
         }
@@ -264,7 +276,7 @@ public class OwnTeamsController extends FxmlController {
                     // players
                     if (getTreeItem().isLeaf()) {
                         if (!parentValue.equals(ROOT_STRING)) {
-                            List<Integer> leaders = ((Party) parentValue).getLeaderIds();
+                            List<Integer> leaders = ((Team) parentValue).getLeaderIds();
                             if (leaders.contains(playerId)) {
                                 setContextMenu(playerContextMenu);
                             }
@@ -272,7 +284,7 @@ public class OwnTeamsController extends FxmlController {
                     } else {
                         // teams
                         if (parentValue.equals(ACTIVE_TEAM_STRING)) {
-                            List<Integer> leaders = ((Party) value).getLeaderIds();
+                            List<Integer> leaders = ((Team) value).getLeaderIds();
                             if (leaders.contains(playerId)) {
                                 setContextMenu(activeTeamsContextMenu);
                             } else if (parentValue.equals(INACTIVE_TEAM_STRING)) {

@@ -30,7 +30,7 @@ public class PlayerPopup extends VBoxPopup {
         addChild(lv_players);
     }
 
-    protected void initialize() {
+    protected void setupElements() {
         // text field for searching players
         // TODO enable searching in player list
         tf_searchPlayer.setPromptText("Enter a pseudonym here");

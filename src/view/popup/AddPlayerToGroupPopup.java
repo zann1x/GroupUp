@@ -54,7 +54,7 @@ public class AddPlayerToGroupPopup extends PlayerPopup {
             }
         };
 
-        initialize();
+        setupElements();
     }
 
 }

@@ -2,6 +2,7 @@ package model;
 
 import application.MainApplication;
 import application.Session;
+import sun.applet.Main;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -58,13 +59,13 @@ public class Group extends Party {
     @Override
     protected void create(String name) throws SQLException {
         // get the lowest id that is currently not used
-        sql = "SELECT MIN(t1.id + 1) AS nextid FROM `group` t1 " +
-                "LEFT JOIN `group` t2 ON t1.id + 1 = t2.id " +
-                "WHERE t2.id IS NULL;";
+        sql = "SELECT MIN(g1.id + 1) AS nextlowestid FROM `group` g1 " +
+                "LEFT JOIN `group` g2 ON g1.id + 1 = g2.id " +
+                "WHERE g2.id IS NULL;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.first()) {
-            int lowestIdAvailable = resultSet.getInt("nextid");
+            int lowestIdAvailable = resultSet.getInt("nextlowestid");
             lowestIdAvailable = lowestIdAvailable == 0 ? 1 : lowestIdAvailable;
 
             sql = "INSERT INTO `group`(id, name) VALUE(?, ?);";
@@ -80,6 +81,7 @@ public class Group extends Party {
 
     public void create(Player player) throws SQLException {
         create(player.getPseudonym());
+        addPlayer(player, true);
     }
 
     @Override
@@ -98,6 +100,12 @@ public class Group extends Party {
     public void delete() throws SQLException {
         sql = "DELETE FROM `group` WHERE id = ?;";
         super.delete();
+    }
+
+    @Override
+    public void rename(String name) throws SQLException {
+        sql = "UPDATE `group` SET name = ? WHERE id = ?;";
+        super.rename(name);
     }
 
     public void exitOnLogout() throws SQLException {

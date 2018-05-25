@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO add 'leader' functionality to group and team
 public abstract class Party {
 
     protected String sql;
@@ -34,6 +33,20 @@ public abstract class Party {
     }
 
     protected abstract void getData() throws SQLException;
+
+    public int getSize() throws SQLException {
+        return getPlayerIds().size();
+    }
+
+    public List<Player> getPlayers() throws SQLException {
+        List<Integer> playerIds = getPlayerIds();
+        List<Player> players = new ArrayList<>();
+
+        for (int id : playerIds) {
+            players.add(new Player(id));
+        }
+        return players;
+    }
 
     public List<Integer> getPlayerIds() throws SQLException {
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
@@ -91,22 +104,12 @@ public abstract class Party {
         getData();
     }
 
-    public void create(String name, Player player) throws SQLException {
-        create(name);
-        addPlayer(player, true);
-    }
-
     public void addPlayer(Player player, boolean isLeader) throws SQLException {
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setInt(1, id);
         statement.setInt(2, player.getId());
         statement.setBoolean(3, isLeader);
         statement.executeUpdate();
-    }
-
-    public void addPlayers(List<Player> players) throws SQLException {
-        for (Player player : players)
-            addPlayer(player, false);
     }
 
     public void removePlayer(Player player) throws SQLException {
@@ -126,19 +129,16 @@ public abstract class Party {
         statement.executeUpdate();
     }
 
+    public void rename(String name) throws SQLException {
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setString(1, name);
+        statement.setInt(2, id);
+        statement.executeUpdate();
+    }
+
     @Override
     public String toString() {
         return name;
-    }
-
-    public List<Player> getPlayers() throws SQLException {
-        List<Integer> playerIds = getPlayerIds();
-        List<Player> players = new ArrayList<>();
-
-        for (int id : playerIds) {
-            players.add(new Player(id));
-        }
-        return players;
     }
 
 }
