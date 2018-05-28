@@ -1,3 +1,4 @@
+/* main */
 #bottom {
     -fx-background-color: #b2b2b2;
 }
@@ -7,5 +8,10 @@
 }
 
 #header-text {
+    -fx-font-weight: bold;
+}
+
+/* own teams */
+#leader-tree-item {
     -fx-font-weight: bold;
 }

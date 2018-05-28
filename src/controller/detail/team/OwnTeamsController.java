@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import model.Party;
 import model.Player;
 import model.Team;
 import view.popup.AddPlayerToTeamPopup;
@@ -19,26 +18,21 @@ import java.util.*;
 
 public class OwnTeamsController extends FxmlController {
 
-    @FXML
-    private BorderPane ownTeamsRoot;
-
-    @FXML
-    private TreeView<Object> tv_teams;
+    private static final String ACTIVE_TEAM_STRING = "Active teams";
+    private static final String INACTIVE_TEAM_STRING = "Inactive teams";
+    private static final String ROOT_STRING = "Teams";
     @FXML
     public VBox vb_statistics;
     @FXML
     public Label lbl_statistics;
-
+    @FXML
+    private BorderPane ownTeamsRoot;
+    @FXML
+    private TreeView<Object> tv_teams;
     private TreeItem<Object> rootItem;
-
     private List<Team> activeTeams;
     private List<Team> inactiveTeams;
-
     private Map<Integer, List<Player>> playerMap;
-
-    private static final String ACTIVE_TEAM_STRING = "Active teams";
-    private static final String INACTIVE_TEAM_STRING = "Inactive teams";
-    private static final String ROOT_STRING = "Teams";
 
     @FXML
     public void initialize() {
@@ -155,7 +149,9 @@ public class OwnTeamsController extends FxmlController {
 
         private ContextMenu activeTeamsContextMenu;
         private ContextMenu inactiveTeamsContextMenu;
+        private ContextMenu teamContextMenu;
         private ContextMenu playerContextMenu;
+        private ContextMenu leaderContextMenu;
 
         public CustomTreeCell() {
             MenuItem renameTeam = new MenuItem("Rename");
@@ -244,8 +240,7 @@ public class OwnTeamsController extends FxmlController {
                 }
             });
 
-            MenuItem removePlayer = new MenuItem("Remove player");
-            removePlayer.setOnAction(e -> {
+            javafx.event.EventHandler<ActionEvent> removePlayerEventHandler = actionEvent -> {
                 try {
                     if (showAlert("Are you sure you want to remove this player?")) {
                         Team team = new Team(((Team) getTreeItem().getParent().getValue()).getId());
@@ -256,11 +251,40 @@ public class OwnTeamsController extends FxmlController {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-            });
+            };
 
-            activeTeamsContextMenu = new ContextMenu(renameTeam, addPlayer, deleteActiveTeam, setInactive);
-            inactiveTeamsContextMenu = new ContextMenu(deleteInactiveTeam, setActive);
-            playerContextMenu = new ContextMenu(makeLeader, removeLeader, removePlayer);
+            MenuItem removePlayer = new MenuItem("Remove player");
+            removePlayer.setOnAction(removePlayerEventHandler);
+
+            MenuItem removeLeaderPlayer = new MenuItem("Remove player");
+            removeLeaderPlayer.setOnAction(removePlayerEventHandler);
+
+            javafx.event.EventHandler<ActionEvent> leaveTeamEventHandler = actionEvent -> {
+                try {
+                    if (showAlert("Do you really want to leave this team?")) {
+                        Team team = new Team(((Team) getTreeItem().getValue()).getId());
+                        team.removePlayer(Session.getInstance().getPlayer());
+                        initForShow();
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            };
+
+            MenuItem leaveActiveTeamAsLeader = new MenuItem("Leave team");
+            leaveActiveTeamAsLeader.setOnAction(leaveTeamEventHandler);
+
+            MenuItem leaveInactiveTeamAsLeader = new MenuItem("Leave team");
+            leaveInactiveTeamAsLeader.setOnAction(leaveTeamEventHandler);
+
+            MenuItem leaveTeamAsPlayer = new MenuItem("Leave team");
+            leaveTeamAsPlayer.setOnAction(leaveTeamEventHandler);
+
+            activeTeamsContextMenu = new ContextMenu(renameTeam, addPlayer, setInactive, leaveActiveTeamAsLeader, deleteActiveTeam);
+            inactiveTeamsContextMenu = new ContextMenu(setActive, leaveInactiveTeamAsLeader, deleteInactiveTeam);
+            teamContextMenu = new ContextMenu(leaveTeamAsPlayer);
+            playerContextMenu = new ContextMenu(makeLeader, removePlayer);
+            leaderContextMenu = new ContextMenu(removeLeader, removeLeaderPlayer);
         }
 
         @Override
@@ -276,22 +300,40 @@ public class OwnTeamsController extends FxmlController {
                     // players
                     if (getTreeItem().isLeaf()) {
                         if (!parentValue.equals(ROOT_STRING)) {
-                            List<Integer> leaders = ((Team) parentValue).getLeaderIds();
-                            if (leaders.contains(playerId)) {
-                                setContextMenu(playerContextMenu);
+                            if (value instanceof Player) {
+                                Player selectedPlayer = (Player) value;
+                                List<Integer> leaderIds = ((Team) parentValue).getLeaderIds();
+
+                                if (leaderIds.contains(selectedPlayer.getId()))
+                                    setId("leader-tree-item");
+
+                                if (selectedPlayer.getId() != playerId) {
+                                    if (leaderIds.contains(playerId)) {
+                                        if (leaderIds.contains(selectedPlayer.getId()))
+                                            setContextMenu(leaderContextMenu);
+                                        else
+                                            setContextMenu(playerContextMenu);
+                                    }
+                                } else {
+                                    setContextMenu(null);
+                                }
                             }
                         }
                     } else {
                         // teams
-                        if (parentValue.equals(ACTIVE_TEAM_STRING)) {
-                            List<Integer> leaders = ((Team) value).getLeaderIds();
-                            if (leaders.contains(playerId)) {
+                        List<Integer> leaderIds = new ArrayList<>();
+                        if (value instanceof Team)
+                            leaderIds = ((Team) value).getLeaderIds();
+
+                        if (leaderIds.contains(playerId)) {
+                            if (parentValue.equals(ACTIVE_TEAM_STRING)) {
                                 setContextMenu(activeTeamsContextMenu);
                             } else if (parentValue.equals(INACTIVE_TEAM_STRING)) {
-                                if (leaders.contains(playerId)) {
-                                    setContextMenu(inactiveTeamsContextMenu);
-                                }
+                                setContextMenu(inactiveTeamsContextMenu);
                             }
+                        } else {
+                            if (!value.equals(ACTIVE_TEAM_STRING) && !value.equals(INACTIVE_TEAM_STRING))
+                                setContextMenu(teamContextMenu);
                         }
                     }
                 }

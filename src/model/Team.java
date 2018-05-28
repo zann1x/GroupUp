@@ -102,6 +102,10 @@ public class Team extends Party {
     public void removePlayer(Player player) throws SQLException {
         sql = "DELETE FROM team_player_mapping WHERE teamid = ? AND playerid = ?;";
         super.removePlayer(player);
+
+        if (getLeaderIds().size() == 0) {
+            addLeader(new Player(getPlayerIds().get(0)));
+        }
     }
 
     private void removeAllPlayers() throws SQLException {
