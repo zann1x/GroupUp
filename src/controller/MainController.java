@@ -18,8 +18,8 @@ import model.Group;
 import model.Player;
 import util.SceneNavigator;
 import util.ViewNavigator;
-import view.popup.AddPlayerToGroupPopup;
-import view.popup.RemovePlayerFromGroupPopup;
+import view.popup.playerpopup.AddPlayerToGroupPopup;
+import view.popup.playerpopup.RemovePlayerFromGroupPopup;
 
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -31,8 +31,6 @@ public class MainController extends FxmlController {
 
     @FXML
     private BorderPane rootPane;
-    @FXML
-    private VBox rightPane;
 
     @FXML
     private VBox vb_players;
@@ -62,6 +60,8 @@ public class MainController extends FxmlController {
     private ImageView iv_chat;
     @FXML
     private ImageView iv_logout;
+    @FXML
+    private ImageView iv_refresh;
 
     @FXML
     public void initialize() {
@@ -73,6 +73,8 @@ public class MainController extends FxmlController {
             iv_news.setImage(new Image("file:res/img/news.png"));
             iv_chat.setImage(new Image("file:res/img/chat.png"));
             iv_logout.setImage(new Image("file:res/img/logout_icon.png"));
+            iv_refresh.setImage(new Image("file:res/img/refresh_icon.png"));
+            showPlayer();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,7 +86,6 @@ public class MainController extends FxmlController {
             btn_removePlayerFromGroup.setDisable(true);
 
             initGroupView();
-            showPlayer();
         }
     }
 
@@ -145,6 +146,11 @@ public class MainController extends FxmlController {
         alert.initOwner(stage);
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void handleRefresh() {
+        initForShow();
     }
 
     private void switchToNodeOnPane(ViewNavigator.NodeName nodeName, Pane pane) {

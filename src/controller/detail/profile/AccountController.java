@@ -1,7 +1,5 @@
 package controller.detail.profile;
 
-import java.sql.SQLException;
-
 import application.Session;
 import controller.FxmlController;
 import javafx.fxml.FXML;
@@ -9,6 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.Player;
+
+import java.sql.SQLException;
 
 public class AccountController extends FxmlController {
 

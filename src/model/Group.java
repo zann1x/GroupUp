@@ -2,7 +2,6 @@ package model;
 
 import application.MainApplication;
 import application.Session;
-import sun.applet.Main;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

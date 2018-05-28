@@ -10,8 +10,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import model.Player;
 import model.Team;
-import view.popup.AddPlayerToTeamPopup;
-import view.popup.EditTeamNamePopup;
+import view.popup.playerpopup.AddPlayerToTeamPopup;
+import view.popup.teampopup.EditTeamNamePopup;
 
 import java.sql.SQLException;
 import java.util.*;

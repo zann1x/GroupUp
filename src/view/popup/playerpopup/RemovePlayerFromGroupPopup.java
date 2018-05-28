@@ -1,4 +1,4 @@
-package view.popup;
+package view.popup.playerpopup;
 
 import application.Session;
 import javafx.collections.FXCollections;
@@ -10,26 +10,25 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class AddPlayerToGroupPopup extends PlayerPopup {
+public class RemovePlayerFromGroupPopup extends PlayerPopup {
 
-    public AddPlayerToGroupPopup(Group group) {
-        lbl_selectedPlayers.setText("Players currently online");
+    public RemovePlayerFromGroupPopup(Group group) {
+        lbl_selectedPlayers.setText("Selectable players");
 
         // collect list items
         try {
-            List<Player> players = Player.getAllLoggedInPlayers();
+            List<Player> players = group.getPlayers();
             // remove all players that are already in the team
             List<Player> playersToRemove = new ArrayList<>();
             for (Player player : players) {
-                if (player.getId() == Session.getInstance().getPlayer().getId()
-                        || group.getPlayerIds().contains(player.getId())) {
+                if (player.getId() == Session.getInstance().getPlayer().getId() || group.getLeaderIds().contains(player.getId())) {
                     playersToRemove.add(player);
                 }
             }
             players.removeAll(playersToRemove);
 
             if (players.size() == 0) {
-                lbl_selectedPlayers.setText("No players currently online");
+                lbl_selectedPlayers.setText("No players selectable");
             }
             playerObservableList.addAll(players);
             FXCollections.sort(playerObservableList, Comparator.comparing(Player::toString));
@@ -42,11 +41,12 @@ public class AddPlayerToGroupPopup extends PlayerPopup {
             if (event.getClickCount() >= 2) {
                 Player player = lv_players.getSelectionModel().getSelectedItem();
                 try {
-                    // remove player from his own group first
-                    Group g = new Group(player.getGroupId());
-                    g.removePlayer(player);
+                    group.removePlayer(player);
 
-                    group.addPlayer(player, false);
+                    // add removed player to his own group again
+                    Group g = new Group();
+                    g.create(player);
+
                     stage.close();
                 } catch (SQLException e) {
                     e.printStackTrace();

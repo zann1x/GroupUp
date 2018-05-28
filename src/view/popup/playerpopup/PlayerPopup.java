@@ -1,4 +1,4 @@
-package view.popup;
+package view.popup.playerpopup;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import model.Player;
+import view.popup.VBoxPopup;
 
 public class PlayerPopup extends VBoxPopup {
 

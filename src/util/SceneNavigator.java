@@ -1,9 +1,10 @@
 package util;
 
-import java.util.HashMap;
 import controller.FxmlController;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.util.HashMap;
 
 public class SceneNavigator {
 

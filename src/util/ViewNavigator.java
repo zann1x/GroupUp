@@ -1,10 +1,11 @@
 package util;
 
-import java.util.HashMap;
-import java.util.Map;
 import application.MainApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ViewNavigator {
 

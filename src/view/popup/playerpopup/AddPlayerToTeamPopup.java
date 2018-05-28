@@ -1,4 +1,4 @@
-package view.popup;
+package view.popup.playerpopup;
 
 import application.Session;
 import javafx.collections.FXCollections;

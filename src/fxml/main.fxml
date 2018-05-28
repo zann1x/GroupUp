@@ -35,7 +35,8 @@
       <AnchorPane id="bottom" prefHeight="40.0" BorderPane.alignment="CENTER">
          <children>
                   <ImageView fx:id="iv_logout" fitHeight="20.0" fitWidth="20.0" layoutX="1236.0" layoutY="10.0" onMouseClicked="#handleLogout" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-            <Label layoutX="1229.0" layoutY="12.0" onMouseClicked="#showAbout" prefHeight="17.0" prefWidth="37.0" text="About" underline="true" AnchorPane.rightAnchor="10.0" />
+            <Label layoutX="622.0" layoutY="12.0" onMouseClicked="#showAbout" prefHeight="17.0" prefWidth="37.0" text="About" underline="true" AnchorPane.rightAnchor="621.0" />
+            <ImageView fx:id="iv_refresh" fitHeight="20.0" fitWidth="20.0" layoutX="1049.0" layoutY="-61.0" onMouseClicked="#handleRefresh" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
          </children>
       </AnchorPane>
    </bottom>
@@ -67,7 +68,7 @@
       </HBox>
    </center>
    <right>
-      <VBox id="right" fx:id="rightPane" alignment="BOTTOM_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
+      <VBox id="right" alignment="BOTTOM_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>

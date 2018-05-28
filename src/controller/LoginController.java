@@ -30,6 +30,7 @@ public class LoginController extends FxmlController {
                 lbl_loginSuccess.setText("");
                 Session.create(player);
                 MainApplication.instance.getSceneNavigator().activateScene(SceneNavigator.SceneName.MAIN, MainApplication.instance.getMainController());
+                MainApplication.instance.getMainController().showPlayer();
             } else {
                 lbl_loginSuccess.setText("wrong login details!");
             }
