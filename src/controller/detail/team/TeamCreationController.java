@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
 import model.Player;
 import model.Team;
+import view.textfield.PlayerSearchTextField;
 
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -27,6 +28,8 @@ public class TeamCreationController extends FxmlController {
     @FXML
     private TextField tf_name;
     @FXML
+    private PlayerSearchTextField tf_playerSearch;
+    @FXML
     private ListView<Player> lv_selectedPlayers;
     @FXML
     private ListView<Player> lv_availablePlayers;
@@ -35,11 +38,13 @@ public class TeamCreationController extends FxmlController {
 
     private ObservableList<Player> selectedPlayers;
     private ObservableList<Player> availablePlayers;
+    private ObservableList<Player> allPlayers;
 
     @FXML
     public void initialize() {
         selectedPlayers = FXCollections.observableArrayList();
         availablePlayers = FXCollections.observableArrayList();
+        allPlayers = FXCollections.observableArrayList();
     }
 
     private void initTeamCreationView() {
@@ -48,8 +53,9 @@ public class TeamCreationController extends FxmlController {
             players = players.stream()
                     .filter(p -> p.getId() != Session.getInstance().getPlayer().getId())
                     .collect(Collectors.toList());
-            availablePlayers.addAll(players);
-            FXCollections.sort(availablePlayers, Comparator.comparing(Player::toString));
+            allPlayers.addAll(players);
+            FXCollections.sort(allPlayers, Comparator.comparing(Player::toString));
+            availablePlayers.setAll(allPlayers);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,17 +79,23 @@ public class TeamCreationController extends FxmlController {
     private void handleSubmit() {
         if (mandatoryFieldsFilled()) {
             Team team = new Team();
-            try {
-                team.create(tf_name.getText(), Session.getInstance().getPlayer());
-                team.addPlayers(selectedPlayers);
-
-                initForShow();
-                lbl_createSuccess.setTextFill(Paint.valueOf("GREEN"));
-                lbl_createSuccess.setText("Team created successfully!");
-            } catch (SQLException e) {
+            String teamName = tf_name.getText();
+            if (teamName.length() < 3) {
                 lbl_createSuccess.setTextFill(Paint.valueOf("RED"));
-                lbl_createSuccess.setText("Team creation unsuccessful!");
-                e.printStackTrace();
+                lbl_createSuccess.setText("Team name too short (min. 3)!");
+            } else {
+                try {
+                    team.create(teamName, Session.getInstance().getPlayer());
+                    team.addPlayers(selectedPlayers);
+
+                    initForShow();
+                    lbl_createSuccess.setTextFill(Paint.valueOf("GREEN"));
+                    lbl_createSuccess.setText("Team created successfully!");
+                } catch (SQLException e) {
+                    lbl_createSuccess.setTextFill(Paint.valueOf("RED"));
+                    lbl_createSuccess.setText("Team creation unsuccessful!");
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -119,6 +131,11 @@ public class TeamCreationController extends FxmlController {
             selectedPlayers.remove(lv_selectedPlayers.getSelectionModel().getSelectedIndex());
             FXCollections.sort(availablePlayers, Comparator.comparing(Player::toString));
         }
+    }
+
+    @FXML
+    private void onPlayerSearch() {
+        tf_playerSearch.search(tf_playerSearch.getText(), availablePlayers, allPlayers);
     }
 
 }

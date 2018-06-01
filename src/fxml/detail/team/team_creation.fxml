@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import view.textfield.PlayerSearchTextField?>
 
 <BorderPane fx:id="teamCreationRoot" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.detail.team.TeamCreationController">
    <center>
@@ -15,21 +16,22 @@
          <children>
             <Label fx:id="lbl_name" text="Name *" />
             <TextField fx:id="tf_name" prefWidth="400.0" />
-            <HBox prefHeight="200.0" prefWidth="500.0">
+            <HBox prefHeight="250.0" prefWidth="500.0">
                <children>
-                  <VBox>
+                  <VBox spacing="5.0">
                      <children>
                         <Label text="Available players" />
+                        <PlayerSearchTextField fx:id="tf_playerSearch" onKeyReleased="#onPlayerSearch" promptText="Enter a pseudonym here" />
                         <ListView fx:id="lv_availablePlayers" />
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" prefWidth="50.0">
+                  <VBox alignment="CENTER" prefWidth="50.0" spacing="5.0">
                      <children>
                         <Button mnemonicParsing="false" onAction="#handleAddPlayer" text="&gt;" />
                         <Button mnemonicParsing="false" onAction="#handleRemovePlayer" text="&lt;" />
                      </children>
                   </VBox>
-                  <VBox>
+                  <VBox spacing="5.0">
                      <children>
                         <Label text="Players in team" />
                         <ListView fx:id="lv_selectedPlayers" />

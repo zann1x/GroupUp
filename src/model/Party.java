@@ -91,8 +91,6 @@ public abstract class Party {
     }
 
     protected void create(String name) throws SQLException {
-        // TODO improve this method as soon as i find out how to get the table name of a query
-
         // sql = "SELECT * FROM xxxx WHERE name = ?;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setString(1, name);

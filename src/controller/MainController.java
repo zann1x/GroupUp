@@ -2,7 +2,11 @@ package controller;
 
 import application.MainApplication;
 import application.Session;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -14,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.util.Duration;
 import model.Group;
 import model.Player;
 import util.SceneNavigator;
@@ -150,6 +155,13 @@ public class MainController extends FxmlController {
 
     @FXML
     private void handleRefresh() {
+        RotateTransition rotateTransition = new RotateTransition(Duration.millis(1000), iv_refresh);
+        rotateTransition.setByAngle(360);
+        rotateTransition.setCycleCount(1);
+        rotateTransition.setInterpolator(Interpolator.LINEAR);
+        rotateTransition.setAutoReverse(false);
+        rotateTransition.play();
+
         initForShow();
     }
 

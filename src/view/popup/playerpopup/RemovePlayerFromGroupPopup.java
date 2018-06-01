@@ -1,13 +1,10 @@
 package view.popup.playerpopup;
 
 import application.Session;
-import javafx.collections.FXCollections;
 import model.Group;
 import model.Player;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class RemovePlayerFromGroupPopup extends PlayerPopup {
@@ -18,20 +15,12 @@ public class RemovePlayerFromGroupPopup extends PlayerPopup {
         // collect list items
         try {
             List<Player> players = group.getPlayers();
-            // remove all players that are already in the team
-            List<Player> playersToRemove = new ArrayList<>();
+            // add only those players that aren't already in the team
             for (Player player : players) {
-                if (player.getId() == Session.getInstance().getPlayer().getId() || group.getLeaderIds().contains(player.getId())) {
-                    playersToRemove.add(player);
+                if (player.getId() != Session.getInstance().getPlayer().getId() && !group.getLeaderIds().contains(player.getId())) {
+                    allAvailablePlayers.add(player);
                 }
             }
-            players.removeAll(playersToRemove);
-
-            if (players.size() == 0) {
-                lbl_selectedPlayers.setText("No players selectable");
-            }
-            playerObservableList.addAll(players);
-            FXCollections.sort(playerObservableList, Comparator.comparing(Player::toString));
         } catch (SQLException e) {
             e.printStackTrace();
         }

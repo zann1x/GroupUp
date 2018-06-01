@@ -109,14 +109,14 @@ public class PlayNowController extends FxmlController {
 
     @FXML
     public void startSearch() {
-        // TODO
         if (chb_gameChooser.getSelectionModel().getSelectedItem() == null ||
                 (rbtn_team.isSelected() && chb_teamChooser.getSelectionModel().getSelectedItem() == null)) {
             lbl_allOptionsSet.setTextFill(Paint.valueOf("RED"));
             lbl_allOptionsSet.setText("Not all options are set yet!");
+        } else {
+            lbl_allOptionsSet.setTextFill(Paint.valueOf("GREEN"));
+            lbl_allOptionsSet.setText("under construction...");
         }
-
-        System.out.println("under construction...");
     }
 
 }
