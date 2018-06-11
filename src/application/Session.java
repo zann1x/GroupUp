@@ -52,13 +52,6 @@ public class Session {
                     // remove player from his current group
                     Group group = new Group(player.getGroupId());
                     group.exitOnLogout();
-                    if (group.getSize() != 0) {
-                        if (group.getLeaderIds().isEmpty()) {
-                            Player newLeader = group.getPlayers().get(0);
-                            group.addLeader(newLeader);
-                            group.rename(newLeader.getPseudonym());
-                        }
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

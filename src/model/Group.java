@@ -109,6 +109,14 @@ public class Group extends Party {
 
     public void exitOnLogout() throws SQLException {
         removePlayer(Session.getInstance().getPlayer());
+
+        if (getSize() != 0) {
+            if (getLeaderIds().isEmpty()) {
+                Player newLeader = getPlayers().get(0);
+                addLeader(newLeader);
+                rename(newLeader.getPseudonym());
+            }
+        }
     }
 
 }

@@ -103,8 +103,10 @@ public class Team extends Party {
         sql = "DELETE FROM team_player_mapping WHERE teamid = ? AND playerid = ?;";
         super.removePlayer(player);
 
-        if (getLeaderIds().size() == 0) {
-            addLeader(new Player(getPlayerIds().get(0)));
+        if (getSize() != 0) {
+            if (getLeaderIds().isEmpty()) {
+                addLeader(new Player(getPlayerIds().get(0)));
+            }
         }
     }
 

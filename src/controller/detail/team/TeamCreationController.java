@@ -68,6 +68,7 @@ public class TeamCreationController extends FxmlController {
         if (teamCreationRoot != null) {
             tf_name.setText("");
             availablePlayers.clear();
+            allPlayers.clear();
             selectedPlayers.clear();
             lbl_createSuccess.setText("");
 
