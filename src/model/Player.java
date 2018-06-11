@@ -162,6 +162,18 @@ public class Player {
         preparedStatement.setInt(5, id);
         preparedStatement.executeUpdate();
     }
+    
+    public List<String> getAllPseudonyms() throws SQLException{
+    	List<String> pseudonyms = new ArrayList<>();
+        String sql = "SELECT pseudonym FROM player;";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            String pseudonym = resultSet.getString("pseudonym");
+            pseudonyms.add(pseudonym);
+        }
+        return pseudonyms;
+    }
 
     @Override
     public String toString() {
