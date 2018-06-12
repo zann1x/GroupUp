@@ -161,6 +161,7 @@ public class MainController extends FxmlController {
         rotateTransition.play();
 
         initForShow();
+        viewNavigator.refreshActiveNode();
     }
 
     private void switchToNodeOnPane(ViewNavigator.NodeName nodeName, Pane pane) {
