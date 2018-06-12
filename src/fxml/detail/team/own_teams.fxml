@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -14,6 +15,10 @@
                <children>
                   <Label text="Your teams" />
                   <TreeView fx:id="tv_teams" prefHeight="400.0" prefWidth="350.0" />
+                  <Label fx:id="lbl_error" textFill="RED">
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding></Label>
                </children>
             </VBox>
             <VBox fx:id="vb_statistics" spacing="5.0">

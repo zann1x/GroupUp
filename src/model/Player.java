@@ -116,6 +116,18 @@ public class Player {
         preparedStatement.executeUpdate();
     }
 
+    public String getSessionId() throws SQLException {
+        String sql = "SELECT sessionid FROM player WHERE id = ?;";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        if (resultSet.first())
+            return resultSet.getString("sessionid");
+        else
+            return null;
+    }
+
     public static List<Player> getAllPlayers() throws SQLException {
         List<Player> players = new ArrayList<>();
         String sql = "SELECT id FROM player;";

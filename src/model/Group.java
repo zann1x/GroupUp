@@ -57,15 +57,20 @@ public class Group extends Party {
 
     @Override
     protected void create(String name) throws SQLException {
+        // delete the group with the player's name if one still exists because of errors at closing the last session
+        sql = "DELETE FROM `group` WHERE name = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setString(1, name);
+        statement.executeUpdate();
+
         // get the lowest id that is currently not used
         sql = "SELECT MIN(g1.id + 1) AS nextlowestid FROM `group` g1 " +
                 "LEFT JOIN `group` g2 ON g1.id + 1 = g2.id " +
                 "WHERE g2.id IS NULL;";
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.first()) {
             int lowestIdAvailable = resultSet.getInt("nextlowestid");
-            lowestIdAvailable = lowestIdAvailable == 0 ? 1 : lowestIdAvailable;
 
             sql = "INSERT INTO `group`(id, name) VALUE(?, ?);";
             statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
@@ -107,15 +112,27 @@ public class Group extends Party {
         super.rename(name);
     }
 
+    private void ensureGroupConsistency() throws SQLException {
+        if (getLeaderIds().isEmpty()) {
+            Player newLeader = getPlayers().get(0);
+            addLeader(newLeader);
+            rename(newLeader.getPseudonym());
+        }
+    }
+
+    public void leaveGroup(Player player) throws SQLException {
+        removePlayer(player);
+        ensureGroupConsistency();
+
+        Group group = new Group();
+        group.create(player);
+    }
+
     public void exitOnLogout() throws SQLException {
         removePlayer(Session.getInstance().getPlayer());
 
         if (getSize() != 0) {
-            if (getLeaderIds().isEmpty()) {
-                Player newLeader = getPlayers().get(0);
-                addLeader(newLeader);
-                rename(newLeader.getPseudonym());
-            }
+            ensureGroupConsistency();
         }
     }
 

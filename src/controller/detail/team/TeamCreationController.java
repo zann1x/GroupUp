@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 public class TeamCreationController extends FxmlController {
 
+    private static final String ERROR_MSG = "An error occured";
     @FXML
     private BorderPane teamCreationRoot;
 
@@ -35,6 +36,8 @@ public class TeamCreationController extends FxmlController {
     private ListView<Player> lv_availablePlayers;
     @FXML
     private Label lbl_createSuccess;
+    @FXML
+    private Label lbl_error;
 
     private ObservableList<Player> selectedPlayers;
     private ObservableList<Player> availablePlayers;
@@ -58,6 +61,7 @@ public class TeamCreationController extends FxmlController {
             availablePlayers.setAll(allPlayers);
         } catch (SQLException e) {
             e.printStackTrace();
+            lbl_error.setText(ERROR_MSG);
         }
         lv_selectedPlayers.setItems(selectedPlayers);
         lv_availablePlayers.setItems(availablePlayers);
@@ -71,6 +75,7 @@ public class TeamCreationController extends FxmlController {
             allPlayers.clear();
             selectedPlayers.clear();
             lbl_createSuccess.setText("");
+            lbl_error.setText("");
 
             initTeamCreationView();
         }
@@ -78,6 +83,7 @@ public class TeamCreationController extends FxmlController {
 
     @FXML
     private void handleSubmit() {
+        lbl_error.setText("");
         if (mandatoryFieldsFilled()) {
             Team team = new Team();
             String teamName = tf_name.getText();

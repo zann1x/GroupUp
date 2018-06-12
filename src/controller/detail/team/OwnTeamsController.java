@@ -21,6 +21,8 @@ public class OwnTeamsController extends FxmlController {
     private static final String ACTIVE_TEAM_STRING = "Active teams";
     private static final String INACTIVE_TEAM_STRING = "Inactive teams";
     private static final String ROOT_STRING = "Teams";
+    private static final String ERROR_MSG = "An error occured!";
+
     @FXML
     public VBox vb_statistics;
     @FXML
@@ -28,10 +30,14 @@ public class OwnTeamsController extends FxmlController {
     @FXML
     private BorderPane ownTeamsRoot;
     @FXML
+    private Label lbl_error;
+    @FXML
     private TreeView<Object> tv_teams;
+
     private TreeItem<Object> rootItem;
     private List<Team> activeTeams;
     private List<Team> inactiveTeams;
+
     private Map<Integer, List<Player>> playerMap;
 
     @FXML
@@ -81,6 +87,7 @@ public class OwnTeamsController extends FxmlController {
                     inactiveTeams.add(team);
             } catch (SQLException e) {
                 e.printStackTrace();
+                lbl_error.setText(ERROR_MSG);
             }
             playersInTeam.sort(Comparator.comparing(Player::getPseudonym));
             playerMap.put(id, playersInTeam);
@@ -131,6 +138,7 @@ public class OwnTeamsController extends FxmlController {
             tv_teams.setRoot(null);
             vb_statistics.setVisible(false);
             lbl_statistics.setText("");
+            lbl_error.setText("");
 
             rootItem.getChildren().clear();
             activeTeams.clear();
@@ -162,6 +170,7 @@ public class OwnTeamsController extends FxmlController {
                     initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
+                    lbl_error.setText(ERROR_MSG);
                 }
             });
 
@@ -173,6 +182,7 @@ public class OwnTeamsController extends FxmlController {
                     initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
+                    lbl_error.setText(ERROR_MSG);
                 }
             });
 
@@ -185,6 +195,7 @@ public class OwnTeamsController extends FxmlController {
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
+                    lbl_error.setText(ERROR_MSG);
                 }
             };
 
@@ -202,6 +213,7 @@ public class OwnTeamsController extends FxmlController {
                     initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
+                    lbl_error.setText(ERROR_MSG);
                 }
             });
 
@@ -211,8 +223,9 @@ public class OwnTeamsController extends FxmlController {
                     Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     team.setActive(true);
                     initForShow();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    lbl_error.setText(ERROR_MSG);
                 }
             });
 
@@ -225,6 +238,7 @@ public class OwnTeamsController extends FxmlController {
                     initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
+                    lbl_error.setText(ERROR_MSG);
                 }
             });
 
@@ -237,6 +251,7 @@ public class OwnTeamsController extends FxmlController {
                     initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
+                    lbl_error.setText(ERROR_MSG);
                 }
             });
 
@@ -250,6 +265,7 @@ public class OwnTeamsController extends FxmlController {
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
+                    lbl_error.setText(ERROR_MSG);
                 }
             };
 
@@ -268,6 +284,7 @@ public class OwnTeamsController extends FxmlController {
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
+                    lbl_error.setText(ERROR_MSG);
                 }
             };
 
@@ -305,7 +322,7 @@ public class OwnTeamsController extends FxmlController {
                                 List<Integer> leaderIds = ((Team) parentValue).getLeaderIds();
 
                                 if (leaderIds.contains(selectedPlayer.getId()))
-                                    setId("leader-tree-item");
+                                    setId("leader-item");
 
                                 if (selectedPlayer.getId() != playerId) {
                                     if (leaderIds.contains(playerId)) {
@@ -339,6 +356,7 @@ public class OwnTeamsController extends FxmlController {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+                lbl_error.setText(ERROR_MSG);
             }
         }
 

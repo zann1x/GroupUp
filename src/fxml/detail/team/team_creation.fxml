@@ -39,7 +39,7 @@
                   </VBox>
                </children>
             </HBox>
-            <Label text="* mandatory fields" textFill="RED">
+            <Label text="* mandatory fields">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
@@ -47,9 +47,13 @@
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
                   <Button fx:id="btn_submit" mnemonicParsing="false" onAction="#handleSubmit" text="Submit" />
-                  <Label fx:id="lbl_createSuccess" prefHeight="17.0" prefWidth="300.0" />
+                  <Label fx:id="lbl_createSuccess" />
                </children>
             </HBox>
+            <Label fx:id="lbl_error" textFill="RED">
+               <padding>
+                  <Insets top="10.0" />
+               </padding></Label>
          </children>
          <BorderPane.margin>
             <Insets />

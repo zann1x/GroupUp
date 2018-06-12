@@ -44,6 +44,8 @@ public class MainController extends FxmlController {
     private Label lbl_detailName;
 
     @FXML
+    private Button btn_leaveGroup;
+    @FXML
     private Button btn_removePlayerFromGroup;
 
     @FXML
@@ -86,8 +88,6 @@ public class MainController extends FxmlController {
     @Override
     public void initForShow() {
         if (rootPane != null) {
-            btn_removePlayerFromGroup.setDisable(true);
-
             initGroupView();
         }
     }
@@ -98,17 +98,27 @@ public class MainController extends FxmlController {
         try {
             Group group = new Group(Session.getInstance().getPlayer().getGroupId());
             List<Player> players = group.getPlayers();
+            List<Integer> leaderIds = group.getLeaderIds();
             players.sort(Comparator.comparing(Player::getPseudonym));
-            for (Player player : players)
-                vb_players.getChildren().add(new Label(player.getPseudonym()));
+
+            for (Player player : players) {
+                Label label = new Label(player.getPseudonym());
+                if (leaderIds.contains(player.getId()))
+                    label.setId("leader-item");
+                vb_players.getChildren().add(label);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if (vb_players.getChildren().size() <= 1)
+        if (vb_players.getChildren().size() <= 1) {
             btn_removePlayerFromGroup.setDisable(true);
-        else if (vb_players.getChildren().size() > 1)
+            btn_leaveGroup.setDisable(true);
+        }
+        else if (vb_players.getChildren().size() > 1) {
             btn_removePlayerFromGroup.setDisable(false);
+            btn_leaveGroup.setDisable(false);
+        }
     }
 
     public void close() {
@@ -211,7 +221,7 @@ public class MainController extends FxmlController {
             Group group = new Group(Session.getInstance().getPlayer().getGroupId());
             new AddPlayerToGroupPopup(group).showAndWait();
 
-            initGroupView();
+            initForShow();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -223,7 +233,19 @@ public class MainController extends FxmlController {
             Group group = new Group(Session.getInstance().getPlayer().getGroupId());
             new RemovePlayerFromGroupPopup(group).showAndWait();
 
-            initGroupView();
+            initForShow();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLeaveGroup() {
+        try {
+            Group group = new Group(Session.getInstance().getPlayer().getGroupId());
+            group.leaveGroup(Session.getInstance().getPlayer());
+
+            initForShow();
         } catch (SQLException e) {
             e.printStackTrace();
         }
