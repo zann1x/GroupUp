@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0
+-- version 4.8.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 25. Mai 2018 um 16:20
--- Server-Version: 10.1.31-MariaDB
--- PHP-Version: 7.2.4
+-- Erstellungszeit: 12. Jun 2018 um 22:36
+-- Server-Version: 10.1.32-MariaDB
+-- PHP-Version: 7.2.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -68,7 +68,8 @@ DROP TABLE IF EXISTS `group_player_mapping`;
 CREATE TABLE `group_player_mapping` (
   `groupid` int(11) NOT NULL,
   `playerid` int(11) NOT NULL,
-  `leader` tinyint(1) DEFAULT '0'
+  `leader` tinyint(1) DEFAULT '0',
+  `pendingjoin` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
