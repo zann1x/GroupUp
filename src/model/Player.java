@@ -46,7 +46,7 @@ public class Player {
     }
 
     public int getGroupId() throws SQLException {
-        String sql = "SELECT * FROM group_player_mapping WHERE playerid = ?;";
+        String sql = "SELECT * FROM group_player_mapping WHERE playerid = ? AND pendingjoin = false;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();

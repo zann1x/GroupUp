@@ -6,6 +6,7 @@ import application.Session;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Group extends Party {
@@ -88,6 +89,57 @@ public class Group extends Party {
         addPlayer(player, true);
     }
 
+    public static List<Group> getPendingGroupInvites(Player player) throws SQLException {
+        String sql = "SELECT groupid FROM group_player_mapping WHERE playerid = ? AND pendingjoin = true;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, player.getId());
+        ResultSet resultSet = statement.executeQuery();
+
+        List<Group> invitedGroups = new ArrayList<>();
+        while (resultSet.next()) {
+            int groupId = resultSet.getInt("groupid");
+            invitedGroups.add(new Group(groupId));
+        }
+        return invitedGroups;
+    }
+
+    public List<Integer> getInvitedPlayerIds() throws SQLException {
+        sql = "SELECT playerid FROM group_player_mapping WHERE groupid = ? AND pendingjoin = true;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        ResultSet resultSet = statement.executeQuery();
+
+        List<Integer> invitedPlayerIds = new ArrayList<>();
+        while (resultSet.next())
+            invitedPlayerIds.add(resultSet.getInt("playerid"));
+        return invitedPlayerIds;
+    }
+
+    public void acceptInvite(Player player) throws SQLException {
+        sql = "UPDATE group_player_mapping SET pendingjoin = 0 WHERE groupid = ? AND playerid = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        statement.setInt(2, player.getId());
+        int cnt = statement.executeUpdate();
+        if (cnt != 0) {
+            Group group = new Group(player.getGroupId());
+            group.removePlayer(player);
+        }
+    }
+
+    public void declineInvite(Player player) throws SQLException {
+        sql = "DELETE FROM group_player_mapping WHERE groupid = ? AND playerid = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, id);
+        statement.setInt(2, player.getId());
+        statement.executeUpdate();
+    }
+
+    public void sendInvite(Player player) throws SQLException {
+        sql = "INSERT INTO group_player_mapping (groupid, playerid, leader, pendingjoin) VALUE(?, ?, ?, true);";
+        super.addPlayer(player, false);
+    }
+
     @Override
     public void addPlayer(Player player, boolean isLeader) throws SQLException {
         sql = "INSERT INTO group_player_mapping (groupid, playerid, leader) VALUE(?, ?, ?);";
@@ -98,6 +150,13 @@ public class Group extends Party {
     public void removePlayer(Player player) throws SQLException {
         sql = "DELETE FROM group_player_mapping WHERE groupid = ? AND playerid = ?;";
         super.removePlayer(player);
+    }
+
+    private void removePlayerFromAllGroups(Player player) throws SQLException {
+        sql = "DELETE FROM group_player_mapping WHERE playerid = ?;";
+        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        statement.setInt(1, player.getId());
+        statement.executeUpdate();
     }
 
     @Override
@@ -129,10 +188,12 @@ public class Group extends Party {
     }
 
     public void exitOnLogout() throws SQLException {
-        removePlayer(Session.getInstance().getPlayer());
+        removePlayerFromAllGroups(Session.getInstance().getPlayer());
 
         if (getSize() != 0) {
             ensureGroupConsistency();
+        } else {
+            delete();
         }
     }
 
