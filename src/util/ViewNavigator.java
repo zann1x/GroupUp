@@ -125,7 +125,7 @@ public class ViewNavigator {
                 loader = new FXMLLoader(MainApplication.class.getResource(chatDetail));
                 break;
             default:
-                throw new Exception("node type not supported");
+                throw new Exception("Supplied node type could not be loaded!");
         }
 
         fxmlMap.put(nodeName, new ViewHolder(loader.load(), loader.getController()));

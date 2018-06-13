@@ -31,6 +31,8 @@ public class FriendsController extends FxmlController {
 
     @Override
     public void initForShow() {
+		super.initForShow();
+
     	fillUpComboBox();
     	fillListView();
     	

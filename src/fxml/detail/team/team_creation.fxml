@@ -50,10 +50,6 @@
                   <Label fx:id="lbl_createSuccess" />
                </children>
             </HBox>
-            <Label fx:id="lbl_error" textFill="RED">
-               <padding>
-                  <Insets top="10.0" />
-               </padding></Label>
          </children>
          <BorderPane.margin>
             <Insets />

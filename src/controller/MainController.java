@@ -22,6 +22,7 @@ import model.Group;
 import model.Player;
 import util.SceneNavigator;
 import util.ViewNavigator;
+import view.alert.ErrorAlert;
 import view.popup.playerpopup.AddPlayerToGroupPopup;
 import view.popup.playerpopup.RemovePlayerFromGroupPopup;
 
@@ -84,6 +85,8 @@ public class MainController extends FxmlController {
             showPlayer();
         } catch (Exception e) {
             e.printStackTrace();
+            ErrorAlert.showAlert();
+            Platform.runLater(Platform::exit);
         }
     }
 
@@ -91,34 +94,43 @@ public class MainController extends FxmlController {
     public void initForShow() {
         if (rootPane != null) {
             initGroupView();
+            checkForGroupInvites();
+        }
+    }
 
-            try {
-                List<Group> invitedGroups = Group.getPendingGroupInvites(Session.getInstance().getPlayer());
-                if (!invitedGroups.isEmpty()) {
-                    Group group = invitedGroups.get(0);
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Group invitation");
-                    alert.setHeaderText(null);
-                    alert.setContentText("You were invited to group '" + group.getName() + "'. Do you want to join?");
-                    ButtonType btnYes = new ButtonType("Yes");
-                    ButtonType btnNo = new ButtonType("No");
-                    alert.getButtonTypes().clear();
-                    alert.getButtonTypes().addAll(btnYes, btnNo);
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.isPresent()) {
-                        if (result.get() == btnYes) {
-                            group.acceptInvite(Session.getInstance().getPlayer());
-                            initForShow();
-                        } else {
-                            group.declineInvite(Session.getInstance().getPlayer());
-                            initForShow();
-                        }
+    private void checkForGroupInvites() {
+        try {
+            List<Group> invitedGroups = Group.getPendingGroupInvites(Session.getInstance().getPlayer());
+
+            if (!invitedGroups.isEmpty()) {
+                Group group = invitedGroups.get(0);
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Group invitation");
+                alert.setHeaderText(null);
+                alert.setContentText("You were invited to group '" + group.getName() + "'. Do you want to join?");
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(MainApplication.instance.getPrimaryStage());
+                ButtonType btnYes = new ButtonType("Yes");
+                ButtonType btnNo = new ButtonType("No");
+                alert.getButtonTypes().clear();
+                alert.getButtonTypes().addAll(btnYes, btnNo);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent()) {
+                    if (result.get() == btnYes) {
+                        group.acceptInvite(Session.getInstance().getPlayer());
+                        initForShow();
+                    } else {
+                        group.declineInvite(Session.getInstance().getPlayer());
+                        initForShow();
                     }
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
     }
 
     private void initGroupView() {
