@@ -11,11 +11,12 @@
     -fx-font-weight: bold;
 }
 
-/* own teams */
+/* leader */
 #leader-item {
     -fx-font-weight: bold;
 }
 
+/* invitations */
 #invited-player-item {
     -fx-font-style: italic;
 }

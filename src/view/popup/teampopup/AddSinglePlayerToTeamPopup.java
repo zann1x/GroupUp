@@ -10,6 +10,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.paint.Paint;
 import model.Player;
 import model.Team;
+import view.alert.ErrorAlert;
 import view.popup.VBoxPopup;
 
 public class AddSinglePlayerToTeamPopup extends VBoxPopup {
@@ -39,9 +40,7 @@ public class AddSinglePlayerToTeamPopup extends VBoxPopup {
         				lbl_error.setVisible(true);
     				}
     			} catch (SQLException e) {
-    				lbl_error.setText("There was an Problem with database, Player can not be added to Team");
-    				lbl_error.setTextFill(Paint.valueOf("red"));
-    				lbl_error.setVisible(true);
+    				ErrorAlert.showConnectionAlert();
     				e.printStackTrace();
     			}
             }

@@ -3,6 +3,7 @@ package view.popup.playerpopup;
 import application.Session;
 import model.Group;
 import model.Player;
+import view.alert.ErrorAlert;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,6 +24,7 @@ public class RemovePlayerFromGroupPopup extends PlayerPopup {
                 }
             }
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
 
@@ -39,6 +41,7 @@ public class RemovePlayerFromGroupPopup extends PlayerPopup {
 
                     stage.close();
                 } catch (SQLException e) {
+                	ErrorAlert.showConnectionAlert();
                     e.printStackTrace();
                 }
             }
@@ -46,5 +49,4 @@ public class RemovePlayerFromGroupPopup extends PlayerPopup {
 
         setupElements();
     }
-
 }

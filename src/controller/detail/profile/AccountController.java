@@ -1,14 +1,14 @@
 package controller.detail.profile;
 
+import java.sql.SQLException;
+
 import application.Session;
 import controller.FxmlController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.Player;
-
-import java.sql.SQLException;
+import view.alert.ErrorAlert;
 
 public class AccountController extends FxmlController {
 
@@ -22,8 +22,6 @@ public class AccountController extends FxmlController {
 	private PasswordField pw_password;
 	@FXML
 	private TextField txt_email;
-	@FXML
-	private Label lbl_error;
 	
     @Override
     public void initialize() {
@@ -54,7 +52,7 @@ public class AccountController extends FxmlController {
 		try{
 			player.updatePlayer(forename, surname, pseudonym, password, email);
 		} catch (SQLException e) {
-			lbl_error.setText("There was a Problem with Writing on DB");
+			ErrorAlert.showConnectionAlert();
 	        e.printStackTrace();
 	    }
 	}

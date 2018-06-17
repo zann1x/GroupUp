@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import model.Player;
 import util.SceneNavigator;
+import view.alert.ErrorAlert;
 
 public class LoginController extends FxmlController {
 
@@ -35,7 +36,7 @@ public class LoginController extends FxmlController {
                 lbl_loginSuccess.setText("wrong login details!");
             }
         } catch (Exception e) {
-        	lbl_loginSuccess.setText("There was a Problem with DB-Connection");;
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
     }

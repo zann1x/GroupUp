@@ -3,6 +3,7 @@ package view.popup.playerpopup;
 import application.Session;
 import model.Group;
 import model.Player;
+import view.alert.ErrorAlert;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,6 +24,7 @@ public class AddPlayerToGroupPopup extends PlayerPopup {
                 }
             }
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
 
@@ -31,12 +33,10 @@ public class AddPlayerToGroupPopup extends PlayerPopup {
             if (event.getClickCount() >= 2) {
                 Player player = lv_players.getSelectionModel().getSelectedItem();
                 try {
-                    // remove player from his own group first
-                    Group g = new Group(player.getGroupId());
                     group.sendInvite(player);
-
                     stage.close();
                 } catch (SQLException e) {
+                	ErrorAlert.showConnectionAlert();
                     e.printStackTrace();
                 }
             }
@@ -44,5 +44,4 @@ public class AddPlayerToGroupPopup extends PlayerPopup {
 
         setupElements();
     }
-
 }

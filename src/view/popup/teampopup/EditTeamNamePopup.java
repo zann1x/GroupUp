@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import model.Team;
+import view.alert.ErrorAlert;
 import view.popup.VBoxPopup;
 
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ public class EditTeamNamePopup extends VBoxPopup {
                 team.rename(tf_newName.getText());
                 stage.close();
             } catch (SQLException e) {
+            	ErrorAlert.showConnectionAlert();
                 e.printStackTrace();
             }
         });
@@ -41,5 +43,4 @@ public class EditTeamNamePopup extends VBoxPopup {
         addChild(tf_newName);
         addChild(hb_buttons);
     }
-
 }

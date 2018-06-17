@@ -40,7 +40,6 @@
                   <Insets top="10.0" />
                </VBox.margin></Label>
             <TextField fx:id="txt_email" />
-            <Label fx:id="lbl_error" alignment="CENTER" textAlignment="CENTER" textFill="RED" />
             <Button fx:id="btn_save" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#save" text="Save" />
          </children>
       </VBox>

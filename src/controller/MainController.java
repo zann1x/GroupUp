@@ -128,6 +128,7 @@ public class MainController extends FxmlController {
                 }
             }
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
 
@@ -152,6 +153,7 @@ public class MainController extends FxmlController {
                 vb_players.getChildren().add(label);
             }
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
 
@@ -266,6 +268,7 @@ public class MainController extends FxmlController {
 
             initForShow();
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
     }
@@ -278,6 +281,7 @@ public class MainController extends FxmlController {
 
             initForShow();
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
     }
@@ -290,8 +294,8 @@ public class MainController extends FxmlController {
 
             initForShow();
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
     }
-
 }

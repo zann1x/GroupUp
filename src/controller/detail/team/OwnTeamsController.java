@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import model.Player;
 import model.Team;
+import view.alert.ErrorAlert;
 import view.popup.playerpopup.AddPlayerToTeamPopup;
 import view.popup.teampopup.EditTeamNamePopup;
 
@@ -23,7 +24,6 @@ public class OwnTeamsController extends FxmlController {
     private static final String ACTIVE_TEAM_STRING = "Active teams";
     private static final String INACTIVE_TEAM_STRING = "Inactive teams";
     private static final String ROOT_STRING = "Teams";
-    private static final String ERROR_MSG = "An error occured!";
 
     @FXML
     public VBox vb_statistics;
@@ -52,6 +52,7 @@ public class OwnTeamsController extends FxmlController {
         try {
             collectTeamsAndPlayers();
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
 
@@ -165,6 +166,7 @@ public class OwnTeamsController extends FxmlController {
                     Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     new EditTeamNamePopup(team).showAndWait();
                 } catch (SQLException ex) {
+                	ErrorAlert.showConnectionAlert();
                     ex.printStackTrace();
                 }
                 initForShow();
@@ -176,6 +178,7 @@ public class OwnTeamsController extends FxmlController {
                     Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     new AddPlayerToTeamPopup(team).showAndWait();
                 } catch (SQLException ex) {
+                	ErrorAlert.showConnectionAlert();
                     ex.printStackTrace();
                 }
                 initForShow();
@@ -188,6 +191,7 @@ public class OwnTeamsController extends FxmlController {
                         team.delete();
                     }
                 } catch (SQLException ex) {
+                	ErrorAlert.showConnectionAlert();
                     ex.printStackTrace();
                 }
                 initForShow();
@@ -205,6 +209,7 @@ public class OwnTeamsController extends FxmlController {
                     Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     team.setActive(false);
                 } catch (SQLException ex) {
+                	ErrorAlert.showConnectionAlert();
                     ex.printStackTrace();
                 }
                 initForShow();
@@ -216,6 +221,7 @@ public class OwnTeamsController extends FxmlController {
                     Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     team.setActive(true);
                 } catch (SQLException ex) {
+                	ErrorAlert.showConnectionAlert();
                     ex.printStackTrace();
                 }
                 initForShow();
@@ -228,6 +234,7 @@ public class OwnTeamsController extends FxmlController {
                     Player player = new Player(((Player) getTreeItem().getValue()).getId());
                     team.addLeader(player);
                 } catch (SQLException ex) {
+                	ErrorAlert.showConnectionAlert();
                     ex.printStackTrace();
                 }
                 initForShow();
@@ -240,6 +247,7 @@ public class OwnTeamsController extends FxmlController {
                     Player player = new Player(((Player) getTreeItem().getValue()).getId());
                     team.removeLeader(player);
                 } catch (SQLException ex) {
+                	ErrorAlert.showConnectionAlert();
                     ex.printStackTrace();
                 }
                 initForShow();
@@ -253,6 +261,7 @@ public class OwnTeamsController extends FxmlController {
                         team.removePlayer(player);
                     }
                 } catch (SQLException ex) {
+                	ErrorAlert.showConnectionAlert();
                     ex.printStackTrace();
                 }
                 initForShow();
@@ -271,6 +280,7 @@ public class OwnTeamsController extends FxmlController {
                         team.removePlayer(Session.getInstance().getPlayer());
                     }
                 } catch (SQLException ex) {
+                	ErrorAlert.showConnectionAlert();
                     ex.printStackTrace();
                 }
                 initForShow();
@@ -344,6 +354,7 @@ public class OwnTeamsController extends FxmlController {
                     }
                 }
             } catch (SQLException e) {
+            	ErrorAlert.showConnectionAlert();
                 e.printStackTrace();
             }
         }

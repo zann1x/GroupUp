@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
 import model.Game;
 import model.Team;
+import view.alert.ErrorAlert;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -77,6 +78,7 @@ public class PlayNowController extends FxmlController {
             teams.sort(Comparator.comparing(Team::getName));
             availableTeams.setAll(teams);
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
         chb_teamChooser.setItems(availableTeams);
@@ -88,6 +90,7 @@ public class PlayNowController extends FxmlController {
             games.sort(Comparator.comparing(Game::getName));
             availableGames.setAll(games);
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
 
@@ -119,5 +122,4 @@ public class PlayNowController extends FxmlController {
             lbl_allOptionsSet.setText("under construction...");
         }
     }
-
 }

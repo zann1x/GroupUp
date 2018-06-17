@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
 import model.Player;
 import model.Team;
+import view.alert.ErrorAlert;
 import view.textfield.PlayerSearchTextField;
 
 import java.sql.SQLException;
@@ -57,6 +58,7 @@ public class TeamCreationController extends FxmlController {
             FXCollections.sort(allPlayers, Comparator.comparing(Player::toString));
             availablePlayers.setAll(allPlayers);
         } catch (SQLException e) {
+        	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
         lv_selectedPlayers.setItems(selectedPlayers);
@@ -94,8 +96,8 @@ public class TeamCreationController extends FxmlController {
                     lbl_createSuccess.setTextFill(Paint.valueOf("GREEN"));
                     lbl_createSuccess.setText("Team created successfully!");
                 } catch (SQLException e) {
-                    lbl_createSuccess.setTextFill(Paint.valueOf("RED"));
-                    lbl_createSuccess.setText("Team creation unsuccessful!");
+                	lbl_createSuccess.setText("");
+                	ErrorAlert.showConnectionAlert();
                     e.printStackTrace();
                 }
             }
