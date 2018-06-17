@@ -28,6 +28,29 @@ USE `groupup`;
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `friends`
+--
+
+DROP TABLE IF EXISTS `friends`;
+CREATE TABLE `friends` (
+  `playerid` int(11) NOT NULL,
+  `friendid` int(11) NOT NULL,
+  `pending` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `friends`
+--
+
+INSERT INTO `friends` (`playerid`, `friendid`, `pending`) VALUES
+(1, 2, 0),
+(2, 1, 0),
+(2, 3, 0),
+(3, 2, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `game`
 --
 
@@ -94,7 +117,11 @@ CREATE TABLE `player` (
 
 INSERT INTO `player` (`id`, `forename`, `surname`, `pseudonym`, `password`, `email`, `sessionid`) VALUES
 (1, 'Lukas', 'Zanner', 'zann1x', 'test', 'zannix@test.de', NULL),
-(2, 'Christian', 'Goller', 'Flame4Fame', 'test', 'Flame4Fame@test.de', NULL);
+(2, 'Christian', 'Goller', 'Flame4Fame', 'test', 'Flame4Fame@test.de', NULL),
+(3, 'Niklas', 'Schaal', 'xcx', 'test', 'xcx@test.de', NULL),
+(4, 'Manuel', 'Dick', 'ManD', 'test', 'ManD@test.de', NULL),
+(5, 'Lukas', 'Wunner', 'Luwu', 'test', 'Luwu@test.de', NULL),
+(6, 'Jonas', 'Baierlein', 'bEyer', 'test', 'beyer@test.de', NULL);
 
 -- --------------------------------------------------------
 
@@ -125,6 +152,13 @@ CREATE TABLE `team_player_mapping` (
 --
 -- Indizes der exportierten Tabellen
 --
+
+--
+-- Indizes für die Tabelle `friends`
+--
+ALTER TABLE `friends`
+  ADD PRIMARY KEY (`playerid`,`friendid`),
+  ADD KEY `friendid` (`friendid`);
 
 --
 -- Indizes für die Tabelle `game`
@@ -183,7 +217,7 @@ ALTER TABLE `game`
 -- AUTO_INCREMENT für Tabelle `player`
 --
 ALTER TABLE `player`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT für Tabelle `team`
@@ -194,6 +228,13 @@ ALTER TABLE `team`
 --
 -- Constraints der exportierten Tabellen
 --
+
+--
+-- Constraints der Tabelle `friends`
+--
+ALTER TABLE `friends`
+  ADD CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`playerid`) REFERENCES `player` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`friendid`) REFERENCES `player` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `group`

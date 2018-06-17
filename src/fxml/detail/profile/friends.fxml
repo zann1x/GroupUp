@@ -4,7 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -12,16 +13,26 @@
    <center>
       <VBox spacing="5.0" BorderPane.alignment="CENTER">
          <children>
-            <ComboBox fx:id="cb_pseudonym" accessibleRole="TEXT_FIELD" editable="true" prefWidth="400.0" promptText="Search Player" />
-            <Button fx:id="btn_add" mnemonicParsing="false" text="Add" />
-            <ListView prefHeight="200.0" prefWidth="200.0" />
-            <Button fx:id="btn_remove" mnemonicParsing="false" text="Remove" />
+            <ComboBox fx:id="cb_pseudonym" accessibleRole="TEXT_FIELD" editable="true" prefWidth="400.0" promptText="Search Player *" />
+            <Button fx:id="btn_add" mnemonicParsing="false" onAction="#add" text="Add" />
+            <TreeView fx:id="tv_friendList" showRoot="false">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </TreeView>
+            <AnchorPane>
+               <children>
+                  <Button fx:id="btn_remove" alignment="CENTER" mnemonicParsing="false" onAction="#remove" text="Remove" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Button fx:id="btn_accept" layoutX="181.0" layoutY="-3.0" mnemonicParsing="false" onAction="#accept" text="Accept" visible="false" AnchorPane.rightAnchor="65.0" AnchorPane.topAnchor="0.0" />
+                  <Button fx:id="btn_decline" layoutX="100.0" layoutY="-7.0" mnemonicParsing="false" onAction="#decline" text="Decline" visible="false" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
             <Label text="* enter Pseudonym">
                <VBox.margin>
-                  <Insets top="20.0" />
+                  <Insets top="10.0" />
                </VBox.margin>
             </Label>
-            <Label fx:id="lbl_error" text="errorl" visible="false" />
+            <Label fx:id="lbl_error" text="error" textFill="RED" visible="false" />
          </children>
          <BorderPane.margin>
             <Insets />

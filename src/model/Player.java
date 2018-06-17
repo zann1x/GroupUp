@@ -1,12 +1,12 @@
 package model;
 
-import application.MainApplication;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import application.MainApplication;
 
 public class Player {
 
@@ -163,10 +163,17 @@ public class Player {
         preparedStatement.executeUpdate();
     }
     
-    public List<String> getAllPseudonyms() throws SQLException{
+    public List<String> getAllUnfriendPseudonyms() throws SQLException{
     	List<String> pseudonyms = new ArrayList<>();
-        String sql = "SELECT pseudonym FROM player;";
+        String sql = "SELECT pseudonym FROM player WHERE player.id NOT IN " +
+        				"(SELECT friendid FROM friends WHERE playerid = ?) " +
+        				"AND player.id NOT IN " +
+        				"(SELECT playerid FROM friends WHERE friendid = ? AND pending = 1) " +
+        				"AND player.id != ?;";
         PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setInt(2, id);
+        preparedStatement.setInt(3, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             String pseudonym = resultSet.getString("pseudonym");
@@ -174,9 +181,95 @@ public class Player {
         }
         return pseudonyms;
     }
+    
+    public Player getPlayerByPseudonym(String pseudonym) throws SQLException {
+        String sql = "SELECT id FROM player WHERE pseudonym = ?;";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        preparedStatement.setString(1, pseudonym);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.first();
+        int id = resultSet.getInt("id");
+        
+        Player player = new Player(id);
+        return player;
+    }
+    
+    public void sendFriendRequest(Player newFriend) throws SQLException {
+    	String sql = "INSERT INTO friends (playerid, friendid, pending) VALUES (?, ?, 1)";
+    	PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+    	preparedStatement.setInt(1, id);
+    	preparedStatement.setInt(2, newFriend.getId());
+    	preparedStatement.execute();
+    }
+    
+    public void acceptFriendRequest(Player newFriend) throws SQLException {
+    	String sql1 = "UPDATE friends SET pending = 0 WHERE playerid = ? and friendid = ?";
+    	PreparedStatement preparedStatement1 = MainApplication.instance.getDbConnector().prepareStatement(sql1);
+    	preparedStatement1.setInt(1, newFriend.getId());
+    	preparedStatement1.setInt(2, id);
+    	
+    	String sql2 = "INSERT INTO friends (playerid, friendid, pending) VALUES (?, ?, 0)";
+    	PreparedStatement preparedStatement2 = MainApplication.instance.getDbConnector().prepareStatement(sql2);
+    	preparedStatement2.setInt(1, id);
+    	preparedStatement2.setInt(2, newFriend.getId());
+    	
+    	preparedStatement1.executeUpdate();
+    	preparedStatement2.execute();
+    }
+    
+    public List<Player> getPendingFriendRequest() throws SQLException {
+    	String sql = "SELECT playerid FROM friends WHERE friendid = ? and pending = 1;";
+    	PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+    	preparedStatement.setInt(1, id);
+    	ResultSet resultSet = preparedStatement.executeQuery();
+    	
+    	List<Player> PendingRequests = new ArrayList<>();
+    	while(resultSet.next()){
+    		int friendid = resultSet.getInt("playerid");
+    		PendingRequests.add(new Player(friendid));
+    	}
+    	return PendingRequests;
+    }
+    
+    public List<Player> getFriends() throws SQLException {
+    	String sql = "SELECT friendid FROM friends WHERE playerid = ? and pending = 0;";
+    	PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+    	preparedStatement.setInt(1, id);
+    	ResultSet resultSet = preparedStatement.executeQuery();
+    	
+    	List<Player> friends = new ArrayList<>();
+    	while(resultSet.next()){
+    		int friendid = resultSet.getInt("friendid");
+    		friends.add(new Player(friendid));
+    	}
+    	return friends;
+    }
+    
+    public void unFriend(Player friend) throws SQLException {
+    	String sql = "DELETE FROM friends WHERE (playerid =  ? AND friendid = ?) OR (playerid = ? AND friendid = ?);";
+    	PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+    	preparedStatement.setInt(1, id);
+    	preparedStatement.setInt(2, friend.getId());
+    	preparedStatement.setInt(3, friend.getId());
+    	preparedStatement.setInt(4, id);
+    	preparedStatement.execute();
+    }
 
     @Override
     public String toString() {
         return pseudonym;
+    }
+    
+    @Override
+    public boolean equals(Object o){
+    	if(o instanceof Player){
+    		if(this.id == ((Player) o).getId()){
+    			return true;
+    		} else {
+    			return false;
+    		}
+    	} else {
+    		return false;
+    	}
     }
 }

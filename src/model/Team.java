@@ -109,7 +109,7 @@ public class Team extends Party {
             }
         }
     }
-
+    
     private void removeAllPlayers() throws SQLException {
         List<Player> players = getPlayers();
         for (Player player : players)
@@ -129,5 +129,4 @@ public class Team extends Party {
         sql = "UPDATE team SET name = ? WHERE id = ?;";
         super.rename(name);
     }
-
 }
