@@ -53,6 +53,7 @@ public class ViewNavigator {
     private static final String chatDetail = detailPath + "chat.fxml";
 
     private Map<NodeName, ViewHolder> fxmlMap;
+    private NodeName activeNode;
 
     public ViewNavigator() throws Exception {
         fxmlMap = new HashMap<>();
@@ -124,16 +125,24 @@ public class ViewNavigator {
                 loader = new FXMLLoader(MainApplication.class.getResource(chatDetail));
                 break;
             default:
-                throw new Exception("node type not supported");
+                throw new Exception("Supplied node type could not be loaded!");
         }
 
         fxmlMap.put(nodeName, new ViewHolder(loader.load(), loader.getController()));
     }
 
     public Node getNode(NodeName node) {
+        if (!node.name().toLowerCase().contains("overview"))
+            activeNode = node;
         ViewHolder viewHolder = fxmlMap.get(node);
         viewHolder.getController().initForShow();
         return viewHolder.getNode();
+    }
+
+    public void refreshActiveNode() {
+        ViewHolder viewHolder = fxmlMap.get(activeNode);
+        if (viewHolder != null)
+            viewHolder.getController().initForShow();
     }
 
 }

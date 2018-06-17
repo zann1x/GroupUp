@@ -1,5 +1,6 @@
 package controller.detail.team;
 
+import application.MainApplication;
 import application.Session;
 import controller.FxmlController;
 import javafx.event.ActionEvent;
@@ -8,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import model.Player;
 import model.Team;
 import view.popup.playerpopup.AddPlayerToTeamPopup;
@@ -21,6 +23,8 @@ public class OwnTeamsController extends FxmlController {
     private static final String ACTIVE_TEAM_STRING = "Active teams";
     private static final String INACTIVE_TEAM_STRING = "Inactive teams";
     private static final String ROOT_STRING = "Teams";
+    private static final String ERROR_MSG = "An error occured!";
+
     @FXML
     public VBox vb_statistics;
     @FXML
@@ -29,9 +33,11 @@ public class OwnTeamsController extends FxmlController {
     private BorderPane ownTeamsRoot;
     @FXML
     private TreeView<Object> tv_teams;
+
     private TreeItem<Object> rootItem;
     private List<Team> activeTeams;
     private List<Team> inactiveTeams;
+
     private Map<Integer, List<Player>> playerMap;
 
     @FXML
@@ -69,20 +75,16 @@ public class OwnTeamsController extends FxmlController {
         List<Integer> teamIds = Session.getInstance().getPlayer().getTeamIds();
 
         for (int id : teamIds) {
-            // initialize the list at each iteration, so every team gets its own list of players
-            List<Player> playersInTeam = new ArrayList<>();
-            try {
-                Team team = new Team(id);
-                playersInTeam = team.getPlayers();
+            Team team = new Team(id);
+            if (team.isActive())
+                activeTeams.add(team);
+            else
+                inactiveTeams.add(team);
 
-                if (team.isActive())
-                    activeTeams.add(team);
-                else
-                    inactiveTeams.add(team);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            // initialize the list at each iteration, so every team gets its own list of players
+            List<Player> playersInTeam = team.getPlayers();
             playersInTeam.sort(Comparator.comparing(Player::getPseudonym));
+
             playerMap.put(id, playersInTeam);
         }
 
@@ -105,8 +107,10 @@ public class OwnTeamsController extends FxmlController {
 
         activeTeamsItem.setExpanded(true);
         inactiveTeamsItem.setExpanded(true);
-        rootItem.getChildren().add(activeTeamsItem);
-        rootItem.getChildren().add(inactiveTeamsItem);
+        if (!activeTeamsItem.getChildren().isEmpty())
+            rootItem.getChildren().add(activeTeamsItem);
+        if (!inactiveTeamsItem.getChildren().isEmpty())
+            rootItem.getChildren().add(inactiveTeamsItem);
     }
 
     private List<TreeItem<Object>> createTreeItemList(List<Team> teams) {
@@ -127,6 +131,7 @@ public class OwnTeamsController extends FxmlController {
 
     @Override
     public void initForShow() {
+        super.initForShow();
         if (ownTeamsRoot != null) {
             tv_teams.setRoot(null);
             vb_statistics.setVisible(false);
@@ -159,10 +164,10 @@ public class OwnTeamsController extends FxmlController {
                 try {
                     Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     new EditTeamNamePopup(team).showAndWait();
-                    initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                initForShow();
             });
 
             MenuItem addPlayer = new MenuItem("Add player");
@@ -170,22 +175,22 @@ public class OwnTeamsController extends FxmlController {
                 try {
                     Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     new AddPlayerToTeamPopup(team).showAndWait();
-                    initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                initForShow();
             });
 
             javafx.event.EventHandler<ActionEvent> deleteTeamEventHandler = actionEvent -> {
                 try {
-                    if (showAlert("Are you sure you want to delete the team?")) {
+                    if (showConfirmationAlert("Are you sure you want to delete the team?")) {
                         Team team = new Team(((Team) getTreeItem().getValue()).getId());
                         team.delete();
-                        initForShow();
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                initForShow();
             };
 
             MenuItem deleteActiveTeam = new MenuItem("Delete team");
@@ -199,10 +204,10 @@ public class OwnTeamsController extends FxmlController {
                 try {
                     Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     team.setActive(false);
-                    initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                initForShow();
             });
 
             MenuItem setActive = new MenuItem("Set active");
@@ -210,10 +215,10 @@ public class OwnTeamsController extends FxmlController {
                 try {
                     Team team = new Team(((Team) getTreeItem().getValue()).getId());
                     team.setActive(true);
-                    initForShow();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
+                initForShow();
             });
 
             MenuItem makeLeader = new MenuItem("Make leader");
@@ -222,10 +227,10 @@ public class OwnTeamsController extends FxmlController {
                     Team team = new Team(((Team) getTreeItem().getParent().getValue()).getId());
                     Player player = new Player(((Player) getTreeItem().getValue()).getId());
                     team.addLeader(player);
-                    initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                initForShow();
             });
 
             MenuItem removeLeader = new MenuItem("Remove leader");
@@ -234,23 +239,23 @@ public class OwnTeamsController extends FxmlController {
                     Team team = new Team(((Team) getTreeItem().getParent().getValue()).getId());
                     Player player = new Player(((Player) getTreeItem().getValue()).getId());
                     team.removeLeader(player);
-                    initForShow();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                initForShow();
             });
 
             javafx.event.EventHandler<ActionEvent> removePlayerEventHandler = actionEvent -> {
                 try {
-                    if (showAlert("Are you sure you want to remove this player?")) {
+                    if (showConfirmationAlert("Are you sure you want to remove this player?")) {
                         Team team = new Team(((Team) getTreeItem().getParent().getValue()).getId());
                         Player player = new Player(((Player) getTreeItem().getValue()).getId());
                         team.removePlayer(player);
-                        initForShow();
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                initForShow();
             };
 
             MenuItem removePlayer = new MenuItem("Remove player");
@@ -261,14 +266,14 @@ public class OwnTeamsController extends FxmlController {
 
             javafx.event.EventHandler<ActionEvent> leaveTeamEventHandler = actionEvent -> {
                 try {
-                    if (showAlert("Do you really want to leave this team?")) {
+                    if (showConfirmationAlert("Do you really want to leave this team?")) {
                         Team team = new Team(((Team) getTreeItem().getValue()).getId());
                         team.removePlayer(Session.getInstance().getPlayer());
-                        initForShow();
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                initForShow();
             };
 
             MenuItem leaveActiveTeamAsLeader = new MenuItem("Leave team");
@@ -296,6 +301,7 @@ public class OwnTeamsController extends FxmlController {
                     int playerId = Session.getInstance().getPlayer().getId();
                     Object parentValue = getTreeItem().getParent().getValue();
                     Object value = getTreeItem().getValue();
+                    setId(null);
 
                     // players
                     if (getTreeItem().isLeaf()) {
@@ -305,7 +311,7 @@ public class OwnTeamsController extends FxmlController {
                                 List<Integer> leaderIds = ((Team) parentValue).getLeaderIds();
 
                                 if (leaderIds.contains(selectedPlayer.getId()))
-                                    setId("leader-tree-item");
+                                    setId("leader-item");
 
                                 if (selectedPlayer.getId() != playerId) {
                                     if (leaderIds.contains(playerId)) {
@@ -342,14 +348,15 @@ public class OwnTeamsController extends FxmlController {
             }
         }
 
-        private boolean showAlert(String infoText) {
-            ButtonType confirm = new ButtonType("Yes");
-            ButtonType deny = new ButtonType("No");
+        private boolean showConfirmationAlert(String infoText) {
+            ButtonType confirm = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+            ButtonType deny = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-            Alert alert = new Alert(Alert.AlertType.WARNING, "test", confirm, deny);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, infoText, confirm, deny);
             alert.setTitle(null);
             alert.setHeaderText(null);
-            alert.setContentText(infoText);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(MainApplication.instance.getPrimaryStage());
 
             Optional<ButtonType> result = alert.showAndWait();
             return result.orElse(deny) == confirm;

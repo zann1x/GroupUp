@@ -17,7 +17,8 @@ public class RemovePlayerFromGroupPopup extends PlayerPopup {
             List<Player> players = group.getPlayers();
             // add only those players that aren't already in the team
             for (Player player : players) {
-                if (player.getId() != Session.getInstance().getPlayer().getId() && !group.getLeaderIds().contains(player.getId())) {
+                if (player.getId() != Session.getInstance().getPlayer().getId()
+                        && !group.getLeaderIds().contains(player.getId())) {
                     allAvailablePlayers.add(player);
                 }
             }

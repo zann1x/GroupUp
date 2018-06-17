@@ -31,6 +31,8 @@ public class AccountController extends FxmlController {
 
     @Override
     public void initForShow() {
+		super.initForShow();
+		
     	Player player = Session.getInstance().getPlayer();
     	txt_forename.setText(player.getForename());
     	txt_surname.setText(player.getSurname());

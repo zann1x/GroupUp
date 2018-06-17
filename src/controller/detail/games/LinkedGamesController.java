@@ -10,6 +10,7 @@ public class LinkedGamesController extends FxmlController {
 
     @Override
     public void initForShow() {
+        super.initForShow();
     }
 
 }

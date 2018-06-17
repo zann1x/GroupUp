@@ -46,7 +46,7 @@ public class Player {
     }
 
     public int getGroupId() throws SQLException {
-        String sql = "SELECT * FROM group_player_mapping WHERE playerid = ?;";
+        String sql = "SELECT * FROM group_player_mapping WHERE playerid = ? AND pendingjoin = false;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
@@ -114,6 +114,18 @@ public class Player {
         preparedStatement.setString(1, sessionId);
         preparedStatement.setInt(2, id);
         preparedStatement.executeUpdate();
+    }
+
+    public String getSessionId() throws SQLException {
+        String sql = "SELECT sessionid FROM player WHERE id = ?;";
+        PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        if (resultSet.first())
+            return resultSet.getString("sessionid");
+        else
+            return null;
     }
 
     public static List<Player> getAllPlayers() throws SQLException {

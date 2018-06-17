@@ -1,9 +1,5 @@
 package controller;
 
-import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.List;
-
 import application.MainApplication;
 import application.Session;
 import javafx.animation.Interpolator;
@@ -13,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,8 +22,14 @@ import model.Group;
 import model.Player;
 import util.SceneNavigator;
 import util.ViewNavigator;
+import view.alert.ErrorAlert;
 import view.popup.playerpopup.AddPlayerToGroupPopup;
 import view.popup.playerpopup.RemovePlayerFromGroupPopup;
+
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 public class MainController extends FxmlController {
 
@@ -43,6 +46,8 @@ public class MainController extends FxmlController {
     @FXML
     private Label lbl_detailName;
 
+    @FXML
+    private Button btn_leaveGroup;
     @FXML
     private Button btn_removePlayerFromGroup;
 
@@ -80,16 +85,52 @@ public class MainController extends FxmlController {
             showPlayer();
         } catch (Exception e) {
             e.printStackTrace();
+            ErrorAlert.showAlert();
+            Platform.runLater(Platform::exit);
         }
     }
 
     @Override
     public void initForShow() {
         if (rootPane != null) {
-            btn_removePlayerFromGroup.setDisable(true);
-
             initGroupView();
+            checkForGroupInvites();
         }
+    }
+
+    private void checkForGroupInvites() {
+        try {
+            List<Group> invitedGroups = Group.getPendingGroupInvites(Session.getInstance().getPlayer());
+
+            if (!invitedGroups.isEmpty()) {
+                Group group = invitedGroups.get(0);
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Group invitation");
+                alert.setHeaderText(null);
+                alert.setContentText("You were invited to group '" + group.getName() + "'. Do you want to join?");
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(MainApplication.instance.getPrimaryStage());
+                ButtonType btnYes = new ButtonType("Yes");
+                ButtonType btnNo = new ButtonType("No");
+                alert.getButtonTypes().clear();
+                alert.getButtonTypes().addAll(btnYes, btnNo);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent()) {
+                    if (result.get() == btnYes) {
+                        group.acceptInvite(Session.getInstance().getPlayer());
+                        initForShow();
+                    } else {
+                        group.declineInvite(Session.getInstance().getPlayer());
+                        initForShow();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initGroupView() {
@@ -98,17 +139,29 @@ public class MainController extends FxmlController {
         try {
             Group group = new Group(Session.getInstance().getPlayer().getGroupId());
             List<Player> players = group.getPlayers();
+            List<Integer> leaderIds = group.getLeaderIds();
+            List<Integer> invitedPlayerIds = group.getInvitedPlayerIds();
             players.sort(Comparator.comparing(Player::getPseudonym));
-            for (Player player : players)
-                vb_players.getChildren().add(new Label(player.getPseudonym()));
+
+            for (Player player : players) {
+                Label label = new Label(player.getPseudonym());
+                if (leaderIds.contains(player.getId()))
+                    label.setId("leader-item");
+                else if (invitedPlayerIds.contains(player.getId()))
+                    label.setId("invited-player-item");
+                vb_players.getChildren().add(label);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if (vb_players.getChildren().size() <= 1)
+        if (vb_players.getChildren().size() <= 1) {
             btn_removePlayerFromGroup.setDisable(true);
-        else if (vb_players.getChildren().size() > 1)
+            btn_leaveGroup.setDisable(true);
+        } else if (vb_players.getChildren().size() > 1) {
             btn_removePlayerFromGroup.setDisable(false);
+            btn_leaveGroup.setDisable(false);
+        }
     }
 
     public void close() {
@@ -161,6 +214,7 @@ public class MainController extends FxmlController {
         rotateTransition.play();
 
         initForShow();
+        viewNavigator.refreshActiveNode();
     }
 
     private void switchToNodeOnPane(ViewNavigator.NodeName nodeName, Pane pane) {
@@ -210,7 +264,7 @@ public class MainController extends FxmlController {
             Group group = new Group(Session.getInstance().getPlayer().getGroupId());
             new AddPlayerToGroupPopup(group).showAndWait();
 
-            initGroupView();
+            initForShow();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -222,7 +276,19 @@ public class MainController extends FxmlController {
             Group group = new Group(Session.getInstance().getPlayer().getGroupId());
             new RemovePlayerFromGroupPopup(group).showAndWait();
 
-            initGroupView();
+            initForShow();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLeaveGroup() {
+        try {
+            Group group = new Group(Session.getInstance().getPlayer().getGroupId());
+            group.leaveGroup(Session.getInstance().getPlayer());
+
+            initForShow();
         } catch (SQLException e) {
             e.printStackTrace();
         }

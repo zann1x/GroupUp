@@ -96,6 +96,7 @@ public class PlayNowController extends FxmlController {
 
     @Override
     public void initForShow() {
+        super.initForShow();
         if (playNowRoot != null) {
             availableGames.clear();
             availableTeams.clear();

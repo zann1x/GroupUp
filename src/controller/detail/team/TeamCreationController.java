@@ -65,6 +65,7 @@ public class TeamCreationController extends FxmlController {
 
     @Override
     public void initForShow() {
+        super.initForShow();
         if (teamCreationRoot != null) {
             tf_name.setText("");
             availablePlayers.clear();

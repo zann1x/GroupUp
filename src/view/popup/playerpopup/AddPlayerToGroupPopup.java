@@ -33,9 +33,8 @@ public class AddPlayerToGroupPopup extends PlayerPopup {
                 try {
                     // remove player from his own group first
                     Group g = new Group(player.getGroupId());
-                    g.removePlayer(player);
+                    group.sendInvite(player);
 
-                    group.addPlayer(player, false);
                     stage.close();
                 } catch (SQLException e) {
                     e.printStackTrace();

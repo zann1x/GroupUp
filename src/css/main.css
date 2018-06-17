@@ -12,6 +12,10 @@
 }
 
 /* own teams */
-#leader-tree-item {
+#leader-item {
     -fx-font-weight: bold;
+}
+
+#invited-player-item {
+    -fx-font-style: italic;
 }

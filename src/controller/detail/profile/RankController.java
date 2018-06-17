@@ -11,6 +11,7 @@ public class RankController extends FxmlController {
 
     @Override
     public void initForShow() {
+        super.initForShow();
     }
 
   	@FXML

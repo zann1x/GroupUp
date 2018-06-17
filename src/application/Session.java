@@ -30,6 +30,9 @@ public class Session {
         Session session = instance;
         if (session == null) {
             synchronized (mutex) {
+                if (player.getSessionId() != null)
+                    throw new Exception("A Session does already exist!");
+
                 // add player to an initial group with only him as a member
                 Group group = new Group();
                 group.create(player);
