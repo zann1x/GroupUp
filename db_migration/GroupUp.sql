@@ -107,7 +107,8 @@ CREATE TABLE `player` (
   `forename` varchar(255) DEFAULT NULL,
   `surname` varchar(255) DEFAULT NULL,
   `pseudonym` varchar(255) NOT NULL,
-  `password` varchar(255) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `region` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `sessionid` char(36) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -116,13 +117,13 @@ CREATE TABLE `player` (
 -- Daten für Tabelle `player`
 --
 
-INSERT INTO `player` (`id`, `forename`, `surname`, `pseudonym`, `password`, `email`, `sessionid`) VALUES
-(1, 'Lukas', 'Zanner', 'zann1x', 'test', 'zannix@test.de', NULL),
-(2, 'Christian', 'Goller', 'Flame4Fame', 'test', 'Flame4Fame@test.de', NULL),
-(3, 'Niklas', 'Schaal', 'xcx', 'test', 'xcx@test.de', NULL),
-(4, 'Manuel', 'Dick', 'ManD', 'test', 'ManD@test.de', NULL),
-(5, 'Lukas', 'Wunner', 'Luwu', 'test', 'Luwu@test.de', NULL),
-(6, 'Jonas', 'Baierlein', 'bEyer', 'test', 'beyer@test.de', NULL);
+INSERT INTO `player` (`id`, `forename`, `surname`, `pseudonym`, `password`, `region`, `email`, `sessionid`) VALUES
+(1, 'Lukas', 'Zanner', 'zann1x', 'test', 'Germany', 'zannix@test.de', NULL),
+(2, 'Christian', 'Goller', 'Flame4Fame', 'test', 'Germany', 'Flame4Fame@test.de', NULL),
+(3, 'Niklas', 'Schaal', 'xcx', 'test', 'Germany', 'xcx@test.de', NULL),
+(4, 'Manuel', 'Dick', 'ManD', 'test', 'Germany', 'ManD@test.de', NULL),
+(5, 'Lukas', 'Wunner', 'Luwu', 'test', 'Germany', 'Luwu@test.de', NULL),
+(6, 'Jonas', 'Baierlein', 'bEyer', 'test', 'Germany', 'beyer@test.de', NULL);
 
 -- --------------------------------------------------------
 

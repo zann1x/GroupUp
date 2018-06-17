@@ -41,7 +41,7 @@ public class FriendsController extends FxmlController {
 
 	private ObservableList<String> originalItemList;
 	private String oldText = "";
-
+	
 	private final String PENDING_FRIENDS_NAME = "pending Friend Requests";
 	private final String FRIENDS_NAME = "Friends";
 
@@ -58,7 +58,7 @@ public class FriendsController extends FxmlController {
 		// fill with data
 		fillUpComboBox();
 		fillTreeView();
-
+		
 		// listener for combobox
 		cb_pseudonym.getEditor().setOnMouseClicked(event -> {
 			if (!cb_pseudonym.isShowing()) {
@@ -211,7 +211,7 @@ public class FriendsController extends FxmlController {
 		ObservableList<String> pseudonymList = FXCollections.observableArrayList(pseudonyms);
 		cb_pseudonym.setItems(pseudonymList);
 	}
-
+	
 	private void blendOut() {
 		ObservableList<String> itemList = cb_pseudonym.getItems();
 		String currentText = cb_pseudonym.getEditor().getText();

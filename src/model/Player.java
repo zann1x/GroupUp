@@ -14,6 +14,7 @@ public class Player {
     private String forename;
     private String surname;
     private String pseudonym;
+    private String region;
     private String email;
 
     public Player() {
@@ -39,6 +40,10 @@ public class Player {
     
     public String getPseudonym(){
     	return pseudonym;
+    }
+    
+    public String getRegion(){
+    	return region;
     }
 
     public String getEmail() {
@@ -85,6 +90,7 @@ public class Player {
             this.forename = rs.getString("forename");
             this.surname = rs.getString("surname");
             this.pseudonym = rs.getString("pseudonym");
+            this.region = rs.getString("region");
             this.email = rs.getString("email");
         }
         getGroupId();
@@ -152,26 +158,28 @@ public class Player {
         return players;
     }
     
-    public void updatePlayer(String forename, String surname, String pseudonym, String password, String email) throws SQLException{
-    	String sql = "UPDATE player SET forename = ?, surname = ?, pseudonym = ?, password = ?, email = ? WHERE id = ?";
+    public void updatePlayer(String forename, String surname, String pseudonym, String password, String region, String email) throws SQLException{
+    	String sql = "UPDATE player SET forename = ?, surname = ?, pseudonym = ?, password = ?, region = ?, email = ? WHERE id = ?";
     	PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         preparedStatement.setString(1, forename);
         preparedStatement.setString(2, surname);
         preparedStatement.setString(3, pseudonym);
         preparedStatement.setString(4, password);
-        preparedStatement.setString(5, email);
-        preparedStatement.setInt(6, id);
+        preparedStatement.setString(5, region);
+        preparedStatement.setString(6, email);
+        preparedStatement.setInt(7, id);
         preparedStatement.executeUpdate();
     }
     
-    public void updatePlayer(String forename, String surname, String pseudonym, String email) throws SQLException{
-    	String sql = "UPDATE player SET forename = ?, surname = ?, pseudonym = ?, email = ? WHERE id = ?";
+    public void updatePlayer(String forename, String surname, String pseudonym, String region, String email) throws SQLException{
+    	String sql = "UPDATE player SET forename = ?, surname = ?, pseudonym = ?, region = ?, email = ? WHERE id = ?";
     	PreparedStatement preparedStatement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         preparedStatement.setString(1, forename);
         preparedStatement.setString(2, surname);
         preparedStatement.setString(3, pseudonym);
-        preparedStatement.setString(4, email);
-        preparedStatement.setInt(5, id);
+        preparedStatement.setString(4, region);
+        preparedStatement.setString(5, email);
+        preparedStatement.setInt(6, id);
         preparedStatement.executeUpdate();
     }
     
