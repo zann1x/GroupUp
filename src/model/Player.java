@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import application.MainApplication;
 
@@ -90,11 +91,18 @@ public class Player {
             this.forename = rs.getString("forename");
             this.surname = rs.getString("surname");
             this.pseudonym = rs.getString("pseudonym");
-            this.region = rs.getString("region");
+            
+            Locale locale = new Locale("", rs.getString("region"));
+            this.region = locale.getDisplayCountry();
+            
             this.email = rs.getString("email");
         }
         getGroupId();
         getTeamIds();
+    }
+    
+    public void refresh() throws SQLException {
+    	getData();
     }
 
     public boolean checkCredentials(String pseudonym, String password) throws Exception {
@@ -165,7 +173,17 @@ public class Player {
         preparedStatement.setString(2, surname);
         preparedStatement.setString(3, pseudonym);
         preparedStatement.setString(4, password);
-        preparedStatement.setString(5, region);
+        
+		String[] isos = Locale.getISOCountries();
+		String iso = "";
+		for (int i = 0; i < isos.length; i++) {
+			Locale locale = new Locale("", isos[i]);
+			if(locale.getDisplayCountry().equals(region)){
+				iso = isos[i];
+			}
+		}
+        preparedStatement.setString(5, iso);
+        
         preparedStatement.setString(6, email);
         preparedStatement.setInt(7, id);
         preparedStatement.executeUpdate();
@@ -177,7 +195,17 @@ public class Player {
         preparedStatement.setString(1, forename);
         preparedStatement.setString(2, surname);
         preparedStatement.setString(3, pseudonym);
-        preparedStatement.setString(4, region);
+        
+        String[] isos = Locale.getISOCountries();
+		String iso = "";
+		for (int i = 0; i < isos.length; i++) {
+			Locale locale = new Locale("", isos[i]);
+			if(locale.getDisplayCountry().equals(region)){
+				iso = isos[i];
+			}
+		}
+        preparedStatement.setString(4, iso);
+        
         preparedStatement.setString(5, email);
         preparedStatement.setInt(6, id);
         preparedStatement.executeUpdate();

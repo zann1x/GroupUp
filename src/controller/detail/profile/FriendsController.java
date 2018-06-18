@@ -83,22 +83,24 @@ public class FriendsController extends FxmlController {
 		// listener for treeViewItems
 		tv_friendList.setOnMouseClicked(event -> {
 			TreeItem<Object> treeItem = tv_friendList.getSelectionModel().getSelectedItem();
-			if (treeItem != null && treeItem.getParent().getValue().equals(PENDING_FRIENDS_NAME)) {
-				btn_remove.setVisible(false);
-				btn_accept.setVisible(true);
-				btn_decline.setVisible(true);
-			} else {
-				btn_remove.setVisible(true);
-				btn_accept.setVisible(false);
-				btn_decline.setVisible(false);
-			}
+			if (treeItem != null){
+				if(treeItem.getParent().getValue().equals(PENDING_FRIENDS_NAME)) {
+					btn_remove.setVisible(false);
+					btn_accept.setVisible(true);
+					btn_decline.setVisible(true);
+				} else {
+					btn_remove.setVisible(true);
+					btn_accept.setVisible(false);
+					btn_decline.setVisible(false);
+				}
 
-			// set up ContextMenu
-			ContextMenu friends = prepareContextMenu();
-			if (event.getButton() == MouseButton.SECONDARY) {
-				double x = event.getScreenX();
-				double y = event.getScreenY();
-				friends.show(tv_friendList, x, y);
+				// set up ContextMenu
+				ContextMenu friends = prepareContextMenu();
+				if (event.getButton() == MouseButton.SECONDARY && treeItem.getParent().getValue().equals(FRIENDS_NAME)) {
+					double x = event.getScreenX();
+					double y = event.getScreenY();
+					friends.show(tv_friendList, x, y);
+				}
 			}
 		});
 

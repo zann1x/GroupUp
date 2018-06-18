@@ -76,6 +76,14 @@ public class AccountController extends FxmlController {
 		}
 		lbl_success.setText("Your profile settings were successfully updated");
 		lbl_success.setVisible(true);
+		
+		try {
+			Session.getInstance().getPlayer().refresh();
+		} catch (SQLException e) {
+			ErrorAlert.showConnectionAlert();
+			e.printStackTrace();
+		}
+		
 		initForShow();
 	}
 

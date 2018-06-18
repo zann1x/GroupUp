@@ -118,12 +118,12 @@ CREATE TABLE `player` (
 --
 
 INSERT INTO `player` (`id`, `forename`, `surname`, `pseudonym`, `password`, `region`, `email`, `sessionid`) VALUES
-(1, 'Lukas', 'Zanner', 'zann1x', 'test', 'Germany', 'zannix@test.de', NULL),
-(2, 'Christian', 'Goller', 'Flame4Fame', 'test', 'Germany', 'Flame4Fame@test.de', NULL),
-(3, 'Niklas', 'Schaal', 'xcx', 'test', 'Germany', 'xcx@test.de', NULL),
-(4, 'Manuel', 'Dick', 'ManD', 'test', 'Germany', 'ManD@test.de', NULL),
-(5, 'Lukas', 'Wunner', 'Luwu', 'test', 'Germany', 'Luwu@test.de', NULL),
-(6, 'Jonas', 'Baierlein', 'bEyer', 'test', 'Germany', 'beyer@test.de', NULL);
+(1, 'Lukas', 'Zanner', 'zann1x', 'test', 'DE', 'zannix@test.de', NULL),
+(2, 'Christian', 'Goller', 'Flame4Fame', 'test', 'DE', 'Flame4Fame@test.de', NULL),
+(3, 'Niklas', 'Schaal', 'xcx', 'test', 'DE', 'xcx@test.de', NULL),
+(4, 'Manuel', 'Dick', 'ManD', 'test', 'DE', 'ManD@test.de', NULL),
+(5, 'Lukas', 'Wunner', 'Luwu', 'test', 'DE', 'Luwu@test.de', NULL),
+(6, 'Jonas', 'Baierlein', 'bEyer', 'test', 'DE', 'beyer@test.de', NULL);
 
 -- --------------------------------------------------------
 
