@@ -16,9 +16,9 @@
          <children>
             <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="5.0">
                <children>
-                  <Label text="Vorname" />
+                  <Label text="Forename" />
                   <TextField fx:id="txt_forename" />
-                  <Label text="Nachname">
+                  <Label text="Surname">
                      <HBox.margin>
                         <Insets left="50.0" />
                      </HBox.margin>
@@ -31,7 +31,7 @@
                   <Insets top="10.0" />
                </VBox.margin></Label>
             <TextField fx:id="txt_pseudonym" />
-            <Label text="Passwort">
+            <Label text="Password">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin></Label>
