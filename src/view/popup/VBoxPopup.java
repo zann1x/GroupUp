@@ -4,7 +4,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
-public abstract class VBoxPopup extends DefaultPopup {
+public abstract class VBoxPopup extends Popup {
 
     public VBoxPopup() {
         root = new VBox(5.0d);

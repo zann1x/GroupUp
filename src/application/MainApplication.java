@@ -1,7 +1,6 @@
 package application;
 
-import connection.db.DbConnector;
-import connection.db.MySqlConnector;
+import connection.MySqlConnector;
 import controller.LoginController;
 import controller.MainController;
 import javafx.application.Application;
@@ -22,7 +21,7 @@ public class MainApplication extends Application {
     public static final String APPL_NAME_FULL = APPL_NAME_EXT + " " + APPL_VERSION;
 
     public static volatile MainApplication instance;
-    private DbConnector dbConnector;
+    private MySqlConnector mySqlConnector;
 
     private Stage primaryStage;
     private SceneNavigator sceneNavigator;
@@ -34,8 +33,8 @@ public class MainApplication extends Application {
         return primaryStage;
     }
 
-    public DbConnector getDbConnector() {
-        return dbConnector;
+    public MySqlConnector getDbConnector() {
+        return mySqlConnector;
     }
 
     public SceneNavigator getSceneNavigator() {
@@ -74,8 +73,8 @@ public class MainApplication extends Application {
     @Override
     public void init() throws Exception {
         instance = this;
-        dbConnector = new MySqlConnector(DB_NAME);
-        dbConnector.open();
+        mySqlConnector = new MySqlConnector(DB_NAME);
+        mySqlConnector.open();
     }
 
     @Override
@@ -95,7 +94,7 @@ public class MainApplication extends Application {
 
     @Override
     public void stop() throws Exception {
-        dbConnector.close();
+        mySqlConnector.close();
     }
 
     public static void main(String[] args) {
