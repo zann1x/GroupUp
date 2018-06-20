@@ -39,13 +39,13 @@ public class TeamCreationController extends FxmlController {
 
     private ObservableList<Player> selectedPlayers;
     private ObservableList<Player> availablePlayers;
-    private ObservableList<Player> allPlayers;
+    private ObservableList<Player> allAvailablePlayers;
 
     @FXML
     public void initialize() {
         selectedPlayers = FXCollections.observableArrayList();
         availablePlayers = FXCollections.observableArrayList();
-        allPlayers = FXCollections.observableArrayList();
+        allAvailablePlayers = FXCollections.observableArrayList();
     }
 
     private void initTeamCreationView() {
@@ -54,9 +54,9 @@ public class TeamCreationController extends FxmlController {
             players = players.stream()
                     .filter(p -> p.getId() != Session.getInstance().getPlayer().getId())
                     .collect(Collectors.toList());
-            allPlayers.addAll(players);
-            FXCollections.sort(allPlayers, Comparator.comparing(Player::toString));
-            availablePlayers.setAll(allPlayers);
+            allAvailablePlayers.addAll(players);
+            FXCollections.sort(allAvailablePlayers, Comparator.comparing(Player::toString));
+            availablePlayers.setAll(allAvailablePlayers);
         } catch (SQLException e) {
         	ErrorAlert.showConnectionAlert();
             e.printStackTrace();
@@ -71,7 +71,7 @@ public class TeamCreationController extends FxmlController {
         if (teamCreationRoot != null) {
             tf_name.setText("");
             availablePlayers.clear();
-            allPlayers.clear();
+            allAvailablePlayers.clear();
             selectedPlayers.clear();
             lbl_createSuccess.setText("");
 
@@ -122,24 +122,29 @@ public class TeamCreationController extends FxmlController {
     @FXML
     private void handleAddPlayer() {
         if (lv_availablePlayers.getSelectionModel().getSelectedItem() != null) {
-            selectedPlayers.add(lv_availablePlayers.getSelectionModel().getSelectedItem());
-            availablePlayers.remove(lv_availablePlayers.getSelectionModel().getSelectedIndex());
-            FXCollections.sort(selectedPlayers, Comparator.comparing(Player::toString));
+            Player selectedPlayer = lv_availablePlayers.getSelectionModel().getSelectedItem();
+            selectedPlayers.add(selectedPlayer);
+            availablePlayers.remove(selectedPlayer);
+            allAvailablePlayers.remove(selectedPlayer);
+            FXCollections.sort(selectedPlayers, Comparator.comparing(Player::getPseudonym));
         }
     }
 
     @FXML
     private void handleRemovePlayer() {
         if (lv_selectedPlayers.getSelectionModel().getSelectedItem() != null) {
-            availablePlayers.add(lv_selectedPlayers.getSelectionModel().getSelectedItem());
-            selectedPlayers.remove(lv_selectedPlayers.getSelectionModel().getSelectedIndex());
-            FXCollections.sort(availablePlayers, Comparator.comparing(Player::toString));
+            Player selectedPlayer = lv_selectedPlayers.getSelectionModel().getSelectedItem();
+            availablePlayers.add(selectedPlayer);
+            allAvailablePlayers.add(selectedPlayer);
+            selectedPlayers.remove(selectedPlayer);
+            FXCollections.sort(availablePlayers, Comparator.comparing(Player::getPseudonym));
         }
     }
 
     @FXML
     private void onPlayerSearch() {
-        tf_playerSearch.search(tf_playerSearch.getText(), availablePlayers, allPlayers);
+        tf_playerSearch.search(tf_playerSearch.getText(), availablePlayers, allAvailablePlayers);
+        FXCollections.sort(availablePlayers, Comparator.comparing(Player::getPseudonym));
     }
 
 }
