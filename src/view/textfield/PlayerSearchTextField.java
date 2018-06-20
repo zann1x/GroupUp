@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class PlayerSearchTextField extends TextField {
 
     public void search(String playerName, ObservableList<Player> filteredPlayers, ObservableList<Player> allPlayers) {
-        if (playerName.length() >= 3) {
+        if (playerName.length() >= 1) {
             filteredPlayers.setAll(
                     allPlayers.stream()
                             .filter(player -> player.getPseudonym().toLowerCase().contains(playerName.toLowerCase()))
