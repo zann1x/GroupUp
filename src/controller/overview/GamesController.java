@@ -7,7 +7,7 @@ import util.ViewNavigator;
 public class GamesController extends FxmlController {
 
     @Override
-    public void initialize() {
+    protected void initialize() {
     }
 
     @Override

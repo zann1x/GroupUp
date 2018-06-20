@@ -15,34 +15,18 @@ public class Game {
 
     public Game(int id) throws SQLException {
         this.id = id;
-        getDataFromId();
-    }
-
-    public Game(String name) throws SQLException {
-        this.name = name;
-        getDataFromName();
+        getData();
     }
 
     public String getName() {
         return name;
     }
 
-    private void getDataFromId() throws SQLException {
+    private void getData() throws SQLException {
         String sql = "SELECT * FROM game WHERE id = ?;";
         PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
         statement.setInt(1, id);
-        getData(statement);
-    }
-
-    private void getDataFromName() throws SQLException {
-        String sql = "SELECT * FROM game WHERE name = ?;";
-        PreparedStatement statement = MainApplication.instance.getDbConnector().prepareStatement(sql);
-        statement.setString(1, name);
-        getData(statement);
-    }
-
-    private void getData(PreparedStatement preparedStatement) throws SQLException {
-        ResultSet resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = statement.executeQuery();
 
         if (resultSet.first()) {
             this.id = resultSet.getInt("id");

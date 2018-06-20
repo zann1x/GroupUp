@@ -42,7 +42,7 @@ public class LoginController extends FxmlController {
     }
 
     @Override
-    public void initialize() {
+    protected void initialize() {
     }
 
     @Override

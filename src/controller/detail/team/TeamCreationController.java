@@ -42,7 +42,7 @@ public class TeamCreationController extends FxmlController {
     private ObservableList<Player> allAvailablePlayers;
 
     @FXML
-    public void initialize() {
+    protected void initialize() {
         selectedPlayers = FXCollections.observableArrayList();
         availablePlayers = FXCollections.observableArrayList();
         allAvailablePlayers = FXCollections.observableArrayList();

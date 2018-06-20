@@ -71,8 +71,8 @@ public class MainController extends FxmlController {
     @FXML
     private ImageView iv_refresh;
 
-    @FXML
-    public void initialize() {
+    @Override
+    protected void initialize() {
         try {
             viewNavigator = new ViewNavigator();
             iv_profile.setImage(new Image("file:res/img/profile.png"));

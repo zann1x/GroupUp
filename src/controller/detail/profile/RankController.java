@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 public class RankController extends FxmlController {
 
     @Override
-    public void initialize() {
+    protected void initialize() {
     }
 
     @Override

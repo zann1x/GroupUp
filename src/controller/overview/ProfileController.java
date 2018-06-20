@@ -7,7 +7,7 @@ import util.ViewNavigator;
 public class ProfileController extends FxmlController {
 
     @Override
-    public void initialize() {
+    protected void initialize() {
     }
 
     @Override

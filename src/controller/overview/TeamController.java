@@ -7,7 +7,7 @@ import util.ViewNavigator;
 public class TeamController extends FxmlController {
 
     @FXML
-    public void initialize() {
+    protected void initialize() {
     }
 
     @Override

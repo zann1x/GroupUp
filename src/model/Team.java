@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Team extends Party {
 
-    protected boolean active;
+    private boolean active;
 
     public Team() {
         super();

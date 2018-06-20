@@ -37,7 +37,7 @@ public class AccountController extends FxmlController {
 	private String oldText = "";
 
 	@Override
-	public void initialize() {
+	protected void initialize() {
 	}
 
 	@Override

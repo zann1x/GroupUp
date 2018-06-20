@@ -48,7 +48,7 @@ public class FriendsController extends FxmlController {
 	private ContextMenu friends;
 
 	@Override
-	public void initialize() {
+	protected void initialize() {
 	}
 
 	@Override

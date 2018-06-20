@@ -20,7 +20,6 @@ public abstract class Popup {
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(MainApplication.instance.getPrimaryStage());
-        stage.initStyle(StageStyle.UTILITY);
     }
 
     public void showAndWait() {

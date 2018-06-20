@@ -26,9 +26,9 @@ public class OwnTeamsController extends FxmlController {
     private static final String ROOT_STRING = "Teams";
 
     @FXML
-    public VBox vb_statistics;
+    private VBox vb_statistics;
     @FXML
-    public Label lbl_statistics;
+    private Label lbl_statistics;
     @FXML
     private BorderPane ownTeamsRoot;
     @FXML
@@ -41,7 +41,7 @@ public class OwnTeamsController extends FxmlController {
     private Map<Integer, List<Player>> playerMap;
 
     @FXML
-    public void initialize() {
+    protected void initialize() {
         activeTeams = new ArrayList<>();
         inactiveTeams = new ArrayList<>();
         rootItem = new TreeItem<>(ROOT_STRING);

@@ -21,9 +21,8 @@ public class ErrorAlert {
     }
 
     public static void showAlert() {
-        alert.setContentText(ERR_MSG +
+        showAlert(ERR_MSG +
                 "\nFor further information contact the developer who didn't want to specify this message any further.");
-        showAndWait();
     }
 
     public static void showAlert(String content) {
