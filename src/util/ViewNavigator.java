@@ -40,7 +40,7 @@ public class ViewNavigator {
 
     private static final String teamOverview = overviewPath + "team.fxml";
     private static final String teamCreation = detailPath + "team/team_creation.fxml";
-    private static final String teams = detailPath + "team/own_teams.fxml";
+    private static final String ownTeams = detailPath + "team/own_teams.fxml";
 
     private static final String gamesOverview = overviewPath + "games.fxml";
     private static final String playNow = detailPath + "/games/play_now.fxml";
@@ -101,7 +101,7 @@ public class ViewNavigator {
                 loader = new FXMLLoader(MainApplication.class.getResource(teamCreation));
                 break;
             case OWN_TEAMS:
-                loader = new FXMLLoader(MainApplication.class.getResource(teams));
+                loader = new FXMLLoader(MainApplication.class.getResource(ownTeams));
                 break;
             case GAMES_OVERVIEW:
                 loader = new FXMLLoader(MainApplication.class.getResource(gamesOverview));

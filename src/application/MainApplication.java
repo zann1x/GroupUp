@@ -16,9 +16,7 @@ public class MainApplication extends Application {
     private static final String DB_NAME = "GroupUp";
 
     public static final String APPL_NAME = "GroupUp!";
-    public static final String APPL_VERSION = "v0.0.1";
     public static final String APPL_NAME_EXT = APPL_NAME + " - Esports Group Finder";
-    public static final String APPL_NAME_FULL = APPL_NAME_EXT + " " + APPL_VERSION;
 
     public static volatile MainApplication instance;
     private MySqlConnector mySqlConnector;

@@ -197,7 +197,7 @@ public class MainController extends FxmlController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
         alert.setHeaderText(null);
-        String content = MainApplication.APPL_NAME_FULL + "\n" +
+        String content = MainApplication.APPL_NAME_EXT + "\n" +
                 "Christian Goller, Lukas Zanner\n\n" +
                 "Session: " + sessionName;
         alert.setContentText(content);
