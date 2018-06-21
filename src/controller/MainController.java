@@ -5,6 +5,7 @@ import application.Session;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -13,6 +14,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -247,17 +249,41 @@ public class MainController extends FxmlController {
 
     @FXML
     public void showGames() {
-        switchToOverviewNode(ViewNavigator.NodeName.GAMES_OVERVIEW, "GAME");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("available soon");
+        alert.setHeaderText(null);
+        alert.setContentText("feature under construction");
+        alert.initOwner(MainApplication.instance.getPrimaryStage());
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+
+        // switchToOverviewNode(ViewNavigator.NodeName.GAMES_OVERVIEW, "GAME");
     }
 
     @FXML
     public void showNews() {
-        switchToOverviewNode(ViewNavigator.NodeName.NEWS_OVERVIEW, "NEWS");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("available soon");
+        alert.setHeaderText(null);
+        alert.setContentText("feature under construction");
+        alert.initOwner(MainApplication.instance.getPrimaryStage());
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+
+        //switchToOverviewNode(ViewNavigator.NodeName.NEWS_OVERVIEW, "NEWS");
     }
 
     @FXML
     public void showChat() {
-        switchToOverviewNode(ViewNavigator.NodeName.CHAT_OVERVIEW, "CHAT");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("available soon");
+        alert.setHeaderText(null);
+        alert.setContentText("feature under construction");
+        alert.initOwner(MainApplication.instance.getPrimaryStage());
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+
+        //switchToOverviewNode(ViewNavigator.NodeName.CHAT_OVERVIEW, "CHAT");
     }
 
     @FXML

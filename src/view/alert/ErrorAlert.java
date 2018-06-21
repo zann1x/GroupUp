@@ -25,13 +25,12 @@ public class ErrorAlert {
                 "\nFor further information contact the developer who didn't want to specify this message any further.");
     }
 
-    public static void showAlert(String content) {
-        alert.setContentText(ERR_MSG + "\n" + content);
-        showAndWait();
+    public static void showConnectionAlert() {
+        showAlert(DB_CONN_ERR);
     }
 
-    public static void showConnectionAlert() {
-        alert.setContentText(DB_CONN_ERR);
+    public static void showAlert(String content) {
+        alert.setContentText(content);
         showAndWait();
     }
 

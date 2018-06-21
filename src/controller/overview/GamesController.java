@@ -19,9 +19,4 @@ public class GamesController extends FxmlController {
         super.showDetail(ViewNavigator.NodeName.PLAY_NOW, "Play now");
     }
 
-    @FXML
-    private void unLinkGames() {
-        super.showDetail(ViewNavigator.NodeName.GAME_LINKING, "Un/Link games");
-    }
-
 }

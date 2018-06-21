@@ -20,14 +20,7 @@ public class ViewNavigator {
         OWN_TEAMS,
 
         GAMES_OVERVIEW,
-        PLAY_NOW,
-        GAME_LINKING,
-
-        NEWS_OVERVIEW,
-        NEWS_DETAIL,
-
-        CHAT_OVERVIEW,
-        CHAT_DETAIL
+        PLAY_NOW
     }
 
     private static final String overviewPath = "../fxml/overview/";
@@ -44,13 +37,6 @@ public class ViewNavigator {
 
     private static final String gamesOverview = overviewPath + "games.fxml";
     private static final String playNow = detailPath + "/games/play_now.fxml";
-    private static final String gameLinking = detailPath + "/games/game_linking.fxml";
-
-    private static final String newsOverview = overviewPath + "news.fxml";
-    private static final String newsDetail = detailPath + "news.fxml";
-
-    private static final String chatOverview = overviewPath + "chat.fxml";
-    private static final String chatDetail = detailPath + "chat.fxml";
 
     private Map<NodeName, ViewHolder> fxmlMap;
     private NodeName activeNode;
@@ -69,13 +55,6 @@ public class ViewNavigator {
 
         addNode(NodeName.GAMES_OVERVIEW);
         addNode(NodeName.PLAY_NOW);
-        addNode(NodeName.GAME_LINKING);
-
-        addNode(NodeName.NEWS_OVERVIEW);
-        addNode(NodeName.NEWS_DETAIL);
-
-        addNode(NodeName.CHAT_OVERVIEW);
-        addNode(NodeName.CHAT_DETAIL);
     }
 
 
@@ -108,21 +87,6 @@ public class ViewNavigator {
                 break;
             case PLAY_NOW:
                 loader = new FXMLLoader(MainApplication.class.getResource(playNow));
-                break;
-            case GAME_LINKING:
-                loader = new FXMLLoader(MainApplication.class.getResource(gameLinking));
-                break;
-            case NEWS_OVERVIEW:
-                loader = new FXMLLoader(MainApplication.class.getResource(newsOverview));
-                break;
-            case NEWS_DETAIL:
-                loader = new FXMLLoader(MainApplication.class.getResource(newsDetail));
-                break;
-            case CHAT_OVERVIEW:
-                loader = new FXMLLoader(MainApplication.class.getResource(chatOverview));
-                break;
-            case CHAT_DETAIL:
-                loader = new FXMLLoader(MainApplication.class.getResource(chatDetail));
                 break;
             default:
                 throw new Exception("Supplied node type could not be loaded!");
