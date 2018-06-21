@@ -17,10 +17,7 @@ public class ViewNavigator {
 
         TEAM_OVERVIEW,
         TEAM_CREATION,
-        OWN_TEAMS,
-
-        GAMES_OVERVIEW,
-        PLAY_NOW
+        OWN_TEAMS
     }
 
     private static final String overviewPath = "../fxml/overview/";
@@ -34,9 +31,6 @@ public class ViewNavigator {
     private static final String teamOverview = overviewPath + "team.fxml";
     private static final String teamCreation = detailPath + "team/team_creation.fxml";
     private static final String ownTeams = detailPath + "team/own_teams.fxml";
-
-    private static final String gamesOverview = overviewPath + "games.fxml";
-    private static final String playNow = detailPath + "/games/play_now.fxml";
 
     private Map<NodeName, ViewHolder> fxmlMap;
     private NodeName activeNode;
@@ -52,9 +46,6 @@ public class ViewNavigator {
         addNode(NodeName.TEAM_OVERVIEW);
         addNode(NodeName.TEAM_CREATION);
         addNode(NodeName.OWN_TEAMS);
-
-        addNode(NodeName.GAMES_OVERVIEW);
-        addNode(NodeName.PLAY_NOW);
     }
 
 
@@ -81,12 +72,6 @@ public class ViewNavigator {
                 break;
             case OWN_TEAMS:
                 loader = new FXMLLoader(MainApplication.class.getResource(ownTeams));
-                break;
-            case GAMES_OVERVIEW:
-                loader = new FXMLLoader(MainApplication.class.getResource(gamesOverview));
-                break;
-            case PLAY_NOW:
-                loader = new FXMLLoader(MainApplication.class.getResource(playNow));
                 break;
             default:
                 throw new Exception("Supplied node type could not be loaded!");

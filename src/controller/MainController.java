@@ -256,8 +256,6 @@ public class MainController extends FxmlController {
         alert.initOwner(MainApplication.instance.getPrimaryStage());
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.showAndWait();
-
-        // switchToOverviewNode(ViewNavigator.NodeName.GAMES_OVERVIEW, "GAME");
     }
 
     @FXML
@@ -269,8 +267,6 @@ public class MainController extends FxmlController {
         alert.initOwner(MainApplication.instance.getPrimaryStage());
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.showAndWait();
-
-        //switchToOverviewNode(ViewNavigator.NodeName.NEWS_OVERVIEW, "NEWS");
     }
 
     @FXML
@@ -282,8 +278,6 @@ public class MainController extends FxmlController {
         alert.initOwner(MainApplication.instance.getPrimaryStage());
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.showAndWait();
-
-        //switchToOverviewNode(ViewNavigator.NodeName.CHAT_OVERVIEW, "CHAT");
     }
 
     @FXML
