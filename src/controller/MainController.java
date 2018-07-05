@@ -1,11 +1,15 @@
 package controller;
 
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
 import application.MainApplication;
 import application.Session;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -14,7 +18,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -27,11 +30,6 @@ import util.ViewNavigator;
 import view.alert.ErrorAlert;
 import view.popup.playerpopup.AddPlayerToGroupPopup;
 import view.popup.playerpopup.RemovePlayerFromGroupPopup;
-
-import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 public class MainController extends FxmlController {
 
