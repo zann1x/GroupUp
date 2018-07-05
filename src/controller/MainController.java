@@ -1,5 +1,10 @@
 package controller;
 
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
 import application.MainApplication;
 import application.Session;
 import javafx.animation.Interpolator;
@@ -25,11 +30,6 @@ import util.ViewNavigator;
 import view.alert.ErrorAlert;
 import view.popup.playerpopup.AddPlayerToGroupPopup;
 import view.popup.playerpopup.RemovePlayerFromGroupPopup;
-
-import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 public class MainController extends FxmlController {
 
