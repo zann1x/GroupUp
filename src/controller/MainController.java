@@ -5,7 +5,6 @@ import application.Session;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -14,7 +13,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -77,13 +75,13 @@ public class MainController extends FxmlController {
     protected void initialize() {
         try {
             viewNavigator = new ViewNavigator();
-            iv_profile.setImage(new Image("file:res/img/profile.png"));
-            iv_team.setImage(new Image("file:res/img/team.png"));
-            iv_games.setImage(new Image("file:res/img/games.png"));
-            iv_news.setImage(new Image("file:res/img/news.png"));
-            iv_chat.setImage(new Image("file:res/img/chat.png"));
-            iv_logout.setImage(new Image("file:res/img/logout_icon.png"));
-            iv_refresh.setImage(new Image("file:res/img/refresh_icon.png"));
+            iv_profile.setImage(new Image("/img/profile.png"));
+            iv_team.setImage(new Image("/img/team.png"));
+            iv_games.setImage(new Image("/img/games.png"));
+            iv_news.setImage(new Image("/img/news.png"));
+            iv_chat.setImage(new Image("/img/chat.png"));
+            iv_logout.setImage(new Image("/img/logout_icon.png"));
+            iv_refresh.setImage(new Image("/img/refresh_icon.png"));
             showPlayer();
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,7 +128,7 @@ public class MainController extends FxmlController {
                 }
             }
         } catch (SQLException e) {
-        	ErrorAlert.showConnectionAlert();
+            ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
 
@@ -155,7 +153,7 @@ public class MainController extends FxmlController {
                 vb_players.getChildren().add(label);
             }
         } catch (SQLException e) {
-        	ErrorAlert.showConnectionAlert();
+            ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
 
@@ -288,7 +286,7 @@ public class MainController extends FxmlController {
 
             initForShow();
         } catch (SQLException e) {
-        	ErrorAlert.showConnectionAlert();
+            ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
     }
@@ -301,7 +299,7 @@ public class MainController extends FxmlController {
 
             initForShow();
         } catch (SQLException e) {
-        	ErrorAlert.showConnectionAlert();
+            ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
     }
@@ -314,7 +312,7 @@ public class MainController extends FxmlController {
 
             initForShow();
         } catch (SQLException e) {
-        	ErrorAlert.showConnectionAlert();
+            ErrorAlert.showConnectionAlert();
             e.printStackTrace();
         }
     }

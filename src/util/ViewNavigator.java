@@ -1,6 +1,5 @@
 package util;
 
-import application.MainApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 
@@ -20,8 +19,8 @@ public class ViewNavigator {
         OWN_TEAMS
     }
 
-    private static final String overviewPath = "../fxml/overview/";
-    private static final String detailPath = "../fxml/detail/";
+    private static final String overviewPath = "/fxml/overview/";
+    private static final String detailPath = "/fxml/detail/";
 
     private static final String profileOverview = overviewPath + "profile.fxml";
     private static final String account = detailPath + "profile/account.fxml";
@@ -53,25 +52,25 @@ public class ViewNavigator {
         FXMLLoader loader;
         switch (nodeName) {
             case PROFILE_OVERVIEW:
-                loader = new FXMLLoader(MainApplication.class.getResource(profileOverview));
+                loader = new FXMLLoader(getClass().getResource(profileOverview));
                 break;
             case Account:
-                loader = new FXMLLoader(MainApplication.class.getResource(account));
+                loader = new FXMLLoader(getClass().getResource(account));
                 break;
             case Friends:
-                loader = new FXMLLoader(MainApplication.class.getResource(friends));
+                loader = new FXMLLoader(getClass().getResource(friends));
                 break;
             case Rank:
-                loader = new FXMLLoader(MainApplication.class.getResource(rank));
+                loader = new FXMLLoader(getClass().getResource(rank));
                 break;
             case TEAM_OVERVIEW:
-                loader = new FXMLLoader(MainApplication.class.getResource(teamOverview));
+                loader = new FXMLLoader(getClass().getResource(teamOverview));
                 break;
             case TEAM_CREATION:
-                loader = new FXMLLoader(MainApplication.class.getResource(teamCreation));
+                loader = new FXMLLoader(getClass().getResource(teamCreation));
                 break;
             case OWN_TEAMS:
-                loader = new FXMLLoader(MainApplication.class.getResource(ownTeams));
+                loader = new FXMLLoader(getClass().getResource(ownTeams));
                 break;
             default:
                 throw new Exception("Supplied node type could not be loaded!");

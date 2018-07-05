@@ -52,15 +52,15 @@ public class MainApplication extends Application {
         Scene scene;
         sceneNavigator = new SceneNavigator(primaryStage);
 
-        fxmlLoader = new FXMLLoader(MainApplication.class.getResource("../fxml/login.fxml"));
+        fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
         scene = new Scene(fxmlLoader.load());
         sceneNavigator.addScene(SceneNavigator.SceneName.LOGIN, scene);
         loginController = fxmlLoader.getController();
         loginController.setStage(primaryStage);
 
-        fxmlLoader = new FXMLLoader(MainApplication.class.getResource("../fxml/main.fxml"));
+        fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(MainApplication.class.getResource("../css/main.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/main.css").toExternalForm());
         sceneNavigator.addScene(SceneNavigator.SceneName.MAIN, scene);
         mainController = fxmlLoader.getController();
         mainController.setStage(primaryStage);
@@ -85,7 +85,7 @@ public class MainApplication extends Application {
             event.consume();
         });
         initScenes();
-        primaryStage.getIcons().add(new Image("file:res/img/play.png"));
+        primaryStage.getIcons().add(new Image("/img/play.png"));
         primaryStage.setTitle(MainApplication.APPL_NAME);
         primaryStage.show();
     }
