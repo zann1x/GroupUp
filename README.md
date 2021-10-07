@@ -10,9 +10,9 @@ Only some very basic features were implemented during the course as most of the 
 - Start the application.
 - Login with e.g. username "zann1x" and password "test".
 
-![image](https://user-images.githubusercontent.com/19776837/60226599-3d221d00-988c-11e9-8fdd-5ea25aeb2a3f.png)
-![image](https://user-images.githubusercontent.com/19776837/60226711-aace4900-988c-11e9-9976-148f4ac2541b.png)
-![image](https://user-images.githubusercontent.com/19776837/60226737-ca657180-988c-11e9-9304-cc8afb66c0dc.png)
-![image](https://user-images.githubusercontent.com/19776837/60226669-883c3000-988c-11e9-90bb-7931fbadf7e1.png)
-![image](https://user-images.githubusercontent.com/19776837/60226689-9722e280-988c-11e9-9ee8-4c8ea4476545.png)
-![image](https://user-images.githubusercontent.com/19776837/60226845-43fd5f80-988d-11e9-8e32-ac16ad8dad9c.png)
+![image](Screenshots/Login.png)
+![image](Screenshots/Account.png)
+![image](Screenshots/Friends.png)
+![image](Screenshots/TeamCreation.png)
+![image](Screenshots/TeamOverview.png)
+![image](Screenshots/GroupAdd.png)
